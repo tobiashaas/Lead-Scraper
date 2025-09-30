@@ -81,8 +81,6 @@ class PlaywrightBrowserManager:
             proxy=proxy_config,
             args=[
                 '--disable-blink-features=AutomationControlled',
-                '--disable-dev-shm-usage',
-                '--no-sandbox'
             ] if self.browser_type == "chromium" else []
         )
         

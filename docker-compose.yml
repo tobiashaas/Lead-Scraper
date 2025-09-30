@@ -6,8 +6,8 @@ services:
     container_name: kr-postgres
     environment:
       POSTGRES_DB: kr_leads
-      POSTGRES_USER: kr_user
-      POSTGRES_PASSWORD: kr_password_change_in_production
+      POSTGRES_USER: kr_admin
+      POSTGRES_PASSWORD: uxu*rkj2yap7EWT-ubu
     ports:
       - "5432:5432"
     volumes:

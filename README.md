@@ -135,15 +135,23 @@ uvicorn app.main:app --reload
 API verfügbar unter: `http://localhost:8000`
 Docs verfügbar unter: `http://localhost:8000/docs`
 
-### Scraping Job starten (Beispiel - später)
+### Scraping Job starten
+
+```bash
+# 11880 Scraper testen
+python scrape_11880_test.py
+```
+
+Oder programmatisch:
 
 ```python
-from app.scrapers.eleven_eighty import ElevenEightyScaper
+from app.scrapers.eleven_eighty import scrape_11880
 
-scraper = ElevenEightyScaper()
-results = await scraper.scrape(
+results = await scrape_11880(
     city="Stuttgart",
-    industry="IT-Service"
+    industry="IT-Service",
+    max_pages=2,
+    use_tor=False
 )
 ```
 

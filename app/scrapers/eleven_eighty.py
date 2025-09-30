@@ -19,19 +19,19 @@ class ElevenEightyScaper(BaseScraper):
     Scraper für 11880.com
     
     Features:
-    - Einfache HTML-Struktur
-    - Keine JavaScript-Rendering nötig
+    - JavaScript-Rendering mit Playwright/Firefox
+    - Query-Parameter basierte URLs
     - Öffentlich zugänglich
     """
     
-    BASE_URL = "https://www.11880.com"
+    BASE_URL = "https://www.11880.com/suche"
     
     def __init__(self, use_tor: bool = True):
         super().__init__(
             name="11880",
             domain="11880.com",
             use_tor=use_tor,
-            use_playwright=False  # httpx reicht für 11880
+            use_playwright=True  # Playwright nötig für JavaScript-Rendering
         )
     
     async def get_search_urls(
@@ -43,7 +43,7 @@ class ElevenEightyScaper(BaseScraper):
         """
         Generiert Such-URLs für 11880.com
         
-        Format: https://www.11880.com/suche/{industry}/{city}?page={page}
+        Format: https://www.11880.com/suche?what={industry}&where={city}&firmen=1&personen=0&page={page}
         
         Args:
             city: Stadt (z.B. "Stuttgart")
@@ -60,10 +60,10 @@ class ElevenEightyScaper(BaseScraper):
         encoded_city = quote_plus(city)
         
         for page in range(1, max_pages + 1):
-            url = f"{self.BASE_URL}/suche/{encoded_industry}/{encoded_city}"
+            url = f"{self.BASE_URL}?what={encoded_industry}&where={encoded_city}&firmen=1&personen=0"
             
             if page > 1:
-                url += f"?page={page}"
+                url += f"&page={page}"
             
             urls.append(url)
         
@@ -87,9 +87,8 @@ class ElevenEightyScaper(BaseScraper):
         soup = BeautifulSoup(html, 'lxml')
         results = []
         
-        # Finde alle Unternehmens-Einträge
-        # HINWEIS: Selektoren müssen ggf. angepasst werden (11880 ändert manchmal HTML)
-        entries = soup.find_all('article', class_=re.compile(r'mod-Treffer'))
+        # Finde alle Unternehmens-Einträge mit der Klasse 'result-list-entry'
+        entries = soup.find_all('li', class_='result-list-entry')
         
         if not entries:
             logger.warning(f"Keine Einträge gefunden auf {url}")
@@ -120,10 +119,8 @@ class ElevenEightyScaper(BaseScraper):
         Returns:
             ScraperResult oder None
         """
-        # Firmenname
-        company_name_tag = entry.find('h2', class_=re.compile(r'name'))
-        if not company_name_tag:
-            company_name_tag = entry.find('a', class_=re.compile(r'company'))
+        # Firmenname (in h2 mit Klasse result-list-entry-title__headline)
+        company_name_tag = entry.find('h2', class_='result-list-entry-title__headline')
         
         if not company_name_tag:
             logger.warning("Kein Firmenname gefunden")
@@ -131,29 +128,48 @@ class ElevenEightyScaper(BaseScraper):
         
         company_name = company_name_tag.get_text(strip=True)
         
-        # Adresse
+        # Adresse (mit spezifischen Klassen)
         address = None
-        address_tag = entry.find('address') or entry.find('div', class_=re.compile(r'address'))
-        if address_tag:
-            address = address_tag.get_text(strip=True)
-        
-        # Stadt & PLZ aus Adresse extrahieren
-        city = None
+        street = None
         postal_code = None
-        if address:
-            # Format: "Straße, PLZ Stadt"
-            match = re.search(r'(\d{5})\s+([A-Za-zäöüÄÖÜß\s-]+)', address)
-            if match:
-                postal_code = match.group(1)
-                city = match.group(2).strip()
+        city = None
         
-        # Telefon
+        # Straße
+        street_tag = entry.find('span', class_='js-street-address')
+        if street_tag:
+            street = street_tag.get_text(strip=True)
+        
+        # PLZ
+        postal_tag = entry.find('span', class_='js-postal-code')
+        if postal_tag:
+            postal_code = postal_tag.get_text(strip=True)
+        
+        # Stadt
+        city_tag = entry.find('span', class_='js-address-locality')
+        if city_tag:
+            city = city_tag.get_text(strip=True)
+        
+        # Vollständige Adresse zusammensetzen
+        if street or postal_code or city:
+            address_parts = []
+            if street:
+                address_parts.append(street)
+            if postal_code and city:
+                address_parts.append(f"{postal_code} {city}")
+            elif postal_code:
+                address_parts.append(postal_code)
+            elif city:
+                address_parts.append(city)
+            address = ", ".join(address_parts)
+        
+        # Telefon (aus href-Attribut extrahieren)
         phone = None
         phone_tag = entry.find('a', href=re.compile(r'tel:'))
-        if phone_tag:
-            phone = phone_tag.get_text(strip=True)
+        if phone_tag and phone_tag.get('href'):
+            # Extrahiere Nummer aus href (z.B. "tel:+497118829810")
+            phone = phone_tag['href'].replace('tel:', '').strip()
         else:
-            # Alternative: Suche nach Telefon-Pattern
+            # Fallback: Suche nach Telefon-Pattern im Text
             phone_pattern = re.compile(r'(\+49|0)\s*\d+[\s\d\-/()]+')
             phone_match = phone_pattern.search(entry.get_text())
             if phone_match:
@@ -173,6 +189,9 @@ class ElevenEightyScaper(BaseScraper):
         email_tag = entry.find('a', href=re.compile(r'mailto:'))
         if email_tag:
             email = email_tag['href'].replace('mailto:', '')
+            # Entferne Query-Parameter (z.B. ?subject=...)
+            if '?' in email:
+                email = email.split('?')[0]
         
         # Beschreibung/Kategorien
         description = None
