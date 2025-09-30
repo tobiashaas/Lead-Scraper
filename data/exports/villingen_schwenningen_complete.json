@@ -1,0 +1,2891 @@
+[
+  {
+    "company_name": "Bode + Christ Elektrotechnik GmbH",
+    "website": "http://www.bodechrist.de/",
+    "phone": "+49772195230",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Ihr regionaler Partner für Elektro, Sicherheit und Klima",
+    "scraped_at": "2025-09-30T23:40:09.338960",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/060691303B43117963/bode-christ-elektrotechnik-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.338965",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/060691303B43117963/bode-christ-elektrotechnik-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:18.314768",
+        "fields": [
+          "description",
+          "social_media",
+          "website"
+        ]
+      },
+      {
+        "name": "website_scraping",
+        "url": "http://www.bodechrist.de/",
+        "scraped_at": "2025-09-30T23:44:20.257122",
+        "fields": [
+          "directors",
+          "register_number"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": {
+      "facebook": "https://www.facebook.com/bodechrist/",
+      "instagram": "https://www.instagram.com/bodechristgmbh/"
+    },
+    "additional_phones": [
+      "+49772195230"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "Elektriker, Sicherheitstechnik & Telefonanlagen",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "01.09.2025"
+    },
+    "website_data": {
+      "impressum": {
+        "directors": [
+          "Thomas Christ",
+          "Dieter Christ"
+        ],
+        "register_number": "HRB 601010",
+        "register_court": null,
+        "vat_id": null
+      },
+      "team": [],
+      "emails": [],
+      "phones": [
+        "+49-7721-95230",
+        "{$telefonnrlink}"
+      ]
+    }
+  },
+  {
+    "company_name": "Hoerco expert PC",
+    "website": "https://www.expert.de",
+    "phone": "+497721841135",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78048",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.339392",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B110756255/hoerco-expert-pc.html",
+        "scraped_at": "2025-09-30T23:40:09.339394",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B110756255/hoerco-expert-pc.html",
+        "scraped_at": "2025-09-30T23:40:23.210673",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497721841135"
+    ],
+    "additional_emails": [
+      "info@hoerco.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Computerservice & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "04.07.2025"
+    },
+    "website_data": {
+      "impressum": null,
+      "team": [],
+      "emails": [],
+      "phones": []
+    }
+  },
+  {
+    "company_name": "all 4 net GmbH",
+    "website": "http://www.all4net.de/",
+    "phone": "+4977208570",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78056",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.339752",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B43283981/all-4-net-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.339753",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B43283981/all-4-net-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:30.838552",
+        "fields": [
+          "description",
+          "website"
+        ]
+      },
+      {
+        "name": "website_scraping",
+        "url": "http://www.all4net.de/",
+        "scraped_at": "2025-09-30T23:44:22.863423",
+        "fields": [
+          "additional_emails",
+          "directors",
+          "register_number"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977208570"
+    ],
+    "additional_emails": [
+      "info@all4net.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Computerservice & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "12.11.2024"
+    },
+    "website_data": {
+      "impressum": {
+        "directors": [],
+        "register_number": "HRB 6683",
+        "register_court": null,
+        "vat_id": null
+      },
+      "team": [],
+      "emails": [
+        "info@all4net.de"
+      ],
+      "phones": [
+        "0615153940",
+        "07720/857-0",
+        "06151/5394-0"
+      ]
+    }
+  },
+  {
+    "company_name": "Mada Marx Datentechnik GmbH Datentechnik",
+    "website": "https://www.mada.de",
+    "phone": "+49772188480",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.340109",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B28064651/mada-marx-datentechnik-gmbh-datentechnik.html",
+        "scraped_at": "2025-09-30T23:40:09.340110",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B28064651/mada-marx-datentechnik-gmbh-datentechnik.html",
+        "scraped_at": "2025-09-30T23:40:35.508477",
+        "fields": [
+          "description",
+          "website"
+        ]
+      },
+      {
+        "name": "website_scraping",
+        "url": "https://www.mada.de",
+        "scraped_at": "2025-09-30T23:44:30.801524",
+        "fields": [
+          "additional_emails",
+          "directors",
+          "register_number"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772188480"
+    ],
+    "additional_emails": [
+      "info@mada.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Hersteller & EDV-Anlagen Vertrieb",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "11.08.2025"
+    },
+    "website_data": {
+      "impressum": {
+        "directors": [
+          "Patrick Marx"
+        ],
+        "register_number": "HRB 600",
+        "register_court": "Freiburg",
+        "vat_id": null
+      },
+      "team": [],
+      "emails": [
+        "info@mada.de",
+        "heidi.braun@mada.de",
+        "marcel.rohrer@mada.de",
+        "annalena.weisser@mada.de",
+        "anette.kantimm@mada.de",
+        "doris.sowieja@mada.de",
+        "gaby.gronmaier@mada.de",
+        "janine.przywara@mada.de",
+        "jessica.neininger@mada.de",
+        "kimberly.gruber@mada.de"
+      ],
+      "phones": [
+        "+49772188480"
+      ]
+    }
+  },
+  {
+    "company_name": "Control Systems GmbH & Co. KG IT-Lösungen",
+    "website": "https://control-systems.de",
+    "phone": "+497721997760",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78048",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.340468",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B111700786/control-systems-gmbh-co-kg-it-loesungen.html",
+        "scraped_at": "2025-09-30T23:40:09.340469",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B111700786/control-systems-gmbh-co-kg-it-loesungen.html",
+        "scraped_at": "2025-09-30T23:40:40.103498",
+        "fields": [
+          "description",
+          "website"
+        ]
+      },
+      {
+        "name": "website_scraping",
+        "url": "https://control-systems.de",
+        "scraped_at": "2025-09-30T23:44:31.601467",
+        "fields": [
+          "additional_emails",
+          "directors",
+          "register_number"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497721997760"
+    ],
+    "additional_emails": [
+      "info@control-systems.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Vertrieb & Hersteller",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "02.08.2025"
+    },
+    "website_data": {
+      "impressum": {
+        "directors": [
+          "Hansjörg Zucker\r\n\n\r\n\tKontakt"
+        ],
+        "register_number": "HRB 602072",
+        "register_court": "Freiburg",
+        "vat_id": null
+      },
+      "team": [],
+      "emails": [
+        "sales@control-systems.de"
+      ],
+      "phones": []
+    }
+  },
+  {
+    "company_name": "Epsilon Gesellschaft für tech. Informatik m.b.H. IT-Systemlösungen",
+    "website": "https://epsilon-vs.de",
+    "phone": "+497721887760",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78048",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.340810",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331035B26189411/epsilon-gesellschaft-fuer-tech-informatik-m-b-h-it-systemloesungen.html",
+        "scraped_at": "2025-09-30T23:40:09.340811",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331035B26189411/epsilon-gesellschaft-fuer-tech-informatik-m-b-h-it-systemloesungen.html",
+        "scraped_at": "2025-09-30T23:40:47.801184",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497721887760"
+    ],
+    "additional_emails": [
+      "info@epsilon-vs.de"
+    ],
+    "company_info": null,
+    "industry": "Computerhändler, Computer & Computerzubehör",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "08.11.2024"
+    },
+    "website_data": {
+      "impressum": null,
+      "team": [],
+      "emails": [],
+      "phones": []
+    }
+  },
+  {
+    "company_name": "Mate iT GmbH",
+    "website": "https://www.mateit.de",
+    "phone": "+4977218078009",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78048",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.341154",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/061752713B107328890/mate-it-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.341155",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/061752713B107328890/mate-it-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:52.557550",
+        "fields": [
+          "description",
+          "website"
+        ]
+      },
+      {
+        "name": "website_scraping",
+        "url": "https://www.mateit.de",
+        "scraped_at": "2025-09-30T23:44:32.654176",
+        "fields": [
+          "additional_emails",
+          "directors",
+          "register_number"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977218078009"
+    ],
+    "additional_emails": [
+      "matthias.grdan@mateit.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Consulting, IT-Dienstleistung & Computerservice",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "25.10.2024"
+    },
+    "website_data": {
+      "impressum": {
+        "directors": [],
+        "register_number": null,
+        "register_court": "Freiburg",
+        "vat_id": null
+      },
+      "team": [],
+      "emails": [
+        "team@mateit.de"
+      ],
+      "phones": [
+        "+4977218078009"
+      ]
+    }
+  },
+  {
+    "company_name": "MV Solution GmbH",
+    "website": "https://www.vsqloud.de",
+    "phone": "+4977212028733",
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.341516",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B102345967/mv-solution-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.341516",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B102345967/mv-solution-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:57.411654",
+        "fields": [
+          "description",
+          "website"
+        ]
+      },
+      {
+        "name": "website_scraping",
+        "url": "https://www.vsqloud.de",
+        "scraped_at": "2025-09-30T23:44:33.126446",
+        "fields": [
+          "additional_emails",
+          "directors",
+          "register_number"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977212028733",
+      "+491628753946"
+    ],
+    "additional_emails": [
+      "info@vsqloud.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "02.08.2025"
+    },
+    "website_data": {
+      "impressum": {
+        "directors": [
+          "Mauricio Schäpers"
+        ],
+        "register_number": "HRB 258842",
+        "register_court": "München",
+        "vat_id": null
+      },
+      "team": [],
+      "emails": [
+        "info@vsqloud.de"
+      ],
+      "phones": [
+        "+49 89 122281020"
+      ]
+    }
+  },
+  {
+    "company_name": "Schuler IT Betreuung, Frank Schuler",
+    "website": "https://www.itschuler.de",
+    "phone": "+4977209413900",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78056",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.341855",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B42822425/schuler-it-betreuung-frank-schuler.html",
+        "scraped_at": "2025-09-30T23:40:09.341855",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B42822425/schuler-it-betreuung-frank-schuler.html",
+        "scraped_at": "2025-09-30T23:41:02.089532",
+        "fields": [
+          "description",
+          "website"
+        ]
+      },
+      {
+        "name": "website_scraping",
+        "url": "https://www.itschuler.de",
+        "scraped_at": "2025-09-30T23:44:33.864970",
+        "fields": [
+          "additional_emails"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977209413900"
+    ],
+    "additional_emails": [
+      "info@it-schuler.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Dienstleistung, EDV & Computerhändler",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "25.05.2025"
+    },
+    "website_data": {
+      "impressum": null,
+      "team": [],
+      "emails": [
+        "info@it-schuler.de"
+      ],
+      "phones": [
+        "+4977209413900",
+        "+4917624067753"
+      ]
+    }
+  },
+  {
+    "company_name": "Syylex AG Datenarchivierung",
+    "website": "http://www.syylex.com",
+    "phone": "+4977219447480",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78048",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.342194",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B104533404/syylex-ag-datenarchivierung.html",
+        "scraped_at": "2025-09-30T23:40:09.342195",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B104533404/syylex-ag-datenarchivierung.html",
+        "scraped_at": "2025-09-30T23:41:07.044368",
+        "fields": [
+          "description",
+          "social_media",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": {
+      "twitter": "http://www.syylex.com"
+    },
+    "additional_phones": [
+      "+4977219447480"
+    ],
+    "additional_emails": [
+      "info@syylex.com"
+    ],
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Computerservice & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "27.10.2024"
+    },
+    "website_data": {
+      "impressum": null,
+      "team": [],
+      "emails": [],
+      "phones": []
+    }
+  },
+  {
+    "company_name": "Hahn-Schickard-Gesellschaft für angewandte Forschung e.V. Inst. für Mikro- u. Informationstechnik",
+    "website": "https://www.hahn-schickard.de",
+    "phone": "+4977219430",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.342516",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B3186060/hahn-schickard-gesellschaft-fuer-angewandte-forschung-e-v-inst-fuer-mikro-u-informationstechnik.html",
+        "scraped_at": "2025-09-30T23:40:09.342517",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B3186060/hahn-schickard-gesellschaft-fuer-angewandte-forschung-e-v-inst-fuer-mikro-u-informationstechnik.html",
+        "scraped_at": "2025-09-30T23:41:11.827303",
+        "fields": [
+          "description",
+          "social_media",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": {
+      "facebook": "https://facebook.com/hsgimit"
+    },
+    "additional_phones": [
+      "+4977219430"
+    ],
+    "additional_emails": [
+      "claudia.feith@hahn-schickard.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Computerservice & PC-Reparatur",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "03.08.2025"
+    }
+  },
+  {
+    "company_name": "Maier Datensysteme GmbH",
+    "website": "https://maier-datensysteme-vs.de",
+    "phone": "+4977219976490",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.342890",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/121866635B43516743/maier-datensysteme-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.342892",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/121866635B43516743/maier-datensysteme-gmbh.html",
+        "scraped_at": "2025-09-30T23:41:16.627340",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977219976490"
+    ],
+    "additional_emails": [
+      "info@maier-datensysteme-vs.de"
+    ],
+    "company_info": null,
+    "industry": "EDV-Anlagen Vertrieb, EDV & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "09.08.2025"
+    }
+  },
+  {
+    "company_name": "mp IT-SOLUTIONS",
+    "website": "http://www.mpit-solutions.de",
+    "phone": "+491736543001",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78054",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.343249",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B102275927/mp-it-solutions.html",
+        "scraped_at": "2025-09-30T23:40:09.343250",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B102275927/mp-it-solutions.html",
+        "scraped_at": "2025-09-30T23:41:21.439084",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+491736543001"
+    ],
+    "additional_emails": [
+      "service@mpit-solutions.de"
+    ],
+    "company_info": null,
+    "industry": "Computerservice, IT-Dienstleistung & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "28.10.2024"
+    }
+  },
+  {
+    "company_name": "PrimeXSystems Computerelektronik",
+    "website": "http://www.primex-systems.de",
+    "phone": "+497720989166",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78054",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.343593",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050335115B43147241/primexsystems-computerelektronik.html",
+        "scraped_at": "2025-09-30T23:40:09.343594",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050335115B43147241/primexsystems-computerelektronik.html",
+        "scraped_at": "2025-09-30T23:41:26.198574",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497720989166"
+    ],
+    "additional_emails": [
+      "info@pxsweb.de"
+    ],
+    "company_info": null,
+    "industry": "Systemhaus, IT-Consulting & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "28.10.2024"
+    }
+  },
+  {
+    "company_name": "Scalaris AG",
+    "website": "http://www.scalaris.com",
+    "phone": "+49772191750",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78050",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.343923",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B27715125/scalaris-ag.html",
+        "scraped_at": "2025-09-30T23:40:09.343924",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B27715125/scalaris-ag.html",
+        "scraped_at": "2025-09-30T23:41:31.049347",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772191750"
+    ],
+    "additional_emails": [
+      "info@glynt.com"
+    ],
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Computerservice & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "18.12.2024"
+    }
+  },
+  {
+    "company_name": "APS delta GmbH",
+    "website": "https://aps-delta.de",
+    "phone": "+49772199260",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78048",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.344262",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/061755491B29529768/aps-delta-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.344263",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/061755491B29529768/aps-delta-gmbh.html",
+        "scraped_at": "2025-09-30T23:41:35.941540",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772199260"
+    ],
+    "additional_emails": [
+      "info@aps-delta.de"
+    ],
+    "company_info": null,
+    "industry": "Unternehmensberatung, Computerhändler & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "10.08.2025"
+    }
+  },
+  {
+    "company_name": "Hochzeitsdj PartydJ Toni aus Villingen-Schwenningen",
+    "website": "http://www.tonis-party.de",
+    "phone": "+4977219461045",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78056",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.344657",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/052091250B38245832/hochzeitsdj-partydj-toni-aus-villingen-schwenningen.html",
+        "scraped_at": "2025-09-30T23:40:09.344657",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/052091250B38245832/hochzeitsdj-partydj-toni-aus-villingen-schwenningen.html",
+        "scraped_at": "2025-09-30T23:41:40.775459",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977219461045"
+    ],
+    "additional_emails": [
+      "helpdesk@tbs-multimedia.com"
+    ],
+    "company_info": null,
+    "industry": "EDV, IT-Dienstleistung & Alleinunterhalter",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "06.08.2025"
+    }
+  },
+  {
+    "company_name": "Computer-Service A.Hirschle Computerservice",
+    "website": "http://www.hirschle-edv.de",
+    "phone": "+4977212049377",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78050",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.345084",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/052101026B101008052/computer-service-a-hirschle-computerservice.html",
+        "scraped_at": "2025-09-30T23:40:09.345089",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/052101026B101008052/computer-service-a-hirschle-computerservice.html",
+        "scraped_at": "2025-09-30T23:41:45.503722",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977212049377"
+    ],
+    "additional_emails": [
+      "lois@hirschle-edv.de"
+    ],
+    "company_info": null,
+    "industry": "Computer, Computerhändler & Computerzubehör",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "13.08.2025"
+    }
+  },
+  {
+    "company_name": "EDV Höhne GmbH",
+    "website": "https://www.edv-hoehne.de",
+    "phone": "+49772184360",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78050",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.345429",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050335115B26222227/edv-hoehne-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.345430",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050335115B26222227/edv-hoehne-gmbh.html",
+        "scraped_at": "2025-09-30T23:41:50.191897",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772184360"
+    ],
+    "additional_emails": [
+      "info@edv-hoehne.de"
+    ],
+    "company_info": null,
+    "industry": "Systemhaus, Computerservice & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "18.03.2025"
+    }
+  },
+  {
+    "company_name": "GTS Computer GmbH",
+    "website": "http://www.gts-computer.de/",
+    "phone": "+4977209949190",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78054",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.345772",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331035B37465244/gts-computer-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.345773",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331035B37465244/gts-computer-gmbh.html",
+        "scraped_at": "2025-09-30T23:41:54.943901",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977209949190"
+    ],
+    "additional_emails": [
+      "service@gts-computer.de"
+    ],
+    "company_info": null,
+    "industry": "Computerhändler, Computer & Computerzubehör",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "06.11.2024"
+    }
+  },
+  {
+    "company_name": "IT-Service Andreas Tunnat",
+    "website": "https://www.tunnat.net",
+    "phone": "+4977219166169",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.346115",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331048B104698873/it-service-andreas-tunnat.html",
+        "scraped_at": "2025-09-30T23:40:09.346116",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331048B104698873/it-service-andreas-tunnat.html",
+        "scraped_at": "2025-09-30T23:41:59.656622",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977219166169"
+    ],
+    "additional_emails": [
+      "it-service@tunnat.net"
+    ],
+    "company_info": null,
+    "industry": "Computerservice, IT-Dienstleistung & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "15.05.2025"
+    }
+  },
+  {
+    "company_name": "Ottscho IT-Service",
+    "website": "https://www.ottscho-it-service.de",
+    "phone": "+4977219160572",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78050",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.346457",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331048B102524123/ottscho-it-service.html",
+        "scraped_at": "2025-09-30T23:40:09.346458",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331048B102524123/ottscho-it-service.html",
+        "scraped_at": "2025-09-30T23:42:04.420116",
+        "fields": [
+          "description",
+          "social_media",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": {
+      "facebook": "https://facebook.com/pages/ottscho-it/1508233319420544"
+    },
+    "additional_phones": [
+      "+4977219160572"
+    ],
+    "additional_emails": [
+      "support@ottscho.de"
+    ],
+    "company_info": null,
+    "industry": "Computerservice, IT-Dienstleistung & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "28.10.2024"
+    }
+  },
+  {
+    "company_name": "s.h.a. Meß- und Datentechnik GmbH",
+    "website": "https://www.sha-gmbh.de",
+    "phone": "+49772184340",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78048",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.346801",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/061752713B28303940/s-h-a-mess-und-datentechnik-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.346802",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/061752713B28303940/s-h-a-mess-und-datentechnik-gmbh.html",
+        "scraped_at": "2025-09-30T23:42:09.353105",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772184340"
+    ],
+    "additional_emails": [
+      "info@sha-gmbh.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Consulting, Regeltechnik & Messtechnik",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "30.06.2025"
+    }
+  },
+  {
+    "company_name": "SOCO GmbH EDV-Berater",
+    "website": "http://www.furiosshop.de",
+    "phone": "+4977216970080",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78050",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.347176",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050335115B42020853/soco-gmbh-edv-berater.html",
+        "scraped_at": "2025-09-30T23:40:09.347177",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050335115B42020853/soco-gmbh-edv-berater.html",
+        "scraped_at": "2025-09-30T23:42:14.229264",
+        "fields": [
+          "description",
+          "social_media",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": {
+      "facebook": "https://facebook.com/socogmbh"
+    },
+    "additional_phones": [
+      "+4977216970080"
+    ],
+    "additional_emails": [
+      "info@softwareundcomputer.de"
+    ],
+    "company_info": null,
+    "industry": "Systemhaus, IT-Dienstleistung & Hersteller",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "08.09.2025"
+    }
+  },
+  {
+    "company_name": "FFS.net Communications IT- & PC-Service Florian Fuchs-Steigerwald",
+    "website": "https://www.ffs.net",
+    "phone": "+497720994851",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78054",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.347522",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B112639651/ffs-net-communications-it-pc-service-florian-fuchs-steigerwald.html",
+        "scraped_at": "2025-09-30T23:40:09.347522",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B112639651/ffs-net-communications-it-pc-service-florian-fuchs-steigerwald.html",
+        "scraped_at": "2025-09-30T23:42:19.042636",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497720994851"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "IT-Dienstleistung & Kommunikationsagentur",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "22.07.2025"
+    }
+  },
+  {
+    "company_name": "adventiv GmbH",
+    "website": "http://www.adventiv.de",
+    "phone": "+49772194910",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.347850",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/061752713B100857223/adventiv-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.347850",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/061752713B100857223/adventiv-gmbh.html",
+        "scraped_at": "2025-09-30T23:42:23.661593",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772194910"
+    ],
+    "additional_emails": [
+      "consulting@adventiv.de"
+    ],
+    "company_info": null,
+    "industry": "IT-Consulting, Computerservice & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "29.10.2024"
+    }
+  },
+  {
+    "company_name": "Andreas Degen Software & Systeme",
+    "website": "http://www.andreas-degen.com/",
+    "phone": "+4977219167880",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.348178",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/052094857B100969561/andreas-degen-software-systeme.html",
+        "scraped_at": "2025-09-30T23:40:09.348179",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/052094857B100969561/andreas-degen-software-systeme.html",
+        "scraped_at": "2025-09-30T23:42:28.647195",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977219167880"
+    ],
+    "additional_emails": [
+      "info@andreas-degen.com"
+    ],
+    "company_info": null,
+    "industry": "Computerservice, Software & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "06.11.2024"
+    }
+  },
+  {
+    "company_name": "Bernd Anderle",
+    "website": "https://www.andits.de",
+    "phone": "+497720958858",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78056",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.348509",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331035B53653951/bernd-anderle.html",
+        "scraped_at": "2025-09-30T23:40:09.348510",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331035B53653951/bernd-anderle.html",
+        "scraped_at": "2025-09-30T23:42:33.637614",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497720958858"
+    ],
+    "additional_emails": [
+      "info@andits.de"
+    ],
+    "company_info": null,
+    "industry": "Computerhändler, Internetservice & Computerservice",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "29.12.2024"
+    }
+  },
+  {
+    "company_name": "EDV Höhne GmbH EDV-Org.",
+    "website": "https://www.edv-hoehne.de",
+    "phone": "+49772184360",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78048",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.348860",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/052094857B110756261/edv-hoehne-gmbh-edv-org.html",
+        "scraped_at": "2025-09-30T23:40:09.348861",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/052094857B110756261/edv-hoehne-gmbh-edv-org.html",
+        "scraped_at": "2025-09-30T23:42:38.508362",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772184360"
+    ],
+    "additional_emails": [
+      "info@edv-hoehne.de"
+    ],
+    "company_info": null,
+    "industry": "Software, IT-Dienstleistung & Computerservice",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "18.03.2025"
+    }
+  },
+  {
+    "company_name": "Professional Services GmbH Datentechnik",
+    "website": "https://www.proservices-gmbh.de",
+    "phone": "+497720809790",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78054",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.349189",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/250776428B3190173/professional-services-gmbh-datentechnik.html",
+        "scraped_at": "2025-09-30T23:40:09.349190",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/250776428B3190173/professional-services-gmbh-datentechnik.html",
+        "scraped_at": "2025-09-30T23:42:43.200378",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497720809790"
+    ],
+    "additional_emails": [
+      "info@proservices-gmbh.de"
+    ],
+    "company_info": null,
+    "industry": "Datentechnik-Hersteller, Software & Systemhaus",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "25.12.2024"
+    }
+  },
+  {
+    "company_name": "Andreas Liberka EDV Service",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+4977209932240",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78054",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.349516",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B54126539/andreas-liberka-edv-service.html",
+        "scraped_at": "2025-09-30T23:40:09.349516",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B54126539/andreas-liberka-edv-service.html",
+        "scraped_at": "2025-09-30T23:42:47.973623",
+        "fields": [
+          "description",
+          "social_media",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": {
+      "facebook": "https://facebook.com/edv.service.liberka"
+    },
+    "additional_phones": [
+      "+4977209932240"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Computerservice & Webdesign",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "23.03.2025"
+    }
+  },
+  {
+    "company_name": "Computer Service Gerhard Bartsch",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+497720994241",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78054",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.349853",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331035B42038346/computer-service-gerhard-bartsch.html",
+        "scraped_at": "2025-09-30T23:40:09.349854",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331035B42038346/computer-service-gerhard-bartsch.html",
+        "scraped_at": "2025-09-30T23:42:52.782782",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497720994241"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "Computerhändler, EDV-Geräte-Kundendienst & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "03.03.2023"
+    }
+  },
+  {
+    "company_name": "PC-HIDI",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+4977203040591",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78056",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.350184",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B101966145/pc-hidi.html",
+        "scraped_at": "2025-09-30T23:40:09.350184",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B101966145/pc-hidi.html",
+        "scraped_at": "2025-09-30T23:42:57.493516",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977203040591"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Computerservice & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "04.01.2023"
+    }
+  },
+  {
+    "company_name": "Token Informatik & Consulting GmbH Datenverarbeitung",
+    "website": "http://www.token.de",
+    "phone": "+49772192950",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.350514",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B54363643/token-informatik-consulting-gmbh-datenverarbeitung.html",
+        "scraped_at": "2025-09-30T23:40:09.350515",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B54363643/token-informatik-consulting-gmbh-datenverarbeitung.html",
+        "scraped_at": "2025-09-30T23:43:02.457280",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772192950"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Software & Systemhaus",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "15.03.2025"
+    }
+  },
+  {
+    "company_name": "Wienen IT Business Solutions GmbH",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+4977218078933",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.350842",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B108794936/wienen-it-business-solutions-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.350843",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B108794936/wienen-it-business-solutions-gmbh.html",
+        "scraped_at": "2025-09-30T23:43:07.345523",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977218078933"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Computerservice & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "03.03.2023"
+    }
+  },
+  {
+    "company_name": "Wienen IT Business Solutions GmbH Fax",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+4977218078934",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.351167",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B108794937/wienen-it-business-solutions-gmbh-fax.html",
+        "scraped_at": "2025-09-30T23:40:09.351168",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B108794937/wienen-it-business-solutions-gmbh-fax.html",
+        "scraped_at": "2025-09-30T23:43:12.033915",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977218078934"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "IT-Dienstleistung, Computerservice & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "03.03.2023"
+    }
+  },
+  {
+    "company_name": "WRS PC-Service & Dokumentationen EDV-Systeme",
+    "website": "http://www.wrs-pc.de",
+    "phone": "+49772127763",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78048",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.351532",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B27624436/wrs-pc-service-dokumentationen-edv-systeme.html",
+        "scraped_at": "2025-09-30T23:40:09.351532",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B27624436/wrs-pc-service-dokumentationen-edv-systeme.html",
+        "scraped_at": "2025-09-30T23:43:16.796424",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772127763"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "Computerservice, IT-Dienstleistung & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "10.11.2024"
+    }
+  },
+  {
+    "company_name": "Netz 5 Ws EDV Computer & Dienstleistung Computerdienstleistung",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+4977212064755",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78050",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.351888",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/250776433B53630983/netz-5-ws-edv-computer-dienstleistung-computerdienstleistung.html",
+        "scraped_at": "2025-09-30T23:40:09.351889",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/250776433B53630983/netz-5-ws-edv-computer-dienstleistung-computerdienstleistung.html",
+        "scraped_at": "2025-09-30T23:43:21.839720",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977212064755"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "Computerzubehör-Hersteller, Computerhändler & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "03.03.2023"
+    }
+  },
+  {
+    "company_name": "ACS Netcom Computer Service",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+4977214048195",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78050",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.352223",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331048B101024507/acs-netcom-computer-service.html",
+        "scraped_at": "2025-09-30T23:40:09.352224",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050331048B101024507/acs-netcom-computer-service.html",
+        "scraped_at": "2025-09-30T23:43:26.684531",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977214048195"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "Computerservice, IT-Dienstleistung & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "16.03.2025"
+    }
+  },
+  {
+    "company_name": "BDT Büro- und Datentechnik GmbH & Co. KG",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+4977219929214",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.352560",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B31327192/bdt-buero-und-datentechnik-gmbh-co-kg.html",
+        "scraped_at": "2025-09-30T23:40:09.352561",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B31327192/bdt-buero-und-datentechnik-gmbh-co-kg.html",
+        "scraped_at": "2025-09-30T23:43:31.537546",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977219929214"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "Computerservice, EDV & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "29.06.2021"
+    }
+  },
+  {
+    "company_name": "Datenservice und Hausverwaltung GmbH",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+497720997440",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78054",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.352959",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/060812249B54025061/datenservice-und-hausverwaltung-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.352964",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/060812249B54025061/datenservice-und-hausverwaltung-gmbh.html",
+        "scraped_at": "2025-09-30T23:43:36.426754",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497720997440"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "Hausverwaltung, Computerservice & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "13.05.2024"
+    }
+  },
+  {
+    "company_name": "OrtsNet Internet- u. EDV-Dienstleistungen",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+497721508060",
+    "email": null,
+    "address": null,
+    "city": "Villingen-Schwenningen",
+    "postal_code": "78052",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.353313",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B26221961/ortsnet-internet-u-edv-dienstleistungen.html",
+        "scraped_at": "2025-09-30T23:40:09.353318",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/villingen-schwenningen/050332715B26221961/ortsnet-internet-u-edv-dienstleistungen.html",
+        "scraped_at": "2025-09-30T23:43:41.189520",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497721508060"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "Computerservice, EDV & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "29.06.2021"
+    }
+  },
+  {
+    "company_name": "IT-Service in der Umgebung",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T23:40:09.353538",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/suche?what=IT-Service&where=Villingen-Schwenningen&firmen=1&personen=0",
+        "scraped_at": "2025-09-30T23:40:09.353539",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "postal_code"
+        ]
+      }
+    ]
+  },
+  {
+    "company_name": "Rudolf-Born-Service Computerdrucksysteme",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+49772150105",
+    "email": null,
+    "address": null,
+    "city": "Mönchweiler",
+    "postal_code": "78087",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.353995",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/moenchweiler/052094857B26221964/rudolf-born-service-computerdrucksysteme.html",
+        "scraped_at": "2025-09-30T23:40:09.353998",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/moenchweiler/052094857B26221964/rudolf-born-service-computerdrucksysteme.html",
+        "scraped_at": "2025-09-30T23:43:45.989542",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772150105"
+    ],
+    "additional_emails": [
+      "info@systemhaus24.de"
+    ],
+    "company_info": null,
+    "industry": "Software, IT-Dienstleistung & Computerservice",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "05.08.2025"
+    }
+  },
+  {
+    "company_name": "(Karl) Achim Schmitz-Computer IT-Service",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+491794658205",
+    "email": null,
+    "address": null,
+    "city": "Bad Dürrheim",
+    "postal_code": "78073",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.354381",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/bad-duerrheim-schwarzwald/050332715B102308682/karl-achim-schmitz-computer-it-service.html",
+        "scraped_at": "2025-09-30T23:40:09.354382",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/bad-duerrheim-schwarzwald/050332715B102308682/karl-achim-schmitz-computer-it-service.html",
+        "scraped_at": "2025-09-30T23:43:50.940978",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+491794658205"
+    ],
+    "additional_emails": [
+      "support@schmitz-computer.de"
+    ],
+    "company_info": null,
+    "industry": "Computerservice, IT-Dienstleistung & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "06.03.2023"
+    }
+  },
+  {
+    "company_name": "Ruth Heckel PC-Trainerin",
+    "website": "https://www.ekomi.de/bewertungen-11880-com.html",
+    "phone": "+4977269393790",
+    "email": null,
+    "address": null,
+    "city": "Bad Dürrheim",
+    "postal_code": "78073",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.354744",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/bad-duerrheim-schwarzwald/050332715B101456646/ruth-heckel-pc-trainerin.html",
+        "scraped_at": "2025-09-30T23:40:09.354745",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/bad-duerrheim-schwarzwald/050332715B101456646/ruth-heckel-pc-trainerin.html",
+        "scraped_at": "2025-09-30T23:43:55.610881",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977269393790"
+    ],
+    "additional_emails": null,
+    "company_info": null,
+    "industry": "Computerservice, EDV & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "29.06.2021"
+    }
+  },
+  {
+    "company_name": "Daten Service GmbH",
+    "website": "http://daten-service-bd.de",
+    "phone": "+4977269394560",
+    "email": null,
+    "address": null,
+    "city": "Bad Dürrheim",
+    "postal_code": "78073",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.355121",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/bad-duerrheim-schwarzwald/050332715B43517311/daten-service-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.355122",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/bad-duerrheim-schwarzwald/050332715B43517311/daten-service-gmbh.html",
+        "scraped_at": "2025-09-30T23:44:00.354401",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4977269394560"
+    ],
+    "additional_emails": [
+      "info@daten-service-bd.de"
+    ],
+    "company_info": null,
+    "industry": "Computerservice, IT-Dienstleistung & PC-Service",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "19.12.2024"
+    }
+  },
+  {
+    "company_name": "SR SYSTEM-ELEKTRONIK GmbH",
+    "website": "http://www.sr-line.com/",
+    "phone": "+49772892680",
+    "email": null,
+    "address": null,
+    "city": "Niedereschach",
+    "postal_code": "78078",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.355490",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/niedereschach/251092496B27419584/sr-system-elektronik-gmbh.html",
+        "scraped_at": "2025-09-30T23:40:09.355491",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/niedereschach/251092496B27419584/sr-system-elektronik-gmbh.html",
+        "scraped_at": "2025-09-30T23:44:05.112078",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49772892680"
+    ],
+    "additional_emails": [
+      "info@satomec.ch"
+    ],
+    "company_info": null,
+    "industry": "Industrieautomation & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "26.09.2025"
+    }
+  },
+  {
+    "company_name": "RP Photonics Consulting GmbH Lasertechnologie",
+    "website": "https://www.rp-photonics.com",
+    "phone": "073",
+    "email": null,
+    "address": null,
+    "city": "Bad Dürrheim",
+    "postal_code": "78073",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.355848",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/bad-duerrheim-schwarzwald/061752713B101005663/rp-photonics-consulting-gmbh-lasertechnologie.html",
+        "scraped_at": "2025-09-30T23:40:09.355849",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/bad-duerrheim-schwarzwald/061752713B101005663/rp-photonics-consulting-gmbh-lasertechnologie.html",
+        "scraped_at": "2025-09-30T23:44:09.818399",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": null,
+    "additional_emails": [
+      "info@rp-photonics.com"
+    ],
+    "company_info": null,
+    "industry": "IT-Consulting, Computerservice & IT-Dienstleistung",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "18.12.2024"
+    }
+  },
+  {
+    "company_name": "Görsch Computer Peter Görsch EDV-Systemdienstleistungen",
+    "website": "http://www.goersch-computer.de/",
+    "phone": "+497720956303",
+    "email": null,
+    "address": null,
+    "city": "Dauchingen",
+    "postal_code": "78083",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.356217",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/dauchingen/050331035B28262996/goersch-computer-peter-goersch-edv-systemdienstleistungen.html",
+        "scraped_at": "2025-09-30T23:40:09.356217",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/dauchingen/050331035B28262996/goersch-computer-peter-goersch-edv-systemdienstleistungen.html",
+        "scraped_at": "2025-09-30T23:44:14.482419",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+497720956303"
+    ],
+    "additional_emails": [
+      "info@goersch-computer.de"
+    ],
+    "company_info": null,
+    "industry": "Computerhändler, IT-Dienstleistung & Computerservice",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "04.08.2025"
+    }
+  },
+  {
+    "company_name": "Wolfgang Renoth Datenservice",
+    "website": "https://hps-datenservice.de",
+    "phone": "+49770591030",
+    "email": null,
+    "address": null,
+    "city": "Donaueschingen",
+    "postal_code": "78166",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T23:40:09.356590",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/branchenbuch/donaueschingen/050331035B28144634/wolfgang-renoth-datenservice.html",
+        "scraped_at": "2025-09-30T23:40:09.356591",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "phone",
+          "postal_code"
+        ]
+      },
+      {
+        "name": "11880_detail",
+        "url": "https://www.11880.com/branchenbuch/donaueschingen/050331035B28144634/wolfgang-renoth-datenservice.html",
+        "scraped_at": "2025-09-30T23:44:19.226095",
+        "fields": [
+          "description",
+          "website"
+        ]
+      }
+    ],
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49770591030"
+    ],
+    "additional_emails": [
+      "info@hpswin.de"
+    ],
+    "company_info": null,
+    "industry": "Computerhändler, Systemhaus & EDV",
+    "locations": null,
+    "verified": {
+      "owner_verified": true
+    },
+    "metadata": {
+      "entry_date": "09.08.2025"
+    }
+  },
+  {
+    "company_name": "Noch nicht das Richtige gefunden?",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T23:40:09.356673",
+    "sources": [
+      {
+        "name": "11880",
+        "url": "https://www.11880.com/suche?what=IT-Service&where=Villingen-Schwenningen&firmen=1&personen=0",
+        "scraped_at": "2025-09-30T23:40:09.356674",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "postal_code"
+        ]
+      }
+    ]
+  }
+]

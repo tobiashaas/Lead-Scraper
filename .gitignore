@@ -27,8 +27,8 @@ ENV/
 .venv
 
 # Environment Variables
-.env
-.env.local
+# .env
+# .env.local
 
 # IDE
 .vscode/
@@ -47,7 +47,6 @@ data/*.csv
 data/*.json
 data/*.db
 data/*.sqlite
-data/exports/
 
 # Database
 *.db

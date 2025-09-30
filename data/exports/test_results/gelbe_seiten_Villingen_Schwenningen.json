@@ -1,0 +1,146 @@
+[
+  {
+    "company_name": "FERCHAU GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:51:49.779483",
+    "sources": [
+      {
+        "name": "gelbe_seiten",
+        "url": "https://www.gelbeseiten.de/Suche/IT-Service/Villingen-Schwenningen",
+        "scraped_at": "2025-09-30T22:51:49.779488",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "postal_code"
+        ]
+      }
+    ]
+  },
+  {
+    "company_name": "Eichmann Technik-Service",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:51:49.779744",
+    "sources": [
+      {
+        "name": "gelbe_seiten",
+        "url": "https://www.gelbeseiten.de/Suche/IT-Service/Villingen-Schwenningen",
+        "scraped_at": "2025-09-30T22:51:49.779745",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "postal_code"
+        ]
+      }
+    ]
+  },
+  {
+    "company_name": "Daten Service GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:51:49.779926",
+    "sources": [
+      {
+        "name": "gelbe_seiten",
+        "url": "https://www.gelbeseiten.de/Suche/IT-Service/Villingen-Schwenningen",
+        "scraped_at": "2025-09-30T22:51:49.779927",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "postal_code"
+        ]
+      }
+    ]
+  },
+  {
+    "company_name": "Rehling Services",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:51:49.780124",
+    "sources": [
+      {
+        "name": "gelbe_seiten",
+        "url": "https://www.gelbeseiten.de/Suche/IT-Service/Villingen-Schwenningen",
+        "scraped_at": "2025-09-30T22:51:49.780124",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "postal_code"
+        ]
+      }
+    ]
+  },
+  {
+    "company_name": "FFS.net Communications IT- & PC-Service Florian Fuchs-Steigerwald",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:51:49.780319",
+    "sources": [
+      {
+        "name": "gelbe_seiten",
+        "url": "https://www.gelbeseiten.de/Suche/IT-Service/Villingen-Schwenningen",
+        "scraped_at": "2025-09-30T22:51:49.780320",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "postal_code"
+        ]
+      }
+    ]
+  },
+  {
+    "company_name": "Competition it-management GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:51:49.780493",
+    "sources": [
+      {
+        "name": "gelbe_seiten",
+        "url": "https://www.gelbeseiten.de/Suche/IT-Service/Villingen-Schwenningen",
+        "scraped_at": "2025-09-30T22:51:49.780494",
+        "fields": [
+          "address",
+          "city",
+          "company_name",
+          "postal_code"
+        ]
+      }
+    ]
+  }
+]

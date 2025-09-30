@@ -503,12 +503,16 @@ async def enrich_with_details(
         detail_url = None
         if result.extra_data.get('detail_url'):
             detail_url = result.extra_data['detail_url']
-        elif result.extra_data.get('sources', {}).get('urls'):
-            # Nehme erste URL die /branchenbuch/ enthält
-            for url in result.extra_data['sources']['urls']:
-                if '/branchenbuch/' in url:
-                    detail_url = url
-                    break
+        elif result.extra_data.get('sources'):
+            # sources ist jetzt eine Liste
+            sources = result.extra_data['sources']
+            if isinstance(sources, list):
+                # Nehme erste URL die /branchenbuch/ enthält
+                for source in sources:
+                    url = source.get('url', '')
+                    if '/branchenbuch/' in url:
+                        detail_url = url
+                        break
         
         if detail_url:
             try:

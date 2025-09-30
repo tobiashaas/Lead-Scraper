@@ -1,0 +1,1387 @@
+[
+  {
+    "company_name": "Technical Support",
+    "website": "https://www.techsup.de",
+    "phone": "+497118829810",
+    "email": "info@techsup.de",
+    "address": "70567 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70567",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T22:24:13.519067",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B49583367/technical-support.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone",
+          "email"
+        ],
+        "11880_detail": [
+          "website",
+          "description",
+          "social_media"
+        ]
+      }
+    },
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": {
+      "facebook": "https://www.facebook.com/HoffmannTechnicalSupport"
+    },
+    "additional_phones": [
+      "+497118829810"
+    ],
+    "additional_emails": [
+      "info@techsup.de"
+    ],
+    "company_info": null
+  },
+  {
+    "company_name": "Computer Hilfe Stuttgart Georg Meier",
+    "website": "https://www.computerhilfe-stuttgart.de",
+    "phone": "+497116363444",
+    "email": null,
+    "address": "70176 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70176",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T22:24:13.519513",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B29327777/computer-hilfe-stuttgart-georg-meier.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ],
+        "11880_detail": [
+          "website",
+          "description",
+          "social_media"
+        ]
+      }
+    },
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": {
+      "facebook": "https://de-de.facebook.com/pages/Computer-Hilfe-Stuttgart/384851901639831"
+    },
+    "additional_phones": [
+      "+497116363444"
+    ],
+    "additional_emails": [
+      "info@computerhilfe-stuttgart.de"
+    ],
+    "company_info": null
+  },
+  {
+    "company_name": "edicta GmbH",
+    "website": "https://edicta.de",
+    "phone": "+49711763381",
+    "email": null,
+    "address": "70597 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70597",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T22:24:13.519883",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B27945610/edicta-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ],
+        "11880_detail": [
+          "website",
+          "description"
+        ]
+      }
+    },
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+49711763381"
+    ],
+    "additional_emails": [
+      "info@edicta.de"
+    ],
+    "company_info": null
+  },
+  {
+    "company_name": "anders und sehr GmbH",
+    "website": "https://www.andersundsehr.com",
+    "phone": "+497111289680",
+    "email": null,
+    "address": "70565 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70565",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T22:24:13.520276",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050872693B100799576/anders-und-sehr-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ],
+        "11880_detail": [
+          "website",
+          "description",
+          "social_media"
+        ]
+      }
+    },
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": {
+      "facebook": "https://de-de.facebook.com/andersundsehr/"
+    },
+    "additional_phones": [
+      "+497111289680"
+    ],
+    "additional_emails": [
+      "kontakt@andersundsehr.com"
+    ],
+    "company_info": null
+  },
+  {
+    "company_name": "Bitfactory GmbH",
+    "website": "https://www.bitfactory.io/?utm_source=google&utm_medium=organic&utm_campaign=mybusiness&utm_content=stuttgart",
+    "phone": "+4971121723730",
+    "email": null,
+    "address": "70197 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70197",
+    "description": "Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:",
+    "scraped_at": "2025-09-30T22:24:13.520630",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B105083188/bitfactory-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ],
+        "11880_detail": [
+          "website",
+          "description"
+        ]
+      }
+    },
+    "opening_hours": null,
+    "services": null,
+    "contact_persons": null,
+    "social_media": null,
+    "additional_phones": [
+      "+4971121723730"
+    ],
+    "additional_emails": [
+      "hello@bitfactory.io"
+    ],
+    "company_info": null
+  },
+  {
+    "company_name": "datec24 AG",
+    "website": null,
+    "phone": "+497115305473",
+    "email": null,
+    "address": "70567 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70567",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.521020",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050335115B102480110/datec24-ag.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "DT Netsolution GmbH IT-Systemhaus",
+    "website": null,
+    "phone": "+4971184991030",
+    "email": null,
+    "address": "70437 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70437",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.521355",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B28855842/dt-netsolution-gmbh-it-systemhaus.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Hornberger ICT",
+    "website": null,
+    "phone": "+4971162066172",
+    "email": null,
+    "address": "70178 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70178",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.521721",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B104760129/hornberger-ict.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Intelligent Apps GmbH",
+    "website": null,
+    "phone": "+4971122086793",
+    "email": null,
+    "address": "70597 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70597",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.522053",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B101498316/intelligent-apps-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "ITM Informations-u.Technologiemanagement Beratungsgesellschaft mbH",
+    "website": null,
+    "phone": "+49711451290",
+    "email": null,
+    "address": "70563 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70563",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.522392",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B27169506/itm-informations-u-technologiemanagement-beratungsgesellschaft-mbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "pritac consulting gmbh",
+    "website": null,
+    "phone": "+497181207170",
+    "email": null,
+    "address": "70567 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70567",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.522803",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B108665339/pritac-consulting-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "RIB Software AG Abt. Service + Training:",
+    "website": null,
+    "phone": "+4971178730",
+    "email": null,
+    "address": "70567 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70567",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.523239",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050335115B110687527/rib-software-ag-abt-service-training.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "serviceminds",
+    "website": null,
+    "phone": "+4917637733506",
+    "email": null,
+    "address": "70565 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70565",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.523589",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/061752713B102362487/serviceminds.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Sirius-net GmbH",
+    "website": null,
+    "phone": "+497119669760",
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.523938",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050335115B43444224/sirius-net-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "SIX Offene Systeme GmbH IT-Dienstleistung",
+    "website": null,
+    "phone": "+49711990910",
+    "email": null,
+    "address": "70565 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70565",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.524270",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/250772337B26654096/six-offene-systeme-gmbh-it-dienstleistung.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Soft-Science GbR",
+    "website": null,
+    "phone": "+4971112852200",
+    "email": null,
+    "address": "70190 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70190",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.524599",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B53433084/soft-science-gbr.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "47Nord Media GmbH",
+    "website": null,
+    "phone": "+4971162766928",
+    "email": null,
+    "address": "70174 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70174",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.524939",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B100996060/47nord-media-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "abilex GmbH",
+    "website": null,
+    "phone": "+497117191880",
+    "email": null,
+    "address": "70597 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70597",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.525315",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/061752713B31469316/abilex-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Admingo e.K.",
+    "website": null,
+    "phone": "+497116195737",
+    "email": null,
+    "address": "70178 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70178",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.525689",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/061752713B100984417/admingo-e-k.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "AGILeVIA GmbH",
+    "website": null,
+    "phone": "+497119974730",
+    "email": null,
+    "address": "70565 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70565",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.526033",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B43442697/agilevia-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Andreas Heinkel mate-systems IT-Dienstleistungen",
+    "website": null,
+    "phone": "+497114516430",
+    "email": null,
+    "address": "70599 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70599",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.526368",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/061752713B39442470/andreas-heinkel-mate-systems-it-dienstleistungen.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "apfelblick it-service",
+    "website": null,
+    "phone": "+4915154816600",
+    "email": null,
+    "address": "70327 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70327",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.526703",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B107275961/apfelblick-it-service.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "ASNTECH GmbH",
+    "website": null,
+    "phone": "+4971154085255",
+    "email": null,
+    "address": "70188 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70188",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.527038",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B101938551/asntech-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Awisto Business Solutions GmbH",
+    "website": null,
+    "phone": "+4971162043740",
+    "email": null,
+    "address": "70499 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70499",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.527376",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050335115B71991338/awisto-business-solutions-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "B-FACTOR GmbH",
+    "website": null,
+    "phone": "+4971118420280",
+    "email": null,
+    "address": "70599 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70599",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.527744",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B100917102/b-factor-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Backup Solutions GmbH Datenverarbeitung",
+    "website": null,
+    "phone": "+4971153069280",
+    "email": null,
+    "address": "70374 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70374",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.528076",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B110134162/backup-solutions-gmbh-datenverarbeitung.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Bergmann InfoTech GmbH",
+    "website": null,
+    "phone": "+4971178244910",
+    "email": null,
+    "address": "70565 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70565",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.528413",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B113632259/bergmann-infotech-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "BITSTEPS GmbH",
+    "website": null,
+    "phone": "+4971125260500",
+    "email": null,
+    "address": "70597 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70597",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.528753",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B100923278/bitsteps-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "CANCOM GmbH",
+    "website": null,
+    "phone": "+49711735820",
+    "email": null,
+    "address": "70565 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70565",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.529118",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/061752713B27139519/cancom-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "CodeBox Computerdienste GmbH IT- Dienstleistungen",
+    "website": null,
+    "phone": "+497116490103",
+    "email": null,
+    "address": "70184 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70184",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.529433",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/061752713B41955932/codebox-computerdienste-gmbh-it-dienstleistungen.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "ComCept GmbH Netzwerke und Kommunikation IT-Dienstleistung",
+    "website": null,
+    "phone": "+497119977360",
+    "email": null,
+    "address": "70567 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70567",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.529770",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052101101B26735768/comcept-gmbh-netzwerke-und-kommunikation-it-dienstleistung.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Comparex AG",
+    "website": null,
+    "phone": "+497119334060",
+    "email": null,
+    "address": "70565 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70565",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.530105",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052101026B101084985/comparex-ag.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "creading GmbH",
+    "website": null,
+    "phone": "+4971188296666",
+    "email": null,
+    "address": "70372 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70372",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.530439",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B107483864/creading-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "CTO Balzuweit GmbH IT-Dienstleistungen",
+    "website": null,
+    "phone": "0567",
+    "email": null,
+    "address": "70567 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70567",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.530861",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B26776072/cto-balzuweit-gmbh-it-dienstleistungen.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "DALLEY IT",
+    "website": null,
+    "phone": "+497112626699",
+    "email": null,
+    "address": "70565 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70565",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.531208",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B26735823/dalley-it.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "DATA-PLAN Computer Consulting GmbH",
+    "website": null,
+    "phone": "+497117280682",
+    "email": null,
+    "address": "70597 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70597",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.531550",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B28121720/data-plan-computer-consulting-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Datenzentrale Baden-Württemberg Anstalt des öffentlichen Rechts",
+    "website": null,
+    "phone": "+49711810820",
+    "email": null,
+    "address": "70469 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70469",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.531868",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B102016814/datenzentrale-baden-wuerttemberg-anstalt-des-oeffentlichen-rechts.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "die webversteher GmbH & Co KG",
+    "website": null,
+    "phone": "+4971120909090",
+    "email": null,
+    "address": "70629 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70629",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.532206",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/250772337B107262677/die-webversteher-gmbh-co-kg.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "DVSE Gesellschaft für Datenverarbeitung, Service und Entwicklung mbH",
+    "website": null,
+    "phone": "+4971191248275",
+    "email": null,
+    "address": "70567 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70567",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.532523",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050335115B71893122/dvse-gesellschaft-fuer-datenverarbeitung-service-und-entwicklung-mbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "ETES GmbH",
+    "website": null,
+    "phone": "+497114890830",
+    "email": null,
+    "address": "70188 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70188",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.532948",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B27936636/etes-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Fichtner IT Consulting GmbH",
+    "website": null,
+    "phone": "+49711899510",
+    "email": null,
+    "address": "70191 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70191",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.533307",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/061752713B109946808/fichtner-it-consulting-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Globalways AG",
+    "website": null,
+    "phone": "+4971197575500",
+    "email": null,
+    "address": "70173 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70173",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.533682",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050332715B101978332/globalways-ag.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "HERZOG SYSTEMS GMBH",
+    "website": null,
+    "phone": "+497112172610",
+    "email": null,
+    "address": "70184 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70184",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.534026",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/061752713B102205472/herzog-systems-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Hoga-Data EDV und Kassen für Hotel und Gastronomie GmbH",
+    "website": null,
+    "phone": "+497114790300",
+    "email": null,
+    "address": "70619 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70619",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.534372",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050334032B111852743/hoga-data-edv-und-kassen-fuer-hotel-und-gastronomie-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Holger Balz (cenks ) Büro für Informationstechnik",
+    "website": null,
+    "phone": "+497112319855",
+    "email": null,
+    "address": "70469 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70469",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.534714",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050335115B52895681/holger-balz-cenks-buero-fuer-informationstechnik.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "IBIX Informationssysteme GmbH",
+    "website": null,
+    "phone": "+4971172560",
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.535111",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052101026B54345358/ibix-informationssysteme-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Incedo AG IT-Dienstleistung",
+    "website": null,
+    "phone": "+49711674300",
+    "email": null,
+    "address": "70176 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70176",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.535448",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B28954028/incedo-ag-it-dienstleistung.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "indasys Holding AG IT-Dienstleistungen",
+    "website": null,
+    "phone": "+497118966590",
+    "email": null,
+    "address": "70469 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70469",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.535795",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B26037360/indasys-holding-ag-it-dienstleistungen.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Innovo Services GmbH",
+    "website": null,
+    "phone": "+4971149047952",
+    "email": null,
+    "address": "70565 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70565",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.536133",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/050334032B108735193/innovo-services-gmbh.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "intellior AG",
+    "website": null,
+    "phone": "+497116868930",
+    "email": null,
+    "address": "70567 Stuttgart",
+    "city": "Stuttgart",
+    "postal_code": "70567",
+    "description": null,
+    "scraped_at": "2025-09-30T22:24:13.536471",
+    "sources": {
+      "primary": "11880",
+      "urls": [
+        "https://www.11880.com/branchenbuch/stuttgart/052094857B38953870/intellior-ag.html"
+      ],
+      "data_sources": {
+        "11880": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code",
+          "phone"
+        ]
+      }
+    }
+  }
+]

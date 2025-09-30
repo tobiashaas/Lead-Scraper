@@ -1,0 +1,1252 @@
+[
+  {
+    "company_name": "Systemhaus KEC GmbH & Co. KG",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.697417",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Mats Heidler IT-Dienstleistungen",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.697623",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "KCES - Klett Corporate Education Services GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.697791",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "POLYGRAIL GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.697999",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Emil Frey Digital Services GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.698205",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Matthias Nyendick IT-Dienstleistungen",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.698577",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Bitfactory GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.698859",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Katrin Ch. Schweizer Mediendienstleistungen BildSchön",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.699088",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Marcel Turnau Reiseveranstalter PURNAM.de",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.699309",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Ljuba Helmut IT-Dienstleistungen+Elektrove.",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.699567",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Harald Grodke und Ralf Grodke EDV-Dienstleistungen Electronic Business",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.699775",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Ulrich Emmert und Jens Bücking ESB-Systemberatung",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.699993",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Eva Weller Motor-/Zusatzsteuergeräten Eco Optimum",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.700208",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "MsrSps GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.700421",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Martin Hiller EDV-Beratung gelöst - EDV",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.700591",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Benedikt Gmeinder IT und EDV Beratung",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.700788",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Patrick Schneider und Joachim Scherer DCT Design & Culture Team Scherer & Schneider GbR",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.701002",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Wear & Care Technologies GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.701256",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Learnteq - Innovative Lösungen für die Digitalisierung",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.701424",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Learnteq - Innovative Lösungen für die Digitalisierung",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.701603",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "FERCHAU GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.701863",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "FERCHAU GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.702122",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "sys-skill computer service - it support - it service",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.702405",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Berger Frank IT-Service",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.702570",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Julkair GmbH IT-Service",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.702759",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Misol Computer im Handwerk IT-Service",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.702991",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Roton IT-Service GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.703178",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Francesco Lucido Professional IT-Services IT-Dienstleistung",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.703363",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Schäfer/fix-up IT Services Ulrike",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.703550",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "CodeBox Computerdienste GmbH IT-Service",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.703719",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "HSH Services IT-Dienstleistung",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.703906",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "comSmile GmbH - IT Service, Reparatur von Tablet, Notebook und Smatphones",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.704189",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "comSmile GmbH - IT Service, Reparatur von Tablet, Notebook und Smatphones",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.704453",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "averi consulting GmbH Consulting, IT Service und Training Consulting",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.704621",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Weichert Wolfgang EDV-Service",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.704809",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Hipp EDV-Service Computer-Dienstleistungen und -Verkauf",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.704979",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "avus Services GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.705197",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "avus Services GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.705410",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "IT-System-Services Partick Pohl",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.705598",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Straub EDV Beratung u. Service",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.705766",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "EPLAN Software & Service GmbH & Co. KG IT-Beratung",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.705953",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "netzwerk-anlegeschutz",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.706124",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "ITcares Telefonanlagen",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.706313",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Quartier Stuttgart",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.706480",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "TASTEONE AV- & IT-Solutions GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.706713",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Optica Abrechnungszentrum Dr. Güldener GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.706888",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "NeTec Netzwerktechnik & Systembetreuung GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.707062",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "SDRC Software und Service GmbH",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.707413",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "Herter Net Kommunikationstechnik",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.707595",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  },
+  {
+    "company_name": "ricc cyber security",
+    "website": null,
+    "phone": null,
+    "email": null,
+    "address": null,
+    "city": null,
+    "postal_code": null,
+    "description": null,
+    "scraped_at": "2025-09-30T22:26:42.707792",
+    "sources": {
+      "primary": "gelbe_seiten",
+      "urls": [
+        "https://www.gelbeseiten.de/Suche/IT-Service/Stuttgart"
+      ],
+      "data_sources": {
+        "gelbe_seiten": [
+          "company_name",
+          "address",
+          "city",
+          "postal_code"
+        ]
+      }
+    }
+  }
+]
