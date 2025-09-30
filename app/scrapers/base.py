@@ -43,12 +43,55 @@ class ScraperResult:
         self.city = city
         self.postal_code = postal_code
         self.description = description
-        self.source_url = source_url
+        self.source_url = source_url  # Deprecated - use sources instead
         self.scraped_at = scraped_at or datetime.now()
         self.extra_data = extra_data
+        
+        # Neue strukturierte Sources
+        if 'sources' not in self.extra_data:
+            self.extra_data['sources'] = {
+                'primary': None,  # Hauptquelle (z.B. "11880", "gelbe_seiten")
+                'urls': [],  # Liste aller besuchten URLs
+                'data_sources': {}  # Welche Daten von welcher Quelle
+            }
+    
+    def add_source(self, source_name: str, url: str, data_fields: List[str] = None):
+        """
+        Fügt eine Datenquelle hinzu
+        
+        Args:
+            source_name: Name der Quelle (z.B. "11880", "gelbe_seiten", "duckduckgo")
+            url: URL der Quelle
+            data_fields: Liste der Felder die von dieser Quelle stammen
+        """
+        sources = self.extra_data.get('sources', {
+            'primary': None,
+            'urls': [],
+            'data_sources': {}
+        })
+        
+        # Setze primary source wenn noch nicht gesetzt
+        if not sources.get('primary'):
+            sources['primary'] = source_name
+        
+        # Füge URL hinzu
+        if url and url not in sources.get('urls', []):
+            sources['urls'].append(url)
+        
+        # Tracke welche Daten von welcher Quelle
+        if data_fields:
+            if source_name not in sources.get('data_sources', {}):
+                sources['data_sources'][source_name] = []
+            sources['data_sources'][source_name].extend(data_fields)
+        
+        self.extra_data['sources'] = sources
     
     def to_dict(self) -> Dict[str, Any]:
         """Konvertiert zu Dictionary"""
+        # Entferne deprecated Felder
+        extra_data_clean = {k: v for k, v in self.extra_data.items() 
+                           if k not in ['detail_url', 'source_url']}
+        
         return {
             "company_name": self.company_name,
             "website": self.website,
@@ -58,9 +101,8 @@ class ScraperResult:
             "city": self.city,
             "postal_code": self.postal_code,
             "description": self.description,
-            "source_url": self.source_url,
             "scraped_at": self.scraped_at.isoformat(),
-            **self.extra_data
+            **extra_data_clean
         }
     
     def __repr__(self) -> str:

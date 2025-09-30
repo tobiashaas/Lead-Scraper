@@ -79,13 +79,22 @@ class ElevenEightyDetailScraper:
     
     def _extract_website(self, soup: BeautifulSoup) -> Optional[str]:
         """Extrahiert Website-URL"""
+        # Liste von zu filternden Domains
+        excluded_domains = [
+            '11880.com',
+            'werkenntdenbesten',
+            'google.com/partners',  # Google Partner Links
+            'cleverb2b.de',
+            'wirfindendeinenjob.de'
+        ]
+        
         # Primär: Suche nach dem spezifischen Website-Link mit tracking-Klasse
         website_link = soup.find('a', class_=lambda x: x and 'tracking--entry-detail-website-link' in str(x))
         
         if website_link and website_link.get('href'):
             url = website_link['href']
-            # Filtere 11880-interne Links und werkenntdenbesten
-            if '11880.com' not in url and 'werkenntdenbesten' not in url and url.startswith('http'):
+            # Filtere ausgeschlossene Domains
+            if url.startswith('http') and not any(domain in url for domain in excluded_domains):
                 logger.debug(f"Website gefunden: {url}")
                 return url
         
@@ -93,21 +102,24 @@ class ElevenEightyDetailScraper:
         website_link = soup.find('a', text=re.compile(r'Website', re.I))
         if website_link and website_link.get('href'):
             url = website_link['href']
-            if '11880.com' not in url and 'werkenntdenbesten' not in url and url.startswith('http'):
+            if url.startswith('http') and not any(domain in url for domain in excluded_domains):
                 logger.debug(f"Website gefunden (Fallback): {url}")
                 return url
         
         # Letzter Fallback: Suche alle externen Links (außer Social Media)
         all_links = soup.find_all('a', href=re.compile(r'^https?://'))
+        
+        # Erweiterte Ausschlussliste für Fallback
+        extended_excluded = excluded_domains + [
+            'facebook.com', 'linkedin.com', 'xing.com', 'instagram.com', 
+            'twitter.com', 'youtube.com', 'postleitzahlen.de', 
+            'bundesnetzagentur.de'
+        ]
+        
         for link in all_links:
             url = link.get('href', '')
-            # Filtere interne Links und bekannte externe Dienste
-            excluded_domains = ['11880.com', 'werkenntdenbesten', 'facebook.com', 'linkedin.com', 
-                              'xing.com', 'instagram.com', 'twitter.com', 'youtube.com',
-                              'postleitzahlen.de', 'bundesnetzagentur.de', 'wirfindendeinenjob.de',
-                              'cleverb2b.de']
             
-            if url and not any(domain in url for domain in excluded_domains):
+            if url and not any(domain in url for domain in extended_excluded):
                 logger.debug(f"Website gefunden (Letzter Fallback): {url}")
                 return url
         
@@ -140,10 +152,24 @@ class ElevenEightyDetailScraper:
             ('p', {'class': lambda x: x and 'text' in str(x).lower()})
         ]
         
+        # Filtere 11880-eigene Texte
+        excluded_phrases = [
+            'Über 11880.com',
+            'Über uns',
+            'Arbeiten bei 11880',
+            'Investor Relations',
+            '11880.com'
+        ]
+        
         for tag, attrs in desc_selectors:
             desc = soup.find(tag, attrs)
             if desc:
                 text = desc.get_text(strip=True)
+                
+                # Prüfe ob Text 11880-eigene Inhalte enthält
+                if any(phrase in text for phrase in excluded_phrases):
+                    continue
+                
                 if len(text) > 50:  # Mindestlänge
                     return text
         
@@ -207,6 +233,14 @@ class ElevenEightyDetailScraper:
         """Extrahiert Social Media Links"""
         social = {}
         
+        # 11880-eigene Social Media Profile (zu filtern)
+        excluded_social = [
+            '11880com',
+            '11880.com',
+            '11880-internet-services',
+            '11880internetservicesag'
+        ]
+        
         social_platforms = {
             'facebook': r'facebook\.com',
             'linkedin': r'linkedin\.com',
@@ -217,9 +251,18 @@ class ElevenEightyDetailScraper:
         }
         
         for platform, pattern in social_platforms.items():
-            link = soup.find('a', href=re.compile(pattern))
-            if link and link.get('href'):
-                social[platform] = link['href']
+            links = soup.find_all('a', href=re.compile(pattern))
+            for link in links:
+                url = link.get('href', '')
+                
+                # Filtere 11880-eigene Profile
+                if any(excluded in url for excluded in excluded_social):
+                    continue
+                
+                # Nehme den ersten validen Link
+                if url:
+                    social[platform] = url
+                    break
         
         return social if social else None
     
@@ -301,13 +344,43 @@ async def enrich_with_details(
             enriched_results.append(result)
             continue
         
+        # Hole Detail-URL aus sources
+        detail_url = None
         if result.extra_data.get('detail_url'):
+            detail_url = result.extra_data['detail_url']
+        elif result.extra_data.get('sources', {}).get('urls'):
+            # Nehme erste URL die /branchenbuch/ enthält
+            for url in result.extra_data['sources']['urls']:
+                if '/branchenbuch/' in url:
+                    detail_url = url
+                    break
+        
+        if detail_url:
             try:
-                details = await detail_scraper.scrape_detail(result.extra_data['detail_url'])
+                details = await detail_scraper.scrape_detail(detail_url)
                 
-                # Füge Details zum Result hinzu
-                if details.get('website'):
+                # Füge Details zum Result hinzu und tracke Quelle
+                detail_data_fields = []
+                
+                if details.get('website') and not result.website:
                     result.website = details['website']
+                    detail_data_fields.append('website')
+                
+                if details.get('opening_hours'):
+                    detail_data_fields.append('opening_hours')
+                
+                if details.get('description'):
+                    detail_data_fields.append('description')
+                
+                if details.get('social_media'):
+                    detail_data_fields.append('social_media')
+                
+                if details.get('contact_persons'):
+                    detail_data_fields.append('contact_persons')
+                
+                # Tracke Detail-Seite als zusätzliche Quelle
+                if detail_data_fields:
+                    result.add_source('11880_detail', detail_url, detail_data_fields)
                 
                 # Zusätzliche Daten in extra_data
                 result.extra_data.update(details)

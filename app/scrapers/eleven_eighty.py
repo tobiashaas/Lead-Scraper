@@ -213,7 +213,7 @@ class ElevenEightyScaper(BaseScraper):
             else:
                 detail_url = f"https://www.11880.com{href}"
         
-        return ScraperResult(
+        result = ScraperResult(
             company_name=company_name,
             website=website,
             phone=phone,
@@ -225,6 +225,21 @@ class ElevenEightyScaper(BaseScraper):
             source_url=source_url,
             detail_url=detail_url
         )
+        
+        # Tracke Datenquelle (nur Detail-URL, nicht die Such-URL)
+        data_fields = ['company_name', 'address', 'city', 'postal_code']
+        if phone:
+            data_fields.append('phone')
+        if email:
+            data_fields.append('email')
+        if website:
+            data_fields.append('website')
+        
+        # Verwende Detail-URL wenn vorhanden, sonst Such-URL
+        source_to_track = detail_url if detail_url else source_url
+        result.add_source('11880', source_to_track, data_fields)
+        
+        return result
 
 
 # Convenience Function
