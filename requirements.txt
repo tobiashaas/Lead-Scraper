@@ -22,6 +22,9 @@ lxml==4.9.3
 playwright==1.40.0
 playwright-stealth==1.0.6
 
+# Google Places API
+googlemaps==4.10.0
+
 # Tor Integration
 stem==1.8.2
 pysocks==1.7.1

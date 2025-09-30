@@ -43,9 +43,12 @@ class Settings(BaseSettings):
     rate_limit_requests: int = Field(default=10, description="Max requests per window")
     rate_limit_window: int = Field(default=60, description="Rate limit window (seconds)")
     
-    # Playwright
+    # Playwright Settings
+    playwright_browser: str = Field(default="firefox", description="Browser engine")
     playwright_headless: bool = Field(default=True, description="Run browser in headless mode")
-    playwright_browser: str = Field(default="chromium", description="Browser engine")
+    
+    # Google Places API
+    google_places_api_key: str = Field(default="", description="Google Places API Key")
     
     # CAPTCHA (optional)
     captcha_enabled: bool = Field(default=False, description="Enable CAPTCHA solving")
