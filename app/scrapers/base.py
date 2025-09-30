@@ -47,13 +47,9 @@ class ScraperResult:
         self.scraped_at = scraped_at or datetime.now()
         self.extra_data = extra_data
         
-        # Neue strukturierte Sources
+        # Neue strukturierte Sources (Liste für einfache DB-Integration)
         if 'sources' not in self.extra_data:
-            self.extra_data['sources'] = {
-                'primary': None,  # Hauptquelle (z.B. "11880", "gelbe_seiten")
-                'urls': [],  # Liste aller besuchten URLs
-                'data_sources': {}  # Welche Daten von welcher Quelle
-            }
+            self.extra_data['sources'] = []
     
     def add_source(self, source_name: str, url: str, data_fields: List[str] = None):
         """
@@ -64,25 +60,32 @@ class ScraperResult:
             url: URL der Quelle
             data_fields: Liste der Felder die von dieser Quelle stammen
         """
-        sources = self.extra_data.get('sources', {
-            'primary': None,
-            'urls': [],
-            'data_sources': {}
-        })
+        sources = self.extra_data.get('sources', [])
         
-        # Setze primary source wenn noch nicht gesetzt
-        if not sources.get('primary'):
-            sources['primary'] = source_name
+        # Prüfe ob diese Quelle bereits existiert
+        existing_source = None
+        for source in sources:
+            if source.get('name') == source_name and source.get('url') == url:
+                existing_source = source
+                break
         
-        # Füge URL hinzu
-        if url and url not in sources.get('urls', []):
-            sources['urls'].append(url)
-        
-        # Tracke welche Daten von welcher Quelle
-        if data_fields:
-            if source_name not in sources.get('data_sources', {}):
-                sources['data_sources'][source_name] = []
-            sources['data_sources'][source_name].extend(data_fields)
+        if existing_source:
+            # Aktualisiere existierende Quelle
+            if data_fields:
+                existing_fields = set(existing_source.get('fields', []))
+                existing_fields.update(data_fields)
+                existing_source['fields'] = sorted(list(existing_fields))
+        else:
+            # Füge neue Quelle hinzu
+            new_source = {
+                'name': source_name,
+                'url': url,
+                'scraped_at': datetime.now().isoformat()
+            }
+            if data_fields:
+                new_source['fields'] = sorted(data_fields)
+            
+            sources.append(new_source)
         
         self.extra_data['sources'] = sources
     
