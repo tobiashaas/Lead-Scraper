@@ -64,7 +64,11 @@ class ElevenEightyDetailScraper:
                 'social_media': self._extract_social_media(soup),
                 'additional_phones': self._extract_additional_phones(soup),
                 'additional_emails': self._extract_additional_emails(soup),
-                'company_info': self._extract_company_info(soup)
+                'company_info': self._extract_company_info(soup),
+                'industry': self._extract_industry(soup),
+                'full_address': self._extract_full_address(soup),
+                'verified': self._extract_verification_status(soup),
+                'metadata': self._extract_metadata(soup)
             }
             
             logger.info(f"Detail-Scraping erfolgreich: {len([v for v in details.values() if v])} Felder gefunden")
@@ -301,20 +305,102 @@ class ElevenEightyDetailScraper:
         
         if info_container:
             # Gründungsjahr
-            founded = info_container.find(text=re.compile(r'gegründet|seit|founded', re.I))
+            founded = info_container.find(string=re.compile(r'gegründet|seit|founded', re.I))
             if founded:
-                year_match = re.search(r'\b(19|20)\d{2}\b', founded)
+                year_match = re.search(r'\b(19|20)\d{2}\b', str(founded))
                 if year_match:
                     info['founded_year'] = year_match.group(0)
             
             # Mitarbeiterzahl
-            employees = info_container.find(text=re.compile(r'mitarbeiter|employees', re.I))
+            employees = info_container.find(string=re.compile(r'mitarbeiter|employees', re.I))
             if employees:
-                num_match = re.search(r'\d+', employees)
+                num_match = re.search(r'\d+', str(employees))
                 if num_match:
                     info['employees'] = num_match.group(0)
         
         return info if info else None
+    
+    def _extract_industry(self, soup: BeautifulSoup) -> Optional[str]:
+        """Extrahiert Branche"""
+        # Aus Meta-Tags
+        meta_desc = soup.find('meta', {'name': 'description'})
+        if meta_desc and meta_desc.get('content'):
+            content = meta_desc['content']
+            # Format: "Branche | ⌚ Öffnungszeiten..."
+            if '|' in content:
+                industry = content.split('|')[0].strip()
+                if industry and len(industry) < 100:
+                    return industry
+        
+        # Aus Breadcrumb oder Kategorie
+        breadcrumb = soup.find('span', {'itemprop': 'name'})
+        if breadcrumb:
+            return breadcrumb.get_text(strip=True)
+        
+        return None
+    
+    def _extract_full_address(self, soup: BeautifulSoup) -> Optional[Dict]:
+        """Extrahiert vollständige Adresse mit Straße und Hausnummer"""
+        address = {}
+        
+        # Straße + Hausnummer
+        street = soup.find('span', {'itemprop': 'streetAddress'})
+        if street:
+            address['street'] = street.get_text(strip=True)
+        
+        # PLZ
+        postal = soup.find('span', {'itemprop': 'postalCode'})
+        if postal:
+            address['postal_code'] = postal.get_text(strip=True)
+        
+        # Ort
+        locality = soup.find('span', {'itemprop': 'addressLocality'})
+        if locality:
+            address['city'] = locality.get_text(strip=True)
+        
+        return address if address else None
+    
+    def _extract_verification_status(self, soup: BeautifulSoup) -> Optional[Dict]:
+        """Extrahiert Verifizierungsstatus"""
+        verification = {}
+        
+        # "Vom Inhaber bestätigt"
+        verified = soup.find(string=re.compile(r'Vom Inhaber bestätigt', re.I))
+        if verified:
+            verification['owner_verified'] = True
+        
+        # Badges
+        badges = []
+        badge_elements = soup.find_all('div', class_=lambda x: x and 'badge' in str(x).lower())
+        for badge in badge_elements:
+            text = badge.get_text(strip=True)
+            if text and len(text) < 100:
+                badges.append(text)
+        
+        if badges:
+            verification['badges'] = badges
+        
+        return verification if verification else None
+    
+    def _extract_metadata(self, soup: BeautifulSoup) -> Optional[Dict]:
+        """Extrahiert Metadaten (Aktualisierung, Erstellung)"""
+        metadata = {}
+        
+        # Aktualisierungsdatum
+        updated = soup.find(string=re.compile(r'wurde aktualisiert am', re.I))
+        if updated:
+            date_match = re.search(r'(\d{2}\.\d{2}\.\d{4})', str(updated))
+            if date_match:
+                metadata['last_updated'] = date_match.group(1)
+        
+        # Eintragsdatum
+        created = soup.find(string=re.compile(r'Eintragsdaten vom', re.I))
+        if created:
+            date_match = re.search(r'(\d{2}\.\d{2}\.\d{4})', str(created))
+            if date_match:
+                metadata['entry_date'] = date_match.group(1)
+        
+        return metadata if metadata else None
 
 
 async def enrich_with_details(

@@ -1,0 +1,1707 @@
+<!DOCTYPE html><html class="js" lang="de"><head>
+    <link rel="preconnect" href="https://a.delivery.consentmanager.net"><link rel="preconnect" href="https://cdn.consentmanager.net"><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-KNK9MRG"></script><script>if(!("gdprAppliesGlobally" in window)){window.gdprAppliesGlobally=true}if(!("cmp_id" in window)||window.cmp_id<1){window.cmp_id=0}if(!("cmp_cdid" in window)){window.cmp_cdid="257e89ef4274"}if(!("cmp_params" in window)){window.cmp_params=""}if(!("cmp_host" in window)){window.cmp_host="a.delivery.consentmanager.net"}if(!("cmp_cdn" in window)){window.cmp_cdn="cdn.consentmanager.net"}if(!("cmp_proto" in window)){window.cmp_proto="https:"}if(!("cmp_codesrc" in window)){window.cmp_codesrc="1"}window.cmp_getsupportedLangs=function(){var b=["DE","EN","FR","IT","NO","DA","FI","ES","PT","RO","BG","ET","EL","GA","HR","LV","LT","MT","NL","PL","SV","SK","SL","CS","HU","RU","SR","ZH","TR","UK","AR","BS"];if("cmp_customlanguages" in window){for(var a=0;a<window.cmp_customlanguages.length;a++){b.push(window.cmp_customlanguages[a].l.toUpperCase())}}return b};window.cmp_getRTLLangs=function(){var a=["AR"];if("cmp_customlanguages" in window){for(var b=0;b<window.cmp_customlanguages.length;b++){if("r" in window.cmp_customlanguages[b]&&window.cmp_customlanguages[b].r){a.push(window.cmp_customlanguages[b].l)}}}return a};window.cmp_getlang=function(j){if(typeof(j)!="boolean"){j=true}if(j&&typeof(cmp_getlang.usedlang)=="string"&&cmp_getlang.usedlang!==""){return cmp_getlang.usedlang}var g=window.cmp_getsupportedLangs();var c=[];var f=location.hash;var e=location.search;var a="languages" in navigator?navigator.languages:[];if(f.indexOf("cmplang=")!=-1){c.push(f.substr(f.indexOf("cmplang=")+8,2).toUpperCase())}else{if(e.indexOf("cmplang=")!=-1){c.push(e.substr(e.indexOf("cmplang=")+8,2).toUpperCase())}else{if("cmp_setlang" in window&&window.cmp_setlang!=""){c.push(window.cmp_setlang.toUpperCase())}else{if(a.length>0){for(var d=0;d<a.length;d++){c.push(a[d])}}}}}if("language" in navigator){c.push(navigator.language)}if("userLanguage" in navigator){c.push(navigator.userLanguage)}var h="";for(var d=0;d<c.length;d++){var b=c[d].toUpperCase();if(g.indexOf(b)!=-1){h=b;break}if(b.indexOf("-")!=-1){b=b.substr(0,2)}if(g.indexOf(b)!=-1){h=b;break}}if(h==""&&typeof(cmp_getlang.defaultlang)=="string"&&cmp_getlang.defaultlang!==""){return cmp_getlang.defaultlang}else{if(h==""){h="EN"}}h=h.toUpperCase();return h};(function(){var u=document;var v=u.getElementsByTagName;var h=window;var o="";var b="_en";if("cmp_getlang" in h){o=h.cmp_getlang().toLowerCase();if("cmp_customlanguages" in h){for(var q=0;q<h.cmp_customlanguages.length;q++){if(h.cmp_customlanguages[q].l.toUpperCase()==o.toUpperCase()){o="en";break}}}b="_"+o}function x(i,e){var w="";i+="=";var s=i.length;var d=location;if(d.hash.indexOf(i)!=-1){w=d.hash.substr(d.hash.indexOf(i)+s,9999)}else{if(d.search.indexOf(i)!=-1){w=d.search.substr(d.search.indexOf(i)+s,9999)}else{return e}}if(w.indexOf("&")!=-1){w=w.substr(0,w.indexOf("&"))}return w}var k=("cmp_proto" in h)?h.cmp_proto:"https:";if(k!="http:"&&k!="https:"){k="https:"}var g=("cmp_ref" in h)?h.cmp_ref:location.href;var j=u.createElement("script");j.setAttribute("data-cmp-ab","1");var c=x("cmpdesign","cmp_design" in h?h.cmp_design:"");var f=x("cmpregulationkey","cmp_regulationkey" in h?h.cmp_regulationkey:"");var r=x("cmpgppkey","cmp_gppkey" in h?h.cmp_gppkey:"");var n=x("cmpatt","cmp_att" in h?h.cmp_att:"");j.src=k+"//"+h.cmp_host+"/delivery/cmp.php?"+("cmp_id" in h&&h.cmp_id>0?"id="+h.cmp_id:"")+("cmp_cdid" in h?"&cdid="+h.cmp_cdid:"")+"&h="+encodeURIComponent(g)+(c!=""?"&cmpdesign="+encodeURIComponent(c):"")+(f!=""?"&cmpregulationkey="+encodeURIComponent(f):"")+(r!=""?"&cmpgppkey="+encodeURIComponent(r):"")+(n!=""?"&cmpatt="+encodeURIComponent(n):"")+("cmp_params" in h?"&"+h.cmp_params:"")+(u.cookie.length>0?"&__cmpfcc=1":"")+"&l="+o.toLowerCase()+"&o="+(new Date()).getTime();j.type="text/javascript";j.async=true;if(u.currentScript&&u.currentScript.parentElement){u.currentScript.parentElement.appendChild(j)}else{if(u.body){u.body.appendChild(j)}else{var t=v("body");if(t.length==0){t=v("div")}if(t.length==0){t=v("span")}if(t.length==0){t=v("ins")}if(t.length==0){t=v("script")}if(t.length==0){t=v("head")}if(t.length>0){t[0].appendChild(j)}}}var m="js";var p=x("cmpdebugunminimized","cmpdebugunminimized" in h?h.cmpdebugunminimized:0)>0?"":".min";var a=x("cmpdebugcoverage","cmp_debugcoverage" in h?h.cmp_debugcoverage:"");if(a=="1"){m="instrumented";p=""}var j=u.createElement("script");j.src=k+"//"+h.cmp_cdn+"/delivery/"+m+"/cmp"+b+p+".js";j.type="text/javascript";j.setAttribute("data-cmp-ab","1");j.async=true;if(u.currentScript&&u.currentScript.parentElement){u.currentScript.parentElement.appendChild(j)}else{if(u.body){u.body.appendChild(j)}else{var t=v("body");if(t.length==0){t=v("div")}if(t.length==0){t=v("span")}if(t.length==0){t=v("ins")}if(t.length==0){t=v("script")}if(t.length==0){t=v("head")}if(t.length>0){t[0].appendChild(j)}}}})();window.cmp_addFrame=function(b){if(!window.frames[b]){if(document.body){var a=document.createElement("iframe");a.style.cssText="display:none";if("cmp_cdn" in window&&"cmp_ultrablocking" in window&&window.cmp_ultrablocking>0){a.src="//"+window.cmp_cdn+"/delivery/empty.html"}a.name=b;a.setAttribute("title","Intentionally hidden, please ignore");a.setAttribute("role","none");a.setAttribute("tabindex","-1");document.body.appendChild(a)}else{window.setTimeout(window.cmp_addFrame,10,b)}}};window.cmp_rc=function(h){var b=document.cookie;var f="";var d=0;while(b!=""&&d<100){d++;while(b.substr(0,1)==" "){b=b.substr(1,b.length)}var g=b.substring(0,b.indexOf("="));if(b.indexOf(";")!=-1){var c=b.substring(b.indexOf("=")+1,b.indexOf(";"))}else{var c=b.substr(b.indexOf("=")+1,b.length)}if(h==g){f=c}var e=b.indexOf(";")+1;if(e==0){e=b.length}b=b.substring(e,b.length)}return(f)};window.cmp_stub=function(){var a=arguments;__cmp.a=__cmp.a||[];if(!a.length){return __cmp.a}else{if(a[0]==="ping"){if(a[1]===2){a[2]({gdprApplies:gdprAppliesGlobally,cmpLoaded:false,cmpStatus:"stub",displayStatus:"hidden",apiVersion:"2.0",cmpId:31},true)}else{a[2](false,true)}}else{if(a[0]==="getUSPData"){a[2]({version:1,uspString:window.cmp_rc("")},true)}else{if(a[0]==="getTCData"){__cmp.a.push([].slice.apply(a))}else{if(a[0]==="addEventListener"||a[0]==="removeEventListener"){__cmp.a.push([].slice.apply(a))}else{if(a.length==4&&a[3]===false){a[2]({},false)}else{__cmp.a.push([].slice.apply(a))}}}}}}};window.cmp_gpp_ping=function(){return{gppVersion:"1.0",cmpStatus:"stub",cmpDisplayStatus:"hidden",supportedAPIs:["tcfca","usnat","usca","usva","usco","usut","usct"],cmpId:31}};window.cmp_gppstub=function(){var a=arguments;__gpp.q=__gpp.q||[];if(!a.length){return __gpp.q}var g=a[0];var f=a.length>1?a[1]:null;var e=a.length>2?a[2]:null;if(g==="ping"){return window.cmp_gpp_ping()}else{if(g==="addEventListener"){__gpp.e=__gpp.e||[];if(!("lastId" in __gpp)){__gpp.lastId=0}__gpp.lastId++;var c=__gpp.lastId;__gpp.e.push({id:c,callback:f});return{eventName:"listenerRegistered",listenerId:c,data:true,pingData:window.cmp_gpp_ping()}}else{if(g==="removeEventListener"){var h=false;__gpp.e=__gpp.e||[];for(var d=0;d<__gpp.e.length;d++){if(__gpp.e[d].id==e){__gpp.e[d].splice(d,1);h=true;break}}return{eventName:"listenerRemoved",listenerId:e,data:h,pingData:window.cmp_gpp_ping()}}else{if(g==="getGPPData"){return{sectionId:3,gppVersion:1,sectionList:[],applicableSections:[0],gppString:"",pingData:window.cmp_gpp_ping()}}else{if(g==="hasSection"||g==="getSection"||g==="getField"){return null}else{__gpp.q.push([].slice.apply(a))}}}}}};window.cmp_msghandler=function(d){var a=typeof d.data==="string";try{var c=a?JSON.parse(d.data):d.data}catch(f){var c=null}if(typeof(c)==="object"&&c!==null&&"__cmpCall" in c){var b=c.__cmpCall;window.__cmp(b.command,b.parameter,function(h,g){var e={__cmpReturn:{returnValue:h,success:g,callId:b.callId}};d.source.postMessage(a?JSON.stringify(e):e,"*")})}if(typeof(c)==="object"&&c!==null&&"__uspapiCall" in c){var b=c.__uspapiCall;window.__uspapi(b.command,b.version,function(h,g){var e={__uspapiReturn:{returnValue:h,success:g,callId:b.callId}};d.source.postMessage(a?JSON.stringify(e):e,"*")})}if(typeof(c)==="object"&&c!==null&&"__tcfapiCall" in c){var b=c.__tcfapiCall;window.__tcfapi(b.command,b.version,function(h,g){var e={__tcfapiReturn:{returnValue:h,success:g,callId:b.callId}};d.source.postMessage(a?JSON.stringify(e):e,"*")},b.parameter)}if(typeof(c)==="object"&&c!==null&&"__gppCall" in c){var b=c.__gppCall;window.__gpp(b.command,function(h,g){var e={__gppReturn:{returnValue:h,success:g,callId:b.callId}};d.source.postMessage(a?JSON.stringify(e):e,"*")},"parameter" in b?b.parameter:null,"version" in b?b.version:1)}};window.cmp_setStub=function(a){if(!(a in window)||(typeof(window[a])!=="function"&&typeof(window[a])!=="object"&&(typeof(window[a])==="undefined"||window[a]!==null))){window[a]=window.cmp_stub;window[a].msgHandler=window.cmp_msghandler;window.addEventListener("message",window.cmp_msghandler,false)}};window.cmp_setGppStub=function(a){if(!(a in window)||(typeof(window[a])!=="function"&&typeof(window[a])!=="object"&&(typeof(window[a])==="undefined"||window[a]!==null))){window[a]=window.cmp_gppstub;window[a].msgHandler=window.cmp_msghandler;window.addEventListener("message",window.cmp_msghandler,false)}};window.cmp_addFrame("__cmpLocator");if(!("cmp_disableusp" in window)||!window.cmp_disableusp){window.cmp_addFrame("__uspapiLocator")}if(!("cmp_disabletcf" in window)||!window.cmp_disabletcf){window.cmp_addFrame("__tcfapiLocator")}if(!("cmp_disablegpp" in window)||!window.cmp_disablegpp){window.cmp_addFrame("__gppLocator")}window.cmp_setStub("__cmp");if(!("cmp_disabletcf" in window)||!window.cmp_disabletcf){window.cmp_setStub("__tcfapi")}if(!("cmp_disableusp" in window)||!window.cmp_disableusp){window.cmp_setStub("__uspapi")}if(!("cmp_disablegpp" in window)||!window.cmp_disablegpp){window.cmp_setGppStub("__gpp")};</script><script data-cmp-ab="1" src="https://a.delivery.consentmanager.net/delivery/cmp.php?&amp;cdid=257e89ef4274&amp;h=https%3A%2F%2Fwww.11880.com%2Fbranchenbuch%2Fdonaueschingen%2F251090143B50860312%2Fims-gear-se-co-kgaa.html&amp;&amp;__cmpfcc=1&amp;l=en&amp;o=1759264308359" type="text/javascript" async=""></script><script src="https://cdn.consentmanager.net/delivery/js/cmp_en.min.js" type="text/javascript" data-cmp-ab="1" async=""></script>
+    
+<meta charset="UTF-8">
+<title>IMS Gear Donaueschingen | Öffnungszeiten | Telefon | Adresse</title>
+<meta name="robots" content="index, follow">
+<meta name="description" content="Antriebstechnik | ⌚ Öffnungszeiten | ✉ Adresse | ☎ Telefonnummer | ➤ Heinrich-Hertz-Str. 16 - 78166 Donaueschingen">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta property="og:title" content="IMS Gear Donaueschingen | Öffnungszeiten | Telefon | Adresse">
+<meta property="og:site_name" content="IMS Gear Donaueschingen | Öffnungszeiten | Telefon | Adresse">
+<meta property="og:type" content="website">
+    <meta property="og:image" content="//static.11880.com/Portal/images/11880/11880_600x600.png">
+<meta property="og:description" content="Antriebstechnik | ⌚ Öffnungszeiten | ✉ Adresse | ☎ Telefonnummer | ➤ Heinrich-Hertz-Str. 16 - 78166 Donaueschingen">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://www.11880.com/branchenbuch/donaueschingen/251090143B50860312/ims-gear-se-co-kgaa.html">
+<meta property="fb:app_id" content="164582917283669"> 
+
+
+<link rel="preconnect" href="https://static.11880.com/" crossorigin=""><link rel="preconnect" href="https://static.11880.com/"><link rel="dns-prefetch" href="https://myk.11880.com"><link rel="preconnect" href="https://cdn.11880.com/"><link rel="dns-prefetch" href="https://statistics.11880.com/"><link rel="preload" href="//static.11880.com/Portal/css/common.min+1758798149967.css" as="style"><link rel="preload" href="//static.11880.com/Portal/css/portaldetailentry.min+1758798149967.css" as="style"><link rel="dns-prefetch" href="https://osms.11880.com"><link rel="dns-prefetch" href="https://adservice.google.com"><link rel="dns-prefetch" href="https://adservice.google.de"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><link rel="dns-prefetch" href="https://securepubads.g.doubleclick.net"><link rel="dns-prefetch" href="https://stats.g.doubleclick.net"><link rel="dns-prefetch" href="https://tpc.googlesyndication.com"><link rel="dns-prefetch" href="https://www.google.com"><link rel="dns-prefetch" href="https://www.google.de"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://www.googletagservices.com"><link rel="preload" href="//static.11880.com/Portal/fonts/sourcesanspro/sourcesanspro-regular-latin.woff2" as="font" type="font/woff2" crossorigin=""><link rel="preload" href="//static.11880.com/Portal/fonts/sourcesanspro/sourcesanspro-bold-latin.woff2" as="font" type="font/woff2" crossorigin=""><link rel="preload" href="//static.11880.com/Portal/fonts/icons-de-tl/11880-icons+1758798149967.woff2" as="font" type="font/woff2" crossorigin="">
+
+
+<link href="https://www.11880.com/branchenbuch/donaueschingen/251090143B50860312/ims-gear-se-co-kgaa.html" rel="canonical">
+
+	<style>.navbar-custom .logo{background-image:url(https://static.11880.com/Portal/images/11880/logo-vector.svg)}@media only screen and (max-width:767px){.navbar-custom .logo{background-image:url(https://static.11880.com/Portal/images/11880/logo-vector-without-claim.svg)}}@font-face {font-family:  '11880-icons';src:          url('//static.11880.com/Portal/fonts/icons-de-tl/11880-icons+1758798149967.eot');src:          url('//static.11880.com/Portal/fonts/icons-de-tl/11880-icons+1758798149967.eot#iefix') format('embedded-opentype'),url('//static.11880.com/Portal/fonts/icons-de-tl/11880-icons+1758798149967.woff2') format('woff2'),url('//static.11880.com/Portal/fonts/icons-de-tl/11880-icons+1758798149967.ttf') format('truetype'),url('//static.11880.com/Portal/fonts/icons-de-tl/11880-icons+1758798149967.woff') format('woff'),url('//static.11880.com/Portal/fonts/icons-de-tl/11880-icons+1758798149967.svg#11880-icons') format('svg');font-weight:  normal;font-style:   normal;font-display: block;}</style>
+
+<link rel="apple-touch-icon" href="//static.11880.com/Portal/images/apple-touch-icon-11880.png">
+<link rel="icon" href="//static.11880.com/Portal/images/11880/favicon.ico">
+	
+	                        <!-- Google Tag Manager -->
+    <script type="text/javascript">
+        window['gtag_enable_tcf_support'] = true;
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag("consent", "default", {
+            ad_storage: "denied",
+            analytics_storage: "denied",
+            wait_for_update: 500
+        });
+
+        gtag("set", "ads_data_redaction", true);
+
+        document.addEventListener("DOMContentLoaded", function (event) {
+            (function(w, d, s, l, i){
+                w[l] = w[l] || [];
+                w[l].push({ 'gtm.start': new Date().getTime(), event:'gtm.js' });
+                var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+                j.type = 'text/javascript';
+                j.async = true;
+                j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+
+                j.addEventListener('load', function() {
+                    console.log('[GTM] Loaded');
+                    setTimeout(function(){
+                        var _ge = new CustomEvent('gtm_loaded', { bubbles: true });
+                        d.dispatchEvent(_ge);
+                    }, 500);
+                });
+            })(window,document,'script','dataLayer','GTM-KNK9MRG');
+        });
+    </script>
+    <!-- End Google Tag Manager -->
+
+        
+                        <!-- Google tag (gtag.js) [GA4] -->
+    <script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-DW1FF9MZ2J"></script>
+    <script type="text/javascript">
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag("consent", "default", {
+            ad_storage: "denied",
+            wait_for_update: 500
+        });
+
+        gtag('consent', 'update', {
+            ad_storage: 'denied',
+            analytics_storage: 'granted'
+        });
+
+        gtag('config', 'G-DW1FF9MZ2J');
+    </script>
+    <!-- End Google Tag (gtag.js) [GA4] -->
+
+        	
+
+<script type="text/javascript">if (window.location.hash == '#_=_')window.location.hash = '';</script>
+
+<script type="text/javascript" data-cfasync="false">
+    var kt                                        = kt || { };
+    kt.Data                                       = kt.Data || { };
+    kt.Data.Page                                  = {"eyecatcherImages":[{"fileName":"ekomi.png","fileNameRetina":"ekomi@2x.png","width":150,"height":150,"alt":"eKomi Siegel","url":"https:\/\/www.ekomi.de\/bewertungen-11880-com.html","target":"_blank","show":true}],"heroImages":[{"filename":"startseite_fruehling-2025.webp","copyright":"\u00a9 pexels \/ grizzlybear","text":"Finden Sie lokale Unternehmen","sub":"Deutschlands gr\u00f6\u00dfte Branchenauskunft","context":"search"},{"filename":"startseite_preisvergleich.webp","copyright":"Foto \u00a9 winyuu","text":"Der 11880.com Preisvergleich: <br>Sparen Sie Zeit &amp; Geld","context":"pricecomparisonselector"},{"filename":"firma-testen.webp","copyright":"Foto \u00a9 istockphoto.com","text":"Wie gut ist Ihre Firma online aufgestellt?","context":"testcompany"}],"source":"OKZHNMZIIZPM."};
+    kt.Data.User                                  = kt.Data.User || { };
+    kt.Data.Shared                                = kt.Data.Shared || { };
+    kt.Data.params                                = kt.Data.params || { };
+    kt.Data.Chatbot                               = kt.Data.Chatbot || { };
+            kt.Data.Chatbot.projectId = '66a354705515f333bd5ebb97';
+        kt.Data.Chatbot.versionId = 'production';
+        kt.Data.Chatbot.cssUrl    = 'https://static.11880.com/components/chatbot/css/chatbot.min.css';
+        kt.Service                                    = kt.Service || { };
+    kt.Service.Environment                        = kt.Service.Environment || { };
+    kt.Service.Environment.name                   = 'LIVE';
+    kt.Service.Environment.domain                 = '11880.com';
+    kt.Service.Environment.rootUrl                = '//www.11880.com';
+    kt.Service.Environment.myUrl                  = '//my.11880.com';
+    kt.Service.Environment.staticUrl              = '//static.11880.com/';
+    kt.Service.Environment.staticVerticalUrl      = 'https://static.11880.com/';
+    kt.Service.Environment.b2bSiteUrl             = '//unternehmen.11880.com/';
+    kt.Service.Environment.cdnBaseUrl             = '//cdn.11880.com/';
+    kt.Service.Environment.osmUrl                 = 'https://osm.11880.com/';
+    kt.Service.Environment.osrmUrl                = 'https://osrm.11880.com/';
+    kt.Service.Environment.osmFallbackMode        = 'false';
+    kt.Service.Environment.Vertical               = kt.Service.Environment.Vertical || { };
+    kt.Service.Environment.Vertical.genericDomain = '';
+    kt.Service.Environment.Vertical.searchSlug    = '';
+    kt.Service.Environment.UAK_COOKIE_NAME        = '__uak';
+    kt.Service.Environment.SESSION_KEY            = 'SESSIONKEY';
+    kt.Service.GeoIpCity                          = kt.Service.GeoIpCity || { };
+    kt.Service.GeoIpCity.name                     = 'Villingen-Schwenningen';
+    kt.Service.GeoIpCity.slug                     = 'villingen-schwenningen';
+    kt.Service.brand                              = '11880';
+    kt.Service.myKHost                            = 'https://my.11880.com';
+    kt.Service.wfdjHost                           = '//www.wirfindendeinenjob.de';
+    kt.Service.localytixHost                      = '//www.localytix.de';
+    kt.Service.registerUrl                        = '//myk.11880.com/';
+    kt.Service.ratingMaxLength                    = '4000';
+    kt.Service.loginUrl                           = 'https://myk.11880.com/login?callbackUrl=https%3A%2F%2Fwww.11880.com%2Fbranchenbuch%2Fdonaueschingen%2F251090143B50860312%2Fims-gear-se-co-kgaa.html';
+    kt.Service.Params                             = JSON.parse('{\"companyId\":\"251090143B50860312\",\"entryId\":\"251090143B50860312\"}');
+    kt.Service.mouseFlowEnabled                   = false;
+    kt.Service.hasFilterTypes                     = { };
+    kt.Component                                  = kt.Component || { };
+
+        kt.Data.Shared.leadFormSubmitUrl = "//v.11880.com";
+            kt.Data.Shared.leadFormTracking = {"referrer":"none","trackingId":null,"trackingType":null,"portaltype":"11880.com","pagetype":"be","verticaltype":"","formtype":"","trade":"","label":""};
+        //User Auth
+        kt.Data.User.isLoggedIn = false;
+    kt.Data.User.role = 'guest';
+        
+    </script>
+
+
+
+
+            <link rel="stylesheet" href="//static.11880.com/Portal/css/common.min+1758798149967.css">
+	    <link rel="stylesheet" href="//static.11880.com/Portal/css/portaldetailentry.min+1758798149967.css">
+    <!--[if lte IE 9]>
+<link rel="stylesheet" href="//static.11880.com/Portal/css/main.11880.ie9+1758798149967.css" />
+<link rel="stylesheet" href="//static.11880.com/Portal/css/ie9.min+1758798149967.css" />
+<![endif]-->
+
+
+
+
+<!--[if lt IE 9]>
+<script src="//static.11880.com/Portal/js/vendor/html5shiv.js"></script>
+<![endif]-->
+
+
+                <link rel="preconnect" href="https://securepubads.g.doubleclick.net" crossorigin="anonymous">
+<link rel="preconnect" href="https://h5v.11880.com/" crossorigin="anonymous">
+
+<!-- your ad tag -->
+<script type="text/plain" async="async" class="cmplazyload" data-cmp-vendor="s1" data-cmp-purpose="s2,7" data-cmp-src="https://h5v.11880.com/latest/moli.min.mjs"></script><script type="text/plain" class="cmplazyload" data-cmp-vendor="s1" data-cmp-purpose="s2,7">window.moli = window.moli || { que: [] };window.moli.que.push(function (adTag) {adTag.setTargeting('url', window.location.pathname.substr(0, 40));adTag.setTargeting('branche', ["3300143"]);adTag.setTargeting('suche', ["Antriebstechnik"]);adTag.setTargeting('ort', ["donaueschingen"]);adTag.setAdUnitPathVariables({pageType: 'Detail_Branche'});adTag.requestAds();});</script>
+    
+
+
+    <script type="text/javascript">
+        kt.Data.trade = 'Antriebstechnik';
+    </script>
+            <script type="application/ld+json">{"localBusiness":{"@context":"http:\/\/schema.org","@type":"LocalBusiness","name":"IMS Gear SE & Co. KGaA","url":"https:\/\/www.11880.com\/branchenbuch\/donaueschingen\/251090143B50860312\/ims-gear-se-co-kgaa.html","email":"info@imsgear.com","address":{"@type":"PostalAddress","postalCode":"78166","addressLocality":"Donaueschingen","addressRegion":"Baden-W\u00fcrttemberg","streetAddress":"Heinrich-Hertz-Str. 16"},"geo":{"@type":"GeoCoordinates","longitude":8.506459,"latitude":47.958489},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":"Montag","opens":"07:30","closes":"17:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Dienstag","opens":"07:30","closes":"17:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Mittwoch","opens":"07:30","closes":"17:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Donnerstag","opens":"07:30","closes":"17:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Freitag","opens":"07:30","closes":"16:00"}],"telephone":["(0771) 85070"],"potentialAction":{"@type":"ReviewAction","target":"https:\/\/www.11880.com\/branchenbuch\/donaueschingen\/251090143B50860312\/ims-gear-se-co-kgaa.html#jetzt-bewerten"}}}</script><script type="application/ld+json">{"@context":"http:\/\/schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Unter welcher Adresse finde ich IMS Gear SE & Co. KGaA?","acceptedAnswer":{"@type":"Answer","text":"Sie finden IMS Gear SE & Co. KGaA unter der folgenden Adresse: Heinrich-Hertz-Str. 16, 78166 Donaueschingen."}},{"@type":"Question","name":"Welche M\u00f6glichkeiten gibt es, IMS Gear SE & Co. KGaA zu kontaktieren?","acceptedAnswer":{"@type":"Answer","text":"Um IMS Gear SE & Co. KGaA zu kontaktieren, w\u00e4hlen Sie einfach eine der hinterlegten Kontaktoptionen: 0771 85070 info@imsgear.com."}},{"@type":"Question","name":"Welche \u00d6ffnungszeiten gelten f\u00fcr IMS Gear SE & Co. KGaA?","acceptedAnswer":{"@type":"Answer","text":"IMS Gear SE & Co. KGaA ist zu diesen Zeiten ge\u00f6ffnet: Mo.: 07:30-17:00; Di.: 07:30-17:00; Mi.: 07:30-17:00; Do.: 07:30-17:00; Fr.: 07:30-16:00."}},{"@type":"Question","name":"Wo sehe ich, welche Preise f\u00fcr IMS Gear SE & Co. KGaA zu erwarten sind?","acceptedAnswer":{"@type":"Answer","text":"Mithilfe der Euro-Symbole kennzeichnen wir, in welcher Preisrange sich IMS Gear SE & Co. KGaA bewegt, wenn uns diese Information vorliegt."}},{"@type":"Question","name":"Kann man den Informationen von IMS Gear SE & Co. KGaA vertrauen?","acceptedAnswer":{"@type":"Answer","text":"Die Informationen f\u00fcr IMS Gear SE & Co. KGaA werden regelm\u00e4\u00dfig auf den neuesten Stand gebracht. Besonders hervorzuheben ist die Kennzeichnung \"vom Inhaber best\u00e4tigt\"."}}]}</script>
+    </head>
+
+<body class="11880 page--entry-detail external-request ads-available scrollspy"><div id="cmpbox" class="cmpbox cmpstyleroot cmpbox1 cmpboxWelcomeGDPR cmpBoxWelcomeOI" aria-modal="true" role="dialog" lang="EN" aria-labelledby="cmpboxheadline1" style="display: block;" data-nosnippet="" dir="ltr"><div class="cmpboxinner" role="document"><div id="cmpboxcontent" class="cmpboxcontent"><div class="cmpboxtxtdiv "><div class="cmpboxhl cmptxt_hl" role="heading" aria-level="1" id="cmpboxheadline1">Consent to Cookies &amp; Data processing</div><div class="cmpboxtxt cmptxt_txt">On this website we use cookies and similar functions to process end device information and personal data (e.g. such as IP-addresses or browser information). The processing is used for purposes such as to integrate content, external services and elements from third parties, statistical analysis/measurement, personalized advertising and the integration of social media. Depending on the function, data is passed on to up to <a class="cmplink cmplinkvendors" href="#" draggable="false" tabindex="0" data-cmp-vendor="">1093 third parties</a> and processed by them. This consent is voluntary, not required for the use of our website and can be revoked at any time using the icon on the bottom left.</div></div><div class="cmpboxwelcomeprps" role="form" title="Purpose"><div class="cmpwelcomeprps"><div class="cmpwelcomeprpsbtn"><a href="#" data-cmp-purpose="1" role="checkbox" tabindex="0" aria-checked="false" aria-label="Purpose: Store and/or access information on a device" draggable="false"><span class="cmptogglespan cmpvnspan-1x1" id="cmpvnspan-1x1"><svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 20 10" version="1.1" class="cmpimgyesno cmptoggle0" aria-label="Store and/or access information on a device"><ellipse ry="4.9" rx="9" cy="5" cx="10" fill="#fff" class="cmpsvgwhitefill" stroke-width="0"></ellipse><path fill="#f64c4e" class="cmpsvgredfill" d="M 15,0 H 5 A 5,5 0 0 0 5,10 H 15 A 5,5 0 0 0 15,0 Z M 6,9 A 4,4 0 1 1 10,5 4,4 0 0 1 6,9 Z"></path></svg></span></a></div><div data-cmp-purpose="1" id="cmppurposelabelp1" class="cmpwelcomeprpstxt " draggable="false">Store and/or access information on a device</div></div><div class="cmpwelcomeprps"><div class="cmpwelcomeprpsbtn"><span class="cmptogglespan cmpvnspan-1xc1" id="cmpvnspan-1xc1"><svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 20 10" class="cmpimgyesno cmptoggle-3" aria-label="Function"><ellipse ry="4.9" rx="9" cy="5" cx="10" fill="#fff" class="cmpsvgwhitefill" stroke-width="0"></ellipse><path fill="#777777" class="cmpsvggrayfill" d="M 15,0 H 5 A 5,5 0 0 0 5,10 H 15 A 5,5 0 0 0 15,0 Z m -1,9 a 4,4 0 1 1 4,-4 4,4 0 0 1 -4,4 z"></path></svg></span></div><div class="cmpwelcomeprpstxt cmpwelcomeprpstxtnopointer"><svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="cmppurposeicon" role="none"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M16.66 4.52l2.83 2.83-2.83 2.83-2.83-2.83 2.83-2.83M9 5v4H5V5h4m10 10v4h-4v-4h4M9 15v4H5v-4h4m7.66-13.31L11 7.34 16.66 13l5.66-5.66-5.66-5.65zM11 3H3v8h8V3zm10 10h-8v8h8v-8zm-10 0H3v8h8v-8z"></path></svg>Function</div></div><div class="cmpwelcomeprps"><div class="cmpwelcomeprpsbtn"><a href="#" draggable="false" aria-label="Purpose: Personalised content, content measurement, audience research, and services development" role="checkbox" tabindex="0" aria-checked="false" data-cmp-stack="16"><span class="cmptogglespan cmpvnspan-1xst16" id="cmpvnspan-1xst16"><svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 20 10" version="1.1" class="cmpimgyesno cmptoggle0" aria-label="Personalised content, content measurement, audience research, and services development"><ellipse ry="4.9" rx="9" cy="5" cx="10" fill="#fff" class="cmpsvgwhitefill" stroke-width="0"></ellipse><path fill="#f64c4e" class="cmpsvgredfill" d="M 15,0 H 5 A 5,5 0 0 0 5,10 H 15 A 5,5 0 0 0 15,0 Z M 6,9 A 4,4 0 1 1 10,5 4,4 0 0 1 6,9 Z"></path></svg></span></a></div><div data-cmp-stack="16" id="cmppurposelabelst16" class="cmpwelcomeprpstxt " draggable="false">Personalised content, content measurement, audience research, and services development</div></div><div class="cmpwelcomeprps"><div class="cmpwelcomeprpsbtn"><a href="#" draggable="false" aria-label="Purpose: Personalised advertising and advertising measurement" role="checkbox" tabindex="0" aria-checked="false" data-cmp-stack="8"><span class="cmptogglespan cmpvnspan-1xst8" id="cmpvnspan-1xst8"><svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 20 10" version="1.1" class="cmpimgyesno cmptoggle0" aria-label="Personalised advertising and advertising measurement"><ellipse ry="4.9" rx="9" cy="5" cx="10" fill="#fff" class="cmpsvgwhitefill" stroke-width="0"></ellipse><path fill="#f64c4e" class="cmpsvgredfill" d="M 15,0 H 5 A 5,5 0 0 0 5,10 H 15 A 5,5 0 0 0 15,0 Z M 6,9 A 4,4 0 1 1 10,5 4,4 0 0 1 6,9 Z"></path></svg></span></a></div><div data-cmp-stack="8" id="cmppurposelabelst8" class="cmpwelcomeprpstxt " draggable="false">Personalised advertising and advertising measurement</div></div></div></div><div class="cmpboxbtns" role="form"><span id="cmpwelcomebtncustom" class="cmpboxbtnspan"><a class="cmpboxbtn cmpboxbtncustom cmptxt_btn_settings" role="button" tabindex="0" href="#" draggable="false"><span id="cmpbntcustomtxt">Settings</span></a></span><span id="cmpwelcomebtnyes" class="cmpboxbtnspan"><a class="cmpboxbtn cmpboxbtnyes cmptxt_btn_yes" role="button" tabindex="0" href="#" draggable="false"><svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" height="32px" viewBox="0 0 32 32" width="32px" class="cmpicosvgfill"><path id="cmpsvgacceptbtn" role="presentation" d="M27 4l-15 15-7-7-5 5 12 12 20-20z"></path></svg> <span id="cmpbntyestxt">Accept all</span></a></span><span style="display:none;" id="cmpwelcomebtnsave" class="cmpboxbtnspan"><a class="cmpboxbtn cmpboxbtnsave cmptxt_btn_save" role="button" tabindex="0" href="#" draggable="false"><span id="cmpbntsavetxt">Save + Exit</span></a></span><div class="cmpmore"><span id="cmpcustomchoiceslink" style="display:none;"><a class="cmpmorelink cmptxt_btn_custom" href="#" tabindex="0" draggable="false">Customize your choice</a><span class="cmpmoredivider"> | </span></span><a class="cmpmorelink cmptxt_cookies" href="#" tabindex="0" draggable="false">Cookies</a><span class="cmpmoredivider"> | </span><a class="cmpmorelink cmptxt_btn_more" href="https://unternehmen.11880.com/datenschutz" tabindex="0" target="_top">Privacy notice</a><span class="cmpmoredivider"> | </span><a class="cmpmorelink cmptxt_btn_tac" href="https://unternehmen.11880.com/agb" tabindex="0" target="_top">T&amp;C</a><span class="cmpmoredivider"> | </span><a class="cmpmorelink cmptxt_btn_imprint" href=" https://unternehmen.11880.com/impressum" tabindex="0" target="_top">Legal notice</a></div></div></div><div class="cmplogo2  cmplogoXL" tabindex="-1"><span class="cmplogo2hx">Cookie Banner powered by </span><a href="https://www.consentmanager.net/en/cookie-banner/?utm_source=cmplogo2A&amp;utm_medium=banner&amp;utm_campaign=cmplogo2A&amp;utm_term=56360&amp;utm_content=11880.com" target="_top"><img src="https://cdn.consentmanager.net/delivery/whitelabel/cmplogo.svg" style="width:14px; height:14px" width="14" height="14" border="0" alt="consentmanager.net" data-cmp-ab="1" loading="lazy"><span class="cmplogo2h ">consentmanager.net</span></a></div><div class="cmplanguage" id="cmplanguage" title="Language: en" role="button" draggable="false" tabindex="0"><img class="cmplangicon" src="https://cdn.consentmanager.net/delivery/flags-lang-circle/en.svg" width="16" height="16" aria-hidden="true" alt="Language: en" title="Language: en" data-cmp-ab="1" loading="lazy"></div></div>
+
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top" id="main-navigation">
+        <div class="container-fluid">
+            <div id="navbar">
+                <a class="logo" title="11880.com" href="//www.11880.com">
+                    <span class="sr-only">11880.com</span>
+                </a>
+
+                                    <form class="link-form" action="https://www.11880.com/form" method="POST" target="_blank"><input type="hidden" name="source" value="*JSPPyTNQ4HnYNS1Ye1m4MOgNTfrtfQtxizfOOgUDidABCTCNG2nUFFsX9GicBFXRtraptDTig_NIvMNY2QnbdQ"><button class="link nav-register hidden-special hidden-sm hidden-xs" title="Gratis: Ihre Firma eintragen" type="submit">
+                        Gratis: Ihre Firma eintragen
+                    </button></form>
+                
+                <ul class="nav navbar-nav navbar-right">
+                                            <li id="navbar-search-icon" class="navbar-search-icon" style="display: none;">
+                            <button class="link" data-bind="click: kt.Service.TopNavigation.toggleSearchNavigation" aria-label="Suche einblenden">
+                                <span id="toggle-search-icons" class="icon-search"></span>
+                            </button>
+                        </li>
+                    
+                                                                        <li class="navbar-user-info">
+                                <form class="link-form" action="https://www.11880.com/form" method="POST"><input type="hidden" name="source" value="*JSPPyTNQ4HkO-uFFPTtpOidLHJ9bvI_NpB8xHHruMiM4GEmrUktRqpZtVm2VgfcsTzVUP7CF_RKRvqk9pWkBO6acMqCUADo6RLNnQHSjBp-75XlxyW-pbjo2KfG0fsmw79wARmtpGekOmhpqgyEDH0aSkJwIUldHDX__gkp6i6KcV1WAYYjVACZnKUuK2Qpc5qEJooeAqLI"><button class="link log-user" aria-label="Anmelden" type="submit">
+                                    <span class="icon-user"></span>
+                                    <span class="text-with-icon center-text-with-icon hidden-sm hidden-xs">Anmelden</span>
+                                </button></form>
+                            </li>
+                                                                <li class="navbar-toggle-burger-menu">
+                        <button class="link" data-bind="click: kt.Service.TopNavigation.toggleBurgerMenu" aria-label="Menü">
+                            <span class="icon-menu"></span>
+                                                    </button>
+                        <div id="main-mega-menu" class="mega-menu-content mega-menu-right mega-menu-burger mega-menu-fixed" style="display: none;" data-bind="visible: kt.Service.TopNavigation.isBurgerMenuVisible">
+                            <div class="mega-menu-inner">
+                                <div class="row">
+                                                                                                                <ul class="list-unstyled col-xs-12">
+                                            <li class="hidden-sm-up">
+                                                <button data-bind="click: kt.Service.TopNavigation.toggleBurgerMenu" aria-label="Menü" class="options-close"><span class="icon-close"></span></button>
+                                            </li>
+                                                                                    </ul>
+                                                                                                                                
+    <ul class="list-unstyled col-xs-12">
+                    
+                                                <li>
+                        <button class="js-toggle-for-users" data-bind="click: function() { kt.Service.TopNavigation.toggleMenuX('burger', 'for-users', false); }">
+                            Für Sie
+
+                            <span class="icon-right">
+                            </span>
+                        </button>
+
+                        <div class="js-submenu js-submenu-for-users collapsed-nested-menu" data-bind="{ visible: kt.Service.TopNavigation.isMenuVisibleX('burger', 'for-users') }" data-is-initially-open="true" style="display: none;">
+
+                            <div class="options d-sm-none hidden-sm-up">
+                                <button class="options-close" aria-label="Menü" data-bind="click: kt.Service.TopNavigation.toggleBurgerMenu">
+                                    <span class="icon-close"></span>
+                                </button>
+
+                                <button class="options-back" data-bind="click: function(){ kt.Service.TopNavigation.toggleMenuX('burger', 'for-users'); }">
+                                    <span class="icon-left"></span>
+                                </button>
+                            </div>
+
+                            <div class="collapsed-nested-menu_content" data-menu-id="for-users">
+                                <div class="h3 nested-menu-headline d-sm-none hidden-sm-up">
+                                    Für Sie
+                                </div>
+
+                                    
+    <ul class="list-unstyled col-xs-12">
+                    
+                                                <li>
+                        <a title="Detailsuche" href="https://www.11880.com/suche">
+                            Detailsuche
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Personensuche" href="https://www.11880.com/personensuche">
+                            Personensuche
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Rückwärtssuche" href="https://www.11880.com/rueckwaertssuche">
+                            Rückwärtssuche
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Branchenbuch" href="https://www.11880.com/branchenbuch">
+                            Branchenbuch
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Telefonbuch" href="https://www.11880.com/telefonbuch">
+                            Telefonbuch
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Firmenverzeichnis" href="https://www.11880.com/firmen-abc">
+                            Firmenverzeichnis
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Preisvergleich" href="https://www.11880.com/preisvergleich">
+                            Preisvergleich
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Telefonauskunft" href="https://www.11880.com/telefonauskunft">
+                            Telefonauskunft
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Firmensuche" href="https://www.11880.com/firmen-finden">
+                            Firmensuche
+                        </a>
+                    </li>
+                                    
+    </ul>
+
+                            </div>
+                        </div>
+                    </li>
+                                                
+                            <li class="separator clearfix">
+                </li>
+                                
+                                                <li>
+                        <button class="js-toggle-for-business" data-bind="click: function() { kt.Service.TopNavigation.toggleMenuX('burger', 'for-business', false); }">
+                            Für Firmeninhaber
+
+                            <span class="icon-right">
+                            </span>
+                        </button>
+
+                        <div class="js-submenu js-submenu-for-business collapsed-nested-menu" data-bind="{ visible: kt.Service.TopNavigation.isMenuVisibleX('burger', 'for-business') }" data-is-initially-open="true" style="display: none;">
+
+                            <div class="options d-sm-none hidden-sm-up">
+                                <button class="options-close" aria-label="Menü" data-bind="click: kt.Service.TopNavigation.toggleBurgerMenu">
+                                    <span class="icon-close"></span>
+                                </button>
+
+                                <button class="options-back" data-bind="click: function(){ kt.Service.TopNavigation.toggleMenuX('burger', 'for-business'); }">
+                                    <span class="icon-left"></span>
+                                </button>
+                            </div>
+
+                            <div class="collapsed-nested-menu_content" data-menu-id="for-business">
+                                <div class="h3 nested-menu-headline d-sm-none hidden-sm-up">
+                                    Für Firmeninhaber
+                                </div>
+
+                                    
+    <ul class="list-unstyled col-xs-12">
+                    
+                                                <li>
+                        <a title="Unsere Produkte" rel="noopener" target="_blank" href="https://unternehmen.11880.com">
+                            Unsere Produkte
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Unser Angebotsservice" href="https://www.11880.com/angebotsservice">
+                            Unser Angebotsservice
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <button class="js-toggle-more-portals" data-bind="click: function() { kt.Service.TopNavigation.toggleMenuX('burger', 'more-portals', false); }">
+                            Unsere Portale
+
+                            <span class="icon-right">
+                            </span>
+                        </button>
+
+                        <div class="js-submenu js-submenu-more-portals collapsed-nested-menu" data-bind="{ visible: kt.Service.TopNavigation.isMenuVisibleX('burger', 'more-portals') }" data-is-initially-open="false" style="display: none;">
+
+                            <div class="options d-sm-none hidden-sm-up">
+                                <button class="options-close" aria-label="Menü" data-bind="click: kt.Service.TopNavigation.toggleBurgerMenu">
+                                    <span class="icon-close"></span>
+                                </button>
+
+                                <button class="options-back" data-bind="click: function(){ kt.Service.TopNavigation.toggleMenuX('burger', 'more-portals'); }">
+                                    <span class="icon-left"></span>
+                                </button>
+                            </div>
+
+                            <div class="collapsed-nested-menu_content" data-menu-id="more-portals">
+                                <div class="h3 nested-menu-headline d-sm-none hidden-sm-up">
+                                    Unsere Portale
+                                </div>
+
+                                    
+    <ul class="list-unstyled col-xs-12">
+                    
+                                                <li>
+                        <a title="11880 Fachportale" rel="noopener" target="_blank" href="https://unternehmen.11880.com/fachportaleintrag#fachportale">
+                            11880 Fachportale
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="werkenntdenBESTEN" rel="noopener" target="_blank" href="https://www.werkenntdenbesten.de">
+                            werkenntdenBESTEN
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="wirfindendeinenJOB" rel="noopener" target="_blank" href="https://www.wirfindendeinenjob.de/">
+                            wirfindendeinenJOB
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="cleverB2B" rel="noopener" target="_blank" href="https://business.cleverb2b.de">
+                            cleverB2B
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Postleitzahlen.de" rel="noopener" target="_blank" href="https://www.postleitzahlen.de">
+                            Postleitzahlen.de
+                        </a>
+                    </li>
+                                    
+    </ul>
+
+                            </div>
+                        </div>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Referenzen" rel="noopener" target="_blank" href="https://erfahrungen.11880.com">
+                            Referenzen
+                        </a>
+                    </li>
+                                    
+    </ul>
+
+                            </div>
+                        </div>
+                    </li>
+                                                
+                            <li>
+                    <a class="register-company" title="Firma eintragen" rel="noopener" href="https://firma-eintragen-kostenlos.11880.com">
+                        Firma eintragen
+                    </a>
+                </li>
+                                
+                            <li class="separator clearfix">
+                </li>
+                                
+                                                <li>
+                        <button class="js-toggle-about-us" data-bind="click: function() { kt.Service.TopNavigation.toggleMenuX('burger', 'about-us', false); }">
+                            Über 11880.com
+
+                            <span class="icon-right">
+                            </span>
+                        </button>
+
+                        <div class="js-submenu js-submenu-about-us collapsed-nested-menu" data-bind="{ visible: kt.Service.TopNavigation.isMenuVisibleX('burger', 'about-us') }" data-is-initially-open="true" style="display: none;">
+
+                            <div class="options d-sm-none hidden-sm-up">
+                                <button class="options-close" aria-label="Menü" data-bind="click: kt.Service.TopNavigation.toggleBurgerMenu">
+                                    <span class="icon-close"></span>
+                                </button>
+
+                                <button class="options-back" data-bind="click: function(){ kt.Service.TopNavigation.toggleMenuX('burger', 'about-us'); }">
+                                    <span class="icon-left"></span>
+                                </button>
+                            </div>
+
+                            <div class="collapsed-nested-menu_content" data-menu-id="about-us">
+                                <div class="h3 nested-menu-headline d-sm-none hidden-sm-up">
+                                    Über 11880.com
+                                </div>
+
+                                    
+    <ul class="list-unstyled col-xs-12">
+                    
+                                                <li>
+                        <a title="Über uns" rel="noopener" target="_blank" href="https://unternehmen.11880.com/ueber-uns">
+                            Über uns
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Arbeiten bei 11880.com" rel="noopener" target="_blank" href="https://karriere.11880.com">
+                            Arbeiten bei 11880.com
+                        </a>
+                    </li>
+                                                
+                                                <li>
+                        <a title="Investor Relations" rel="noopener" target="_blank" href="https://ir.11880.com">
+                            Investor Relations
+                        </a>
+                    </li>
+                                    
+    </ul>
+
+                            </div>
+                        </div>
+                    </li>
+                                    
+    </ul>
+
+                                                                    </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                                    <div class="nav navbar-nav navbar-main nav-company-page hidden-xs" data-bind="visible: kt.Service.TopNavigation.isLeftNavigationVisible" style="display: none;">
+                        Sie sind ein Unternehmen?<br>
+                        <a href="https://unternehmen.11880.com" rel="noopener nofollow" title="11880.com-Unternehmensbereich" target="_blank">Zum 11880.com-Unternehmensbereich wechseln</a>
+                    </div>
+                
+                <div class="nav-search-bar-header navbar-left navbar-search" data-bind="visible: kt.Service.TopNavigation.isSearchBarVisible" style="">
+                    <div class="search-bar-header">
+                        <search-bar-header params="{ 'instance': 'header' }">
+        <div class="hotfix-header">
+            <div role="tabpanel" class="tab-pane active">
+                <form method="post" action="" class="form-inline" data-bind="submit: kt.Service.Search.Delegate('header').onSubmit">
+                    <div class="h3 hidden-lg hidden-md">Suche im Branchenbuch</div>
+                    <div class="row">
+                        <search-part params="{
+                        instance: 'header',
+                        part: 'entity',
+                        cssClass: 'col-xs-12 col-sm-4 col-md-5 form-group form-group-lg',
+                        cssClassInput: 'form-control search-and-find-branch-input',
+                        ariaLabel: 'Branche',
+                        tabIndex: 95
+                    }">
+
+    <div class="search-part col-xs-12 col-sm-4 col-md-5 form-group form-group-lg" data-bind="attr: { 'class': cssClass }">
+        <input type="search" autocomplete="off" class="search-input form-control search-and-find-branch-input" placeholder="Branche, Firma, Name, Tel." data-bind="textInput: delegate.input,
+                      hasFocus: delegate.inputHasFocus,
+                      attr: {
+                        'id': idInput,
+                        'name': inputName,
+                        'value': delegate.input,
+                        'class': cssClassInput,
+                        'tabindex': tabIndex,
+                        'placeholder': delegate.options.placeholder,
+                        'data-suggest-from': suggestFrom,
+                        'autofocus': autofocus,
+                        'autocomplete': 'off',
+                        'aria-label': ariaLabel,
+                        'data-placeholder': delegate.options.placeholder
+                      },
+                      event: { keydown: delegate.onKeydown, keyup: delegate.onKeyup },
+                      placeholder" id="" name="" value="" tabindex="95" aria-label="Branche" data-placeholder="Branche, Firma, Name, Tel.">
+            <span class="spinner" data-bind="visible: delegate.showSpinner" style="display: none;"></span>
+            <span class="icon-empty-input" data-bind="visible: delegate.showClearInput,
+                             click: delegate.onClickClearInput" style="display: none;"></span>
+
+        <div data-bind="component: {
+            name: 'search-suggest',
+            params: delegate.getSuggestParams()
+        }">
+
+    <div class="search-suggest sb-auto-suggest" data-bind="visible: delegate.suggestIsVisible,
+                        attr: { 'class': cssClass }" style="display: none;">
+        <ul data-bind="foreach: delegate.combinedItems"></ul>
+    </div>
+
+    <div class="did-you-mean" data-bind="visible: delegate.showDidYouMean" style="display: none;">
+        <p data-bind="visible: !delegate.didYouMeanNoMatch()">
+            <span class="hidden-xs">Der von Ihnen eingegebene Ort war uneindeutig.</span>
+            Meinten Sie z.B. ...
+        </p>
+        <ul data-bind="visible: !delegate.didYouMeanNoMatch(),
+                   foreach: delegate.didYouMeanResults"></ul>
+        <p data-bind="visible: !delegate.didYouMeanNoMatch() &amp;&amp; delegate.didYouMeanHasMoreResults()" style="display: none;">
+            Es gibt noch mehr mögliche Orte für Ihre Suche. Bitte grenzen Sie die Suche etwas weiter ein.
+        </p>
+        <p data-bind="visible: delegate.didYouMeanNoMatch" style="display: none;">
+            Zu Ihrer Suche wurde kein passender Ort gefunden.
+        </p>
+        <ul data-bind="visible: delegate.didYouMeanNoMatch" style="display: none;">
+            <li>
+                <a href="javascript:void(0);" data-bind="click: delegate.onClickCloseDidYouMean">schließen</a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+    </div>
+
+</search-part>
+                        <search-part params="{
+                        instance: 'header',
+                        part: 'location',
+                        cssClass: 'col-xs-12 col-sm-4 col-md-4 col-lg-5 form-group form-group-lg',
+                        cssClassInput: 'form-control search-and-find-location-input',
+                        ariaLabel: 'Ort',
+                        tabIndex: 96
+                    }">
+
+    <div class="search-part col-xs-12 col-sm-4 col-md-4 col-lg-5 form-group form-group-lg" data-bind="attr: { 'class': cssClass }">
+        <input type="search" autocomplete="off" class="search-input form-control search-and-find-location-input" placeholder="PLZ, Ort, Str." data-bind="textInput: delegate.input,
+                      hasFocus: delegate.inputHasFocus,
+                      attr: {
+                        'id': idInput,
+                        'name': inputName,
+                        'value': delegate.input,
+                        'class': cssClassInput,
+                        'tabindex': tabIndex,
+                        'placeholder': delegate.options.placeholder,
+                        'data-suggest-from': suggestFrom,
+                        'autofocus': autofocus,
+                        'autocomplete': 'off',
+                        'aria-label': ariaLabel,
+                        'data-placeholder': delegate.options.placeholder
+                      },
+                      event: { keydown: delegate.onKeydown, keyup: delegate.onKeyup },
+                      placeholder" id="" name="" value="" tabindex="96" aria-label="Ort" data-placeholder="PLZ, Ort, Str.">
+            <span class="spinner" data-bind="visible: delegate.showSpinner" style="display: none;"></span>
+            <span class="icon-empty-input" data-bind="visible: delegate.showClearInput,
+                             click: delegate.onClickClearInput" style="display: none;"></span>
+
+        <div data-bind="component: {
+            name: 'search-suggest',
+            params: delegate.getSuggestParams()
+        }">
+
+    <div class="search-suggest sb-auto-suggest" data-bind="visible: delegate.suggestIsVisible,
+                        attr: { 'class': cssClass }" style="display: none;">
+        <ul data-bind="foreach: delegate.combinedItems">
+            <li data-bind="attr: { 'class': $data._type }, style: { 'background-color': $data.groupColor , 'padding-left': $data.groupColor ? '10px' : undefined, 'margin-top': $data.groupStart ? '10px' : undefined }" class="geolocation"><a href="javascript:void(0)" data-bind="html: $component.delegate.getItemLabelHtml($data),
+                                   click: $component.delegate.onClickSuggestItem">Aktueller Ort</a></li>
+        </ul>
+    </div>
+
+    <div class="did-you-mean" data-bind="visible: delegate.showDidYouMean" style="display: none;">
+        <p data-bind="visible: !delegate.didYouMeanNoMatch()">
+            <span class="hidden-xs">Der von Ihnen eingegebene Ort war uneindeutig.</span>
+            Meinten Sie z.B. ...
+        </p>
+        <ul data-bind="visible: !delegate.didYouMeanNoMatch(),
+                   foreach: delegate.didYouMeanResults"></ul>
+        <p data-bind="visible: !delegate.didYouMeanNoMatch() &amp;&amp; delegate.didYouMeanHasMoreResults()" style="display: none;">
+            Es gibt noch mehr mögliche Orte für Ihre Suche. Bitte grenzen Sie die Suche etwas weiter ein.
+        </p>
+        <p data-bind="visible: delegate.didYouMeanNoMatch" style="display: none;">
+            Zu Ihrer Suche wurde kein passender Ort gefunden.
+        </p>
+        <ul data-bind="visible: delegate.didYouMeanNoMatch" style="display: none;">
+            <li>
+                <a href="javascript:void(0);" data-bind="click: delegate.onClickCloseDidYouMean">schließen</a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+    </div>
+
+</search-part>
+                        <div class="col-xs-12 col-sm-4 col-md-2 search-bar-header-button">
+                            <button type="submit" class="btn btn-default-highlight btn-find" aria-label="Finden" tabindex="97">
+                                <span class="btn-label">Finden</span>
+                                <span class="icon-search"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </search-bar-header>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            </nav>
+
+<div id="page" class="static-map-bg">
+
+    <section class="content-body content entry-detail-content">
+                <div class="container-fluid">
+            
+<script type="text/javascript">
+    var kt = kt || {};
+    kt.Data = kt.Data || {};
+    kt.Data.Shared = kt.Data.Shared || {};
+    kt.Data.Shared.entrySeoId = '251090143B50860312';
+</script>
+<section id="entry-detail" data-entry-encrypted-id="251090143B50860312" data-bind="component: 'entry-detail' " class="entry-detail--portal entry-type-advanced">
+    <section class="entry-detail__main-content">
+        
+
+<section id="entry" class="box-entry-detail box-entry-detail--main" data-company-id="50860312">
+    <!--entry header-->
+        <!--end entry header-->
+
+    
+    
+    <!--owners name-->
+    <div class="row row--spacing">
+	    <div class="col-xs-10 col-sm-9">
+		    <h1 class="title">IMS Gear SE &amp; Co. KGaA</h1>
+            	    </div>
+
+	    <div class="col-xs-2 col-sm-3 entry-detail__title--type">
+                            <span class="checked-entry icon-signet-checked" title="validierter Eintrag">
+                </span>
+            	    </div>
+    </div>
+
+            <div class="row row--spacing">
+            <div class="col-xs-12">
+                    <div id="additional-features" class="additional-features">
+                    <div class="additional-feature">
+                <span class="additional-feature-icon icon icon-f-check-circle">
+                </span>
+
+                <span class="additional-feature-label">
+                    Vom Inhaber bestätigt
+                </span>
+            </div>
+        
+    </div>
+
+            </div>
+        </div>
+    
+    <div class="detail-information-grid-start">
+        <div class="item-detail-bewertung">
+                                                <div class="entry-detail__entry-rating">
+                        <div class="rating-wrapper" title="zu den Bewertungen" scrollto="#ratings">
+                            <p class="kt-rating">
+    </p>
+
+
+
+
+                        </div>
+                        <a class="entry-top-link hidden-xs" href="#jetzt-bewerten" onclick="kt.Component.Ratings.showRatingFormModal();" rel="nofollow">
+                            <span class="label">Jetzt bewerten!</span>
+                        </a>
+                    </div>
+                                                    <div class="entry-detail__next-opening-hours next-opening-hours next-opening-hours--closed" scrollto="#opening-hours">
+                                                                                    Geschlossen bis Mi., 07:30 Uhr
+                                                                        </div>
+                            
+                            <div class="entry-detail-list__item">
+                                            <div class="entry-detail__categories no-logo">
+                            <span class="entry-item-head">
+                                                                                                            <span class="trades-list">
+                                            <strong>Antriebstechnik</strong>
+                                        </span>
+                                                                                                                                </span>
+                                                    </div>
+                                    </div>
+                    </div>
+
+        <div class="item-detail-photo">
+                            <div class="entry-detail-photo">
+                                                                  <button class="ugc-add-media" rel="nofollow">
+            <span class="ugc-add-media__icon icon icon-add-photo hidden-sm-up"></span>
+            <img class="hidden-xs" width="240" height="180" src="//static.11880.com/Portal/images/11880/add-photo-upload.webp" fetchpriority="high" alt="Platzhalterbild für IMS Gear SE &amp; Co. KGaA Donaueschingen" title="Platzhalterbild für IMS Gear SE &amp; Co. KGaA Donaueschingen">
+        </button>
+    
+                                     </div>
+                    </div>
+
+        <div class="item-detail-mobile-action-bar">
+                            
+    <ul class="mobile-action-bar">
+                    <li class="mobile-action-bar__item">
+                                                            <a rel="noopener" href="tel:+4977185070" target="_self">
+                                            <div class="mobile-action-bar__icon icon icon-phone"></div>
+                        <div class="mobile-action-bar__label">Anrufen</div>
+
+                                                    <meta itemprop="telephone" content="(0771)&amp;nbsp;85070">
+                                                                    </a>
+                                                </li>
+                    <li class="mobile-action-bar__item">
+                                                            <form class="link-form" action="https://www.11880.com/form" method="POST"><input type="hidden" name="source" value="*JSPPyTNQ4Hl4n6FJKGEcgEAQEZoUiTeyibimpML1zG5MGiz8oq-Weh0EX2158mSlZAefLpch55km5gIQ56fz0fDSol1_pei7LDhnWJHmNaeH0IjpAFn3f0ieP-MU68iAdscP_grw4zdE-r5bizP_QmWl8d2ibgDe7s3k6FwcCCwlSJZUL8elfvc_6vsFhdtSwiABaCztXWDjqc7Bh12PUSa83miEoOM7qCNJLNhjl8kgIUyrLpKabMeFNXbAtXGBQJJu_Qs_SvTT4hZb_WVI_rjeRjQp-hqdKv9edJZRhg5UGbVvDTVk8K5KE8rGNaSjpfwd_l-aTBOQleRAOIhd3_oEYsr-rJoTRKsGDKcF9XjwbyYve44nfBumTCD0vLYlVYL7R1_Xcsb4yzMVZr246RlB2f6gCgpwDtd1rCm8LKMEpmbxMwxtMzpMgWBXOMsBqjbUEfR8MaIkuatbJd1kRF157wlNexeJkSZpBteDNduR99PwmxWjPjm6Ec1cUkSkvajKNem6vI5lyH_bnYE78Vx0PZJDLIR813KNzFdfAPa8K2zhlVMzgBqj7622aYt4BziOBOQCVdhlJ9XmYx3DFSNKCsLtDRDus4l4kgFFjpfZvyOiEtsZfOvrQf6qVvK-hu3P09042TFXh-3UEobDXNL2pYb0Vxhw9Otzhz3HNd9ASsyL-cvG2SKhKAzIyaX0EbqayQzPMZer_UbDABXq04Qxzy01jzH5U1XcFsrbFX7Bi282aQfxevuwXK4OtPb8o_NVuG6Wp1lWkXsMZKM9vzOGxhXO1osrEZVWS5DmZqJfB8A-ueFIpX_dPmgS6m-z3KH1vizZ-kjiZZ2LA5OMlPDobjhGkSacEXpVC66CgzR1RG7r83jrwmG5lrmJiWi1H7gcJYrKLnObzr9vtGt0bqid-YPhPSn-6LIKAk1n_OymCpNhMBPl60PSUveadQJNM_9KYkLDtxs"><button class="link tracking--entry-detail-mail-link" data-tracking-prefix="contactLink_" type="submit">
+                            <div class="mobile-action-bar__icon icon icon-envelope"></div>
+                            <div class="mobile-action-bar__label">E-Mail</div>
+                                                    <meta itemprop="email" content="info@imsgear.com">
+                                                </button></form>
+                                                </li>
+                    <li class="mobile-action-bar__item">
+                                                            <div scrollto="#karte-und-route">
+                                            <div class="mobile-action-bar__icon icon icon-location-pointer"></div>
+                        <div class="mobile-action-bar__label">Karte</div>
+
+                                                                    </div>
+                                                </li>
+                    <li class="mobile-action-bar__item">
+                                                            <a rel="noopener" href="https://www.imsgear.com" target="_blank">
+                                            <div class="mobile-action-bar__icon icon icon-website"></div>
+                        <div class="mobile-action-bar__label">Website</div>
+
+                                                    <meta itemprop="url" content="https://www.imsgear.com">
+                                                                    </a>
+                                                </li>
+        
+    </ul>
+
+                    </div>
+        <div class="item-detail-information">
+            <div class="entry-detail-list">
+                                                        <div class="entry-detail-list__item">
+                        <a class="entry-detail-list__wrapper" href="tel:+4977185070" title="Telefonnummer">
+                            <div class="entry-detail-list__icon entry-detail-list__icon--phone">
+                            </div>
+
+                            <div class="entry-detail-list__label">
+                                (0771)&nbsp;85070
+                                                            </div>
+                        </a>
+                    </div>
+                
+                                    <div class="entry-detail-list__item">
+                        <div class="entry-detail-list__wrapper">
+                            <div class="entry-detail-list__icon entry-detail-list__icon--location">
+                            </div>
+
+                            <div class="entry-detail-list__label">
+                                <div title="Adresse">
+                                                                            <div>
+                                            <span>Heinrich-Hertz-Str. 16 </span>
+                                                                                    </div>
+                                                                                                                <div>
+                                            <span class="js-postal-code">78166</span>
+                                            <span class="js-address-locality">Donaueschingen</span>
+                                                                                    </div>
+                                                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="entry-detail-list">
+                                            <div class="entry-detail-list__item">
+                                                            <a href="mailto:info@imsgear.com?subject=Anfrage über 11880.com" title="info@imsgear.com" data-company-id="50860312" class="tracking-mail-to entry-detail-list__wrapper" id="box-email-link">
+                                    <div class="entry-detail-list__icon entry-detail-list__icon--email">
+                                    </div>
+                                    <div class="entry-detail-list__label">
+                                        <span>
+                                            info@imsgear.com
+                                        </span>
+                                    </div>
+                                </a>
+                                                    </div>
+                    
+                                            <div class="entry-detail-list__item">
+                                                            <a class="entry-detail-list__wrapper btn-leadform tracking--entry-detail-website-link" target="_blank" rel="noopener nofollow" href="https://www.imsgear.com" data-bind="click: function() { kt.Service.Tracking.triggerROA('url', null, '251090143B50860312'); return true; }">
+                                                                <div class="entry-detail-list__icon entry-detail-list__icon--website">
+                                    </div>
+
+                                    <div class="entry-detail-list__label">
+                                        https://www.imsgear.com
+                                    </div>
+                                </a>
+                                                                        <div id="main-entry-url-stats" class="main-entry-url-stats">
+                    <div class="main-entry-url-stat">
+                <span class="main-entry-url-stat-icon icon icon-lock">
+                </span>
+
+                <span class="main-entry-url-stat-label">
+                    <div class="tooltip-anchor">SSL zertifiziert<div class="tooltip-container">"SSL zertifiziert" bedeutet, dass eine Website ein SSL-Zertifikat verwendet, um die Verbindung zwischen dem Webserver und dem Browser des Benutzers zu verschlüsseln.<div class="tooltip-arrow-down"></div></div></div>
+                </span>
+            </div>
+                    <div class="main-entry-url-stat">
+                <span class="main-entry-url-stat-icon icon icon-bolt">
+                </span>
+
+                <span class="main-entry-url-stat-label">
+                    lädt normal
+                </span>
+            </div>
+                    <div class="main-entry-url-stat">
+                <span class="main-entry-url-stat-icon icon icon-mobile-alt">
+                </span>
+
+                <span class="main-entry-url-stat-label">
+                    mobil optimiert
+                </span>
+            </div>
+        
+    </div>
+
+                                                        </div>
+                                    </div>
+            </div>
+        </div>
+
+        <div class="item-detail-socal-media">
+            <div class="social-media social-media-icons">
+                            </div>
+
+            <div class="social-media social-media-buttons">
+                            </div>
+
+                                                </div>
+
+        <div class="item-detail-changes-link">
+                                        
+                                        
+                    </div>
+    </div>
+</section>
+
+
+        <div class="middle-sticky-navigation-container"><nav class="middle-sticky-navigation affix-top" id="middle-sticky-navigation"><ul class="middle-sticky-navigation__nav-list nav owl-loaded owl-drag"><div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 753px;"><div class="owl-item active" style="width: auto;"><li class="middle-sticky-navigation__nav-list-item"><a href="#oeffnungszeiten" class="middle-sticky-navigation__nav-link">Öffnungszeiten</a></li></div><div class="owl-item active" style="width: auto;"><li class="middle-sticky-navigation__nav-list-item"><a href="#leistungen" class="middle-sticky-navigation__nav-link">Leistungen</a></li></div><div class="owl-item active" style="width: auto;"><li class="middle-sticky-navigation__nav-list-item"><a href="#auszeichnungen" class="middle-sticky-navigation__nav-link">Auszeichnungen</a></li></div><div class="owl-item active" style="width: auto;"><li class="middle-sticky-navigation__nav-list-item"><a href="#bewertungen" class="middle-sticky-navigation__nav-link">Bewertungen</a></li></div><div class="owl-item active" style="width: auto;"><li class="middle-sticky-navigation__nav-list-item"><a href="#karte-und-route" class="middle-sticky-navigation__nav-link">Karte &amp; Route</a></li></div></div></div><div class="middle-sticky-navigation__controls"><button aria-label="zurück scrollen" class="middle-sticky-navigation__control middle-sticky-navigation__control--left disabled"><i class="icon-left"></i></button><button aria-label="weiter scrollen" class="middle-sticky-navigation__control middle-sticky-navigation__control--right disabled"><i class="icon-right"></i></button></div><div class="owl-dots disabled"></div></ul></nav></div>
+
+        <section class="left-section">
+                            <section class="box-entry-detail box-entry-detail--ad">
+                                <div id="middle_ad" class="middle-ad" style="min-height: 250px;"></div>
+    
+                </section>
+                        
+	<section id="opening-hours" class="box-entry-detail box-entry-detail--opening-hours"><div class="link--jumpmark" id="oeffnungszeiten"></div><div class="entry-left-item"><h2 class="entryboxes-title">Öffnungszeiten</h2><div class="content"><span class="sut-title">Hier finden Sie die Öffnungszeiten von IMS Gear SE &amp; Co. KGaA in Donaueschingen.</span><table class="openingHourTable"><tbody><tr class="openingHourRow"><td class="week-days">Montag</td><td class="hours1">07:30-17:00</td></tr><tr class="openingHourRow active"><td class="week-days">Dienstag</td><td class="hours1">07:30-17:00</td></tr><tr class="openingHourRow"><td class="week-days">Mittwoch</td><td class="hours1">07:30-17:00</td></tr><tr class="openingHourRow"><td class="week-days">Donnerstag</td><td class="hours1">07:30-17:00</td></tr><tr class="openingHourRow"><td class="week-days">Freitag</td><td class="hours1">07:30-16:00</td></tr></tbody></table></div></div></section>
+
+
+            <div id="responsive-bhvr--entry-ratings-sm"></div>
+            
+            			
+	<section id="trade-service-features" class="box-entry-detail box-entry-detail--trade-service-features"><div class="link--jumpmark" id="leistungen"></div><div class="entry-left-item"><h2 class="entryboxes-title">Leistungen</h2><div class="content"><p class="term-box__panel-infotext">Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:</p><div class="term-box__panel-content"><div class="row"><div class="term-box__panel-col col-xs-12 col-sm-3 ">Antriebstechnik</div></div></div></div></div></section>
+
+            
+            
+
+            
+                                                    <div id="responsive-bhvr--ad-sidebar-xs-sm">
+            
+        </div>
+    
+                        
+                <section id="auszeichnungen" class="box-entry-detail">
+        <div class="entry-left-item">
+            <div class="row">
+                <div class="col-xs-12">
+                    <span class="entryboxes-title h2">Auszeichnungen und weitere Zertifikate</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 box-entry-detail--awards-wrapper">
+                                    <div class="box-entry-detail--award">
+                        <a rel="noopener" href="https://www.werkenntdenbesten.de/e/50860312/antriebstechnik/donaueschingen/ims-gear-se-co-kgaa-bewertungen.html?utm_source=referral_11880&amp;utm_medium=widget&amp;utm_campaign=wkdb_widget" target="_blank">
+                            <img class="unveil unveil-placeholder" data-src="https://www.11880.com/Portal/assets/dynamic/wkdbRatingSeal__%2AHgy43UhWXnanx9Su4cBVcOmi0q_OjdY9bhN0u9zVsKd0Ss76FNdjKtRDXK1g_P735dROTFS4iYBeB2f2oqWweBGCnmrMTSRsGPuHHoDSG0Vd16dF9Dyyqqe-9T3O2gWkSIGwEyEDhxk.png" data-src-retina="https://www.11880.com/Portal/assets/dynamic/wkdbRatingSeal__%2AHgy43UhWXnanx9Su4cBVcOmi0q_OjdY9bhN0u9zVsKd0Ss76FNdjKtRDXK1g_P735dROTFS4iYBeB2f2oqWweBGCnmrMTSRsGPuHHoDSG0Vd16dF9Dyyqqe-9T3O2gWkSIGwEyEDhxk@2x.png" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="werkenntdenBESTEN Siegel mit der Bewertung Gut" title="Zum Eintrag auf werkenntdenBESTEN.de" height="125" width="125">
+                        </a>
+                    </div>
+                
+                
+                
+                
+                
+            </div>
+        </div>
+    </section>
+
+            <div id="responsive-bhvr--entry-ratings-md-lg">
+                	
+			<div id="ratings-position-desktop"></div>
+						<section id="ratings" class="box-entry-detail box-entry-detail--ratings" data-bind="component: { 'name': 'ratings', params : { 'comment' : '', 'selectedRate' : '' }}">
+		    <div id="bewertungen" class="link--jumpmark"></div>
+		    <div class="entry-left-item">
+				<div class="asterisk-entryboxex-title">
+					<h2 class="entryboxes-title" id="jetzt-bewerten">Bewertungen und Erfahrungsberichte</h2>
+				</div>
+		        <div class="content">
+		            		                <div class="no-rating-msg">
+			                <p class="no-rating-comment">Für <b>IMS Gear SE &amp; Co. KGaA in Donaueschingen</b> sind noch keine Bewertungen abgegeben worden. Wenn Sie Erfahrungen mit diesem Unternehmen gesammelt haben, teilen Sie diese hier mit anderen Seitenbesuchern.</p>
+		                    <p class="arrow-comment">Geben Sie jetzt die erste Bewertung ab!</p>
+		                </div>
+			            <div class="btn-box">
+			                <button id="box-rating-link" class="btn btn-default" data-bind="click: showRatingFormModal">Jetzt bewerten</button>
+			            </div>
+		            		        </div>
+		    </div>
+            
+<div id="rating-form-modal" class="entry-modal modal fade" data-backdrop="true" data-keyboard="true" tabindex="-1" role="dialog" aria-labelledby="ratingFormLabel" aria-hidden="true">
+	<div class="modal-dialog" data-bind="ratingInitialized: true">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true" class="icon-close"></span></button>
+				<h2><span class="entry-headline-text">Bewertung schreiben</span></h2>
+			</div>
+			<div class="modal-body">
+				<div data-bind="style: { display: ( successed() || 0 ) ? 'none' : 'block' } " style="display: block;">
+					<div class="introtext">
+					    <p data-bind="visible: page() == 1" style="">Geben Sie jetzt Ihre Bewertung für IMS Gear SE &amp; Co. KGaA in Donaueschingen ab. Mit Ihrer Hilfe können andere von Erfahrungsberichten aus erster Hand profitieren!</p>
+					    <p data-bind="visible: page() == 2" style="display: none;">Zuletzt brauchen wir noch Ihre E-Mail-Adresse, um Missbrauch vorzubeugen. Diese Adresse wird nicht öffentlich geteilt, sie dient ausschließlich der internen Bestätigung.</p>
+					</div>
+					<div class="rating-form">
+						<form id="rating-form" data-bind="submit: submitRatingForm, style: { display:  ( successed() || 0) ? 'none' : 'block' } " autocomplete="off" style="display: block;">
+
+                            <div class="page page-1" data-bind="visible: page() == 1" style="">
+    					        <div class="rating-form-stars">
+								    <div class="heading" id="jetzt-bewerten">Ihre Gesamtbewertung*</div>
+                                    <div class="stars-line">
+                                                                                    <span class="rating-one-star icon-star-empty" data-bind="click: rate.bind( $data, 1 ), event: { mouseover: rateMouseOver.bind( $data, 1 ), mouseout: rateMouseOut},  css: (hoveredRate() >= 1 || ( hoveredRate() == 0 &amp;&amp; selectedRate() >= 1 )) ? 'icon-star' : 'icon-star-empty' "></span>
+                                                                                    <span class="rating-one-star icon-star-empty" data-bind="click: rate.bind( $data, 2 ), event: { mouseover: rateMouseOver.bind( $data, 2 ), mouseout: rateMouseOut},  css: (hoveredRate() >= 2 || ( hoveredRate() == 0 &amp;&amp; selectedRate() >= 2 )) ? 'icon-star' : 'icon-star-empty' "></span>
+                                                                                    <span class="rating-one-star icon-star-empty" data-bind="click: rate.bind( $data, 3 ), event: { mouseover: rateMouseOver.bind( $data, 3 ), mouseout: rateMouseOut},  css: (hoveredRate() >= 3 || ( hoveredRate() == 0 &amp;&amp; selectedRate() >= 3 )) ? 'icon-star' : 'icon-star-empty' "></span>
+                                                                                    <span class="rating-one-star icon-star-empty" data-bind="click: rate.bind( $data, 4 ), event: { mouseover: rateMouseOver.bind( $data, 4 ), mouseout: rateMouseOut},  css: (hoveredRate() >= 4 || ( hoveredRate() == 0 &amp;&amp; selectedRate() >= 4 )) ? 'icon-star' : 'icon-star-empty' "></span>
+                                                                                    <span class="rating-one-star icon-star-empty" data-bind="click: rate.bind( $data, 5 ), event: { mouseover: rateMouseOver.bind( $data, 5 ), mouseout: rateMouseOut},  css: (hoveredRate() >= 5 || ( hoveredRate() == 0 &amp;&amp; selectedRate() >= 5 )) ? 'icon-star' : 'icon-star-empty' "></span>
+                                        
+                                        <span class="star-status" data-bind="text: rateDescription">Sterne auswählen</span>
+                                        <input type="hidden" name="rating[rating_stars]" data-bind=" value: selectedRate" value="0">
+                                        <input type="hidden" name="rating[company_id]" value="50860312">
+                                        <input type="hidden" name="rating[city_id]" value="20279319">
+                                    </div>
+                                    <div class="error-msg" data-bind="visible: invalidRate()" style="display: none;">Bitte geben Sie eine Bewertung ab!</div>
+    					        </div>
+
+                                <div class="rating-form-box">
+                                    <label for="rating_message" class="heading">Ihre Bewertung*</label>
+                                    <textarea id="rating_message" placeholder="Schreiben Sie Ihren Text so, als würden Sie einem guten Freund erklären, warum gerade dieses Unternehmen besonders gut oder schlecht ist." class="form-control" name="rating[rating_message]" data-bind="value: comment, valueUpdate: 'afterkeydown', css: { error: errorMessage() }"></textarea>
+                                    <span class="char-count"><span data-bind="text: commentSymbolsCount">4000</span> Zeichen verfügbar</span>
+                                    <span data-bind="text: errorMessage() ? errorMessage() : '', css: errorMessage() ? 'error-msg' : '' "></span>
+                                    <div class="buttons-box">
+                                                                            </div>
+                                </div>
+
+                                <div class="rating-form-buttons clearfix">
+                                    
+
+                                        <button type="submit" class="btn btn-default-highlight btn-right" value="submit">Jetzt bewerten</button>
+                                                                    </div>
+                            </div>
+                                                            <div class="page page-2" data-bind="visible: page() == 2" style="display: none;">
+                                    <div class="rating-form-box">
+                                        <div class="buttons-box">
+                                            
+                                            <label for="rating_name" class="heading" id="rating_name--label">Ihr Name* </label>
+                                            <input type="text" class="rating_name" id="rating_name" name="rating[name]" value="" placeholder="Max Mustermann" data-bind="valueUpdate: 'afterkeydown', css: { error: nameErrorMessage() }, hasFocus: ratingNameSelected" autocomplete="off">
+                                            <span data-bind="html: nameErrorMessage() ? nameErrorMessage() : '', css: nameErrorMessage() ? 'error-msg' : '' "></span>
+                                            
+                                            <label for="rating_email" class="heading">Ihre E-Mail-Adresse* <span class="subtext">(wird nicht angezeigt, nur für die Bestätigungs-E-Mail)</span></label>
+                                            <input type="text" class="rating_email" id="rating_email" name="rating[email]" value="" placeholder="max.mustermann@musterhausen.de" data-bind="value: email, valueUpdate: 'afterkeydown', css: { error: emailErrorMessage() }, hasFocus: ratingEmailSelected">
+                                            <span data-bind="html: emailErrorMessage() ? emailErrorMessage() : '', css: emailErrorMessage() ? 'error-msg' : '' "></span>
+                                            <span data-bind="text: errorMessage() ? errorMessage() : '', css: errorMessage() ? 'error-msg' : '' "></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="rating-form-buttons clearfix">
+                                        <button type="button" class="js-rating-back-button btn btn-default btn-left" data-bind="visible: page() == 2, event: { click: function () { goToPage(1); } }" style="display: none;">Zurück</button>
+
+                                        <button id="rating-submit-button" type="submit" class="btn btn-default-highlight btn-right" value="submit">Veröffentlichen</button>
+                                    </div>
+                                </div>
+                            					    </form>
+                        
+                        <form action="//my.11880.com/login?callbackUrl=http%3A%2F%2Fwww.11880.com%2Fbranchenbuch%2Fdonaueschingen%2F251090143B50860312%2Fims-gear-se-co-kgaa.html" method="post" class="rate-data-form">
+                            <input type="hidden" name="rating[rating_stars]" data-bind="value: selectedRate" value="0">
+                            <input type="hidden" name="rating[company_id]" value="50860312">
+                            <input type="hidden" name="rating[city_id]" value="20279319">
+                            <input type="hidden" name="rating[rating_message]" data-bind="value: comment">
+                        </form>
+					</div>
+				</div>
+
+			    <div class="rating-form-successed" data-bind="style: { display: ( successed() || 0 ) ? 'block' : 'none' } " style="display: none;">
+			        <div class="success-info rating-form top-box">
+			            <p>Vielen Dank für Ihre Bewertung!</p>
+			            <input type="hidden" value="" id="rating-success-message">
+			            <p class="success-text" data-bind="text: successMessage "></p>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+		</section>
+	
+            </div>
+                            
+                                        <div class="map-section box-entry-detail box-entry-detail--map-section" id="map-section">
+                    <div class="link--jumpmark" id="karte-und-route"></div>
+                    <h2 class="entryboxes-title">Karte &amp; Route</h2>
+                                            <form class="link-form" action="https://www.11880.com/form" method="POST"><input type="hidden" name="source" value="*JSPPyTNQ4Hl4n6FJKGEcgK9c_sa0NcjC0I41PQmRy45LyXdOj9w33Vk97JmNdfDknSvGPEcD2e7AUBibO37rfjyK0txQ_0hDrdGYphbGWMp--dtvbo5Nxn53cCoUniabvv_b7d1WNFgS8WluoxpzfAnXuTK6wUIe_qQyW8Zfv4dCiOB9e8yGEg"><button class="link routenplaner" title="Im 11880.com Routenplaner öffnen" type="submit"><span class="icon-route"></span></button></form>
+                                        <form class="link-form" action="https://www.11880.com/form" method="POST"><input type="hidden" name="source" value="*JSPPyTNQ4Hl4n6FJKGEcgN8CIYq2JWnkRwr_HIJpafyZWK54XOWzJ-sGFu27I2Gt1m5hySnhlaEiJnSNARpK_F5awNBeOacK8Bj5lW78f0buQreN90S0kQ"><button class="link external-map" title="Auf Stadtplan Donaueschingen anzeigen" type="submit"><span class="icon-external-link"></span></button></form>
+                    <div class="content">
+                        <form class="link-form" action="https://www.11880.com/form" method="POST"><input type="hidden" name="source" value="*JSPPyTNQ4Hl4n6FJKGEcgN8CIYq2JWnkRwr_HIJpafyZWK54XOWzJ-sGFu27I2Gt1m5hySnhlaEiJnSNARpK_F5awNBeOacK8Bj5lW78f0buQreN90S0kQ"><button class="link inner-map" type="submit">
+                            <img class="unveil_bp img-responsive map-item unveil-placeholder" data-src="https://osms.11880.com/static/smap-47.958557x8.506459-19-400x200-47.958489x8.506459xsmall.png" data-src-md="https://osms.11880.com/static/smap-47.958557x8.506459-20-660x318-47.958489x8.506459xsmall.png" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="830" height="400" alt="Auf Stadtplan Donaueschingen anzeigen">
+                        </button></form>
+                    </div>
+                </div>
+                        
+        </section>
+
+        <section data-bind="css: { 'ads-init': adsInitialized, 'ads-hidden': adsVisible() == false }" class="right-section ads-init">
+
+            
+                                                <section class="supraregional-entries-box common-aside-box" data-address-id="17476"><div class="supraregional-entries-box__header"><i class="icon-office"></i><span>Diese Anbieter aus der Umgebung bieten auch Dienste in Donaueschingen an.</span></div><div class="supraregional-entries-box__content"><ul class="supraregional-entries-box__list" id="supraregional-entries-box__list"><li class="supraregional-entries-box__entry supraregional-entries__entry"><div class="supraregional-entries__entry-wrapper" data-eid="60ca8b337c1ea19e00298183" data-pid="156"><div class="supraregional-entries__name"><a href="/branchenbuch/eschwege/251090143B27964403/praewema-antriebstechnik-gmbh.html" class="supraregional-entries__link">Präwema Antriebstechnik GmbH</a></div><div class="supraregional-entries__middle clearfix"><div class="supraregional-entries__text"><strong>Antriebstechnik</strong>&nbsp; – Lohnfertigungen, Hochleistungshonen&nbsp;in Eschwege</div><div class="supraregional-entries__image"><img src="https://cdn.11880.com/praewema-antriebstechnik-gmbh_52667_fw50h50_eschwege.webp" alt="Logo Präwema Antriebstechnik GmbH"></div></div><div class="supraregional-entries__footer clearfix"><div class="supraregional-entries__ratings"><p class="kt-rating">
+    </p>
+
+
+
+</div><div class="clearfix"><div class="supraregional-entries__distance">375,4 km</div></div></div></div></li><li class="supraregional-entries-box__entry supraregional-entries__entry"><div class="supraregional-entries__entry-wrapper" data-eid="60ca8dcd7c1ea19e002ef0a5" data-pid="45"><div class="supraregional-entries__name"><a href="/branchenbuch/elmshorn/251092445B28871224/hk-hydraulik-kontor-gmbh.html" class="supraregional-entries__link">HK Hydraulik-Kontor GmbH</a></div><div class="supraregional-entries__middle clearfix"><div class="supraregional-entries__text"><strong>Hydraulik</strong>&nbsp; – Bosch-Rexroth-Hydraulik, Hydraulikaggregate&nbsp;in Elmshorn</div><div class="supraregional-entries__image"><img src="https://cdn.11880.com/hk-hydraulik-kontor-gmbh_173784_fw50h50_elmshorn.webp" alt="Logo HK Hydraulik-Kontor GmbH"></div></div><div class="supraregional-entries__footer clearfix"><div class="supraregional-entries__ratings"><p class="kt-rating">
+    </p>
+
+
+
+</div><div class="clearfix"><div class="supraregional-entries__distance">652,8 km</div></div></div></div></li></ul></div><div class="supraregional-entries-box__footer"><button class="button-load-more-entries" id="button-load-more-entries" type="button" disabled="disabled" style="display: none;">Mehr laden</button></div></section>
+                            
+                                                <div id="responsive-bhvr--entry-contactform-md-lg" class="responsive-bhvr-entry-contactform-md-lg"></div>
+                            
+            
+                            <div id="responsive-bhvr--ad-sidebar-sm-md-lg" class="responsive-bhvr-ad-sidebar-sm-md-lg--min-height"><div class="box-entry-detail box-entry-detail--ad">
+                <div id="sidebar_ad" class="sidebar-ad" style="min-height: 320px;"></div>
+            </div></div>
+            
+                                        <div class="box-entry-detail box-entry-detail--ad txt-center hidden-sm hidden-md hidden-lg">
+            <div id="content_4" class="content-4" style="min-height: 280px;"></div>
+        </div>
+    
+            
+                            
+	<section id="similar-entries" class="box-entry-detail box-entry-detail--similar-entries">
+	    <div class="entry-right-item">
+	        <h2 class="entryboxes-title">Ähnliche Anbieter in der Nähe</h2>
+	        <div class="content">
+	            					<div class="supraregional-entries-box__entry supraregional-entries__entry">
+	                	<div class="supraregional-entries__entry-wrapper" data-eid="60df33167c1ea19e00eada5d" data-pid="113"><div class="supraregional-entries__name"><a href="/branchenbuch/donaueschingen/251090143B28228072/sick-stegmann-gmbh.html" class="supraregional-entries__link">SICK Stegmann GmbH</a></div><div class="supraregional-entries__middle clearfix"><div class="supraregional-entries__text"><strong>Antriebstechnik</strong>&nbsp;in Donaueschingen</div></div><div class="supraregional-entries__footer clearfix"><div class="supraregional-entries__ratings"><p class="kt-rating">
+    </p>
+
+
+
+</div><div class="clearfix"><div class="supraregional-entries__distance">256 m</div></div></div></div>
+					</div>
+	            					<div class="supraregional-entries-box__entry supraregional-entries__entry">
+	                	<div class="supraregional-entries__entry-wrapper" data-eid="60df10f47c1ea19e00dc5b48" data-pid="169"><div class="supraregional-entries__name"><a href="/branchenbuch/donaueschingen/251090143B26928947/nottebohm-e-k-antriebs-u-foerdertechnik.html" class="supraregional-entries__link">Nottebohm e.K. Antriebs- u. Fördertechnik</a></div><div class="supraregional-entries__middle clearfix"><div class="supraregional-entries__text"><strong>Antriebstechnik</strong>&nbsp;in Donaueschingen</div></div><div class="supraregional-entries__footer clearfix"><div class="supraregional-entries__ratings"><p class="kt-rating">
+    </p>
+
+
+
+</div><div class="clearfix"><div class="supraregional-entries__distance">1,3 km</div></div></div></div>
+					</div>
+	            					<div class="supraregional-entries-box__entry supraregional-entries__entry">
+	                	<div class="supraregional-entries__entry-wrapper" data-eid="60caac0d7c1ea19e00614c9d" data-pid="38"><div class="supraregional-entries__name"><a href="/branchenbuch/villingen-schwenningen/251090143B101248382/maier-motoren-elektrische-antriebstechnik.html" class="supraregional-entries__link">Maier Motoren Elektrische Antriebstechnik</a></div><div class="supraregional-entries__middle clearfix"><div class="supraregional-entries__text"><strong>Antriebstechnik</strong>&nbsp;in Villingen-Schwenningen</div></div><div class="supraregional-entries__footer clearfix"><div class="supraregional-entries__ratings"><p class="kt-rating">
+    </p>
+
+
+
+</div><div class="clearfix"><div class="supraregional-entries__distance">12,3 km</div></div></div></div>
+					</div>
+	            					<div class="supraregional-entries-box__entry supraregional-entries__entry">
+	                	<div class="supraregional-entries__entry-wrapper" data-eid="60df30497c1ea19e00e8fc8b" data-pid="137"><div class="supraregional-entries__name"><a href="/branchenbuch/villingen-schwenningen/251090143B28071181/festo-ag-co-kg.html" class="supraregional-entries__link">Festo AG &amp; Co. KG</a></div><div class="supraregional-entries__middle clearfix"><div class="supraregional-entries__text"><strong>Antriebstechnik</strong>&nbsp;in Villingen-Schwenningen</div></div><div class="supraregional-entries__footer clearfix"><div class="supraregional-entries__ratings"><p class="kt-rating">
+    </p>
+
+
+
+</div><div class="clearfix"><div class="supraregional-entries__distance">12,5 km</div></div></div></div>
+					</div>
+	            					<div class="supraregional-entries-box__entry supraregional-entries__entry">
+	                	<div class="supraregional-entries__entry-wrapper" data-eid="60df0b567c1ea19e00d9a60d" data-pid="178"><div class="supraregional-entries__name"><a href="/branchenbuch/villingen-schwenningen/251090143B26667320/biemer-werner.html" class="supraregional-entries__link">Biemer Werner</a></div><div class="supraregional-entries__middle clearfix"><div class="supraregional-entries__text"><strong>Antriebstechnik</strong>&nbsp;in Villingen-Schwenningen</div></div><div class="supraregional-entries__footer clearfix"><div class="supraregional-entries__ratings"><p class="kt-rating">
+    </p>
+
+
+
+</div><div class="clearfix"><div class="supraregional-entries__distance">14,4 km</div></div></div></div>
+					</div>
+	            
+	        </div>
+	    </div>
+	</section>
+
+
+                        
+            
+            
+            
+    
+
+            
+            
+        </section>
+    </section>
+    <input id="entry-type" type="hidden" value="advanced" data-bind="text: kt.Data.isMediaEntry = ''">
+
+    <div id="offcontent_ad-box">
+            <div id="off_content_ad" class="offcontent_ad affix-top" data-spy="affix" data-offset-top="74" data-offset-bottom="518" style="min-height: 600px;"></div>
+    </div>
+
+
+            
+    
+            <section id="faq" class="faq">
+    <div class="faq-head faq-section">
+        <div class="faq-headline">Häufige Fragen</div>
+    </div>
+
+    <div class="faq-body faq-section">
+                    <div class="js-collapsible collapsible is-collapsed faq-collapsible">
+    <div class="collapsible-section collapsible-head">
+        <div class="collapsible-heading">
+            
+    Unter welcher Adresse finde ich IMS Gear SE &amp; Co. KGaA?
+
+        </div>
+
+        <div class="collapsible-action">
+            <a class="js-collapsible-toggle collapsible-toggle icon icon-up" href="#">
+            </a>
+        </div>
+    </div>
+
+    <div class="collapsible-section collapsible-body">
+        <div class="collapsible-contents">
+            
+    Sie finden IMS Gear SE &amp; Co. KGaA unter der folgenden Adresse: Heinrich-Hertz-Str. 16, 78166 Donaueschingen.
+
+        </div>
+    </div>
+</div>
+
+                    <div class="js-collapsible collapsible is-collapsed faq-collapsible">
+    <div class="collapsible-section collapsible-head">
+        <div class="collapsible-heading">
+            
+    Welche Möglichkeiten gibt es, IMS Gear SE &amp; Co. KGaA zu kontaktieren?
+
+        </div>
+
+        <div class="collapsible-action">
+            <a class="js-collapsible-toggle collapsible-toggle icon icon-up" href="#">
+            </a>
+        </div>
+    </div>
+
+    <div class="collapsible-section collapsible-body">
+        <div class="collapsible-contents">
+            
+    Um IMS Gear SE &amp; Co. KGaA zu kontaktieren, wählen Sie einfach eine der hinterlegten Kontaktoptionen: 0771 85070 info@imsgear.com.
+
+        </div>
+    </div>
+</div>
+
+                    <div class="js-collapsible collapsible is-collapsed faq-collapsible">
+    <div class="collapsible-section collapsible-head">
+        <div class="collapsible-heading">
+            
+    Welche Öffnungszeiten gelten für IMS Gear SE &amp; Co. KGaA?
+
+        </div>
+
+        <div class="collapsible-action">
+            <a class="js-collapsible-toggle collapsible-toggle icon icon-up" href="#">
+            </a>
+        </div>
+    </div>
+
+    <div class="collapsible-section collapsible-body">
+        <div class="collapsible-contents">
+            
+    IMS Gear SE &amp; Co. KGaA ist zu diesen Zeiten geöffnet: Mo.: 07:30-17:00; Di.: 07:30-17:00; Mi.: 07:30-17:00; Do.: 07:30-17:00; Fr.: 07:30-16:00.
+
+        </div>
+    </div>
+</div>
+
+                    <div class="js-collapsible collapsible is-collapsed faq-collapsible">
+    <div class="collapsible-section collapsible-head">
+        <div class="collapsible-heading">
+            
+    Wo sehe ich, welche Preise für IMS Gear SE &amp; Co. KGaA zu erwarten sind?
+
+        </div>
+
+        <div class="collapsible-action">
+            <a class="js-collapsible-toggle collapsible-toggle icon icon-up" href="#">
+            </a>
+        </div>
+    </div>
+
+    <div class="collapsible-section collapsible-body">
+        <div class="collapsible-contents">
+            
+    Mithilfe der Euro-Symbole kennzeichnen wir, in welcher Preisrange sich IMS Gear SE &amp; Co. KGaA bewegt, wenn uns diese Information vorliegt.
+
+        </div>
+    </div>
+</div>
+
+                    <div class="js-collapsible collapsible is-collapsed faq-collapsible">
+    <div class="collapsible-section collapsible-head">
+        <div class="collapsible-heading">
+            
+    Kann man den Informationen von IMS Gear SE &amp; Co. KGaA vertrauen?
+
+        </div>
+
+        <div class="collapsible-action">
+            <a class="js-collapsible-toggle collapsible-toggle icon icon-up" href="#">
+            </a>
+        </div>
+    </div>
+
+    <div class="collapsible-section collapsible-body">
+        <div class="collapsible-contents">
+            
+    Die Informationen für IMS Gear SE &amp; Co. KGaA werden regelmäßig auf den neuesten Stand gebracht. Besonders hervorzuheben ist die Kennzeichnung "vom Inhaber bestätigt".
+
+        </div>
+    </div>
+</div>
+
+        
+    </div>
+</section>
+
+
+    
+        
+    
+    <section id="secure-data" class="secure-data">
+        <div class="secure-data-note">
+            <p class="heading">Woher kommen diese Daten?</p>
+
+            <br>
+
+            <p>
+                Die 11880 Solutions AG betreibt <b>seit 1997</b> eine von der <a href="https://www.bundesnetzagentur.de/DE/Fachthemen/Telekommunikation/Nummerierung/118xy/ListeAuskunftsAnbieter_Basepage.html" target="_blank" rel="noopener">Bundesnetzagentur</a> lizensierte Auskunft. Zu diesem Zweck erhalten wir die <b>Firmendaten von allen Telekommunikationsanbietern</b>
+                Deutschlands. Diese reichern wir
+                mit Daten aus weiteren Quellen, inklusive Eigenrecherche und Nutzerfeedback an.
+            </p>
+
+            <br>
+
+            <p>
+                11880.com hat mehr als 4,7 Mio. Firmeneinträge mit Adressen und Telefonnummern; davon:
+            </p>
+
+            <ul>
+                <li>mehr als 2 Mio. Unternehmen mit Öffnungszeiten</li>
+                <li>2,7 Mio. mit E-Mail-Adressen und Website</li>
+                <li>1,8 Mio. Firmen mit aggregierten Bewertungen von echten Menschen</li>
+            </ul>
+        </div>
+
+        <div class="secure-data-details">
+            <div class="secure-data-details-badge">
+                <img class="secure-data-details-badge unveil unveil-placeholder" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Sichere Daten - Immer aktuell" width="80" height="80">
+            </div>
+
+                            <div class="secure-data-details-dates">
+                                            <p class="secure-data-details-date">
+                            IMS Gear SE &amp; Co. KGaA in  Donaueschingen  wurde aktualisiert
+                                                                                                    am 20.09.2025.
+                        </p>
+                    
+                                            <p class="secure-data-details-date">
+                            Eintragsdaten vom 31.05.2025.
+                        </p>
+                                    </div>
+                    </div>
+    </section>
+
+
+    
+                <div class="h5-sticky-ad u-hidden-desktop" data-ref="sticky-ad">
+        <div id="11880_mobile_stickyad" class="h5-sticky-ad-container"></div>
+        <button class="h5-sticky-ad-close" data-ref="sticky-ad-close" aria-label="Anzeige entfernen">
+        </button>
+    </div>
+
+    </section>
+
+        </div>
+
+                                <div id="bread-crumb">
+            <div class="container-fluid">
+                
+    <ol class="bread-crumb" itemscope="" itemtype="https://schema.org/BreadcrumbList">
+                    
+            <li class="box-right-ar no-arrow" itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem">
+                                    <a href="https://www.11880.com" title="11880.com Startseite" itemscope="" itemtype="https://schema.org/Thing" itemprop="item" itemid="https://www.11880.com">
+                        <meta itemprop="name" content="11880.com - Telefonbuch - Branchenbuch">
+                        <span>11880.com</span>
+                    </a>
+                
+                <meta itemprop="position" content="1">
+            </li>
+                    
+            <li class="box-right-ar" itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem">
+                                                            <a href="https://www.11880.com/suche/antriebstechnik/donaueschingen" title="Antriebstechnik Donaueschingen" itemscope="" itemtype="https://schema.org/Thing" itemprop="item" itemid="https://www.11880.com/suche/antriebstechnik/donaueschingen">
+                            <span>Antriebstechnik Donaueschingen</span>
+                            <meta itemprop="name" content="Antriebstechnik Donaueschingen">
+                        </a>
+                                    
+                <meta itemprop="position" content="2">
+            </li>
+                    
+            <li class="box-right-ar" itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem">
+                                    <span title="IMS Gear SE &amp; Co. KGaA" itemscope="" itemtype="https://schema.org/Thing" itemprop="item" itemid="https://www.11880.com/branchenbuch/donaueschingen/251090143B50860312/ims-gear-se-co-kgaa.html">
+                        <meta itemprop="name" content="IMS Gear SE &amp; Co. KGaA">
+                        <span>IMS Gear SE &amp; Co. KGaA</span>
+                    </span>
+                
+                <meta itemprop="position" content="3">
+            </li>
+        
+    </ol>
+
+            </div>
+        </div>
+        <section id="footer-nav-section">
+    <div class="footer-container">
+        <div class="footer-hidden-xs">
+            <div class="h2">Unternehmen</div>
+            <ul>
+                <li><a href="https://unternehmen.11880.com/ueber-uns" title="Über uns" class="first" rel="noopener">Über uns</a></li>
+                <li><a href="https://unternehmen.11880.com/ueber-uns/#management" title="Management" rel="noopener">Management</a></li>
+                <li><a href="https://ir.11880.com" title="Investor Relations" rel="noopener">Investor Relations</a></li>
+                <li><a href="https://jobs.11880.com" title="Jobs" rel="noopener">Jobs</a></li>
+            </ul>
+        </div>
+        <div class="footer-hidden-xs">
+            <div class="h2">Produkte</div>
+            <ul>
+                <li><a href="https://unternehmen.11880.com" title="Online-Marketing" class="first" rel="noopener">Online-Marketing</a></li>
+                <li><a href="https://shop.11880.com" title="Softwarelösungen" rel="noopener">Softwarelösungen</a></li>
+            </ul>
+        </div>
+        <div class="footer-hidden-xs">
+            <div class="h2">Dialog</div>
+            <ul>
+                <li><a href="https://unternehmen.11880.com/kontakt" title="Kontakt" class="first" rel="noopener">Kontakt</a></li>
+                <li><a href="https://unternehmen.11880.com/faq" title="FAQ" class="last" rel="noopener">FAQ</a></li>
+            </ul>
+        </div>
+        <div class="footer-mobile-part">
+            <div class="h2">Infos</div>
+            <ul>
+                <li><a href="https://unternehmen.11880.com/impressum" title="Impressum" class="first" rel="noopener">Impressum</a></li>
+                <li><a href="https://unternehmen.11880.com/datenschutz" title="Datenschutz" rel="noopener">Datenschutz</a></li>
+                <li><a href="https://unternehmen.11880.com/agb" title="AGB" rel="noopener">AGB</a></li>
+                <li><a href="https://unternehmen.11880.com/anb" title="ANB" class="last" rel="noopener">ANB</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section id="footer-global-section">
+    <footer id="footer-global" class="footer-container">
+        <div>
+            <div class="h2">Besuchen Sie uns auf:</div>
+            <div class="social-icons">
+                <a rel="noopener nofollow" href="https://www.facebook.com/11880com" target="_blank" aria-label="https://www.facebook.com/11880com">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="//static.11880.com/Portal/images/startpage/footer/facebook.webp" data-srcset="//static.11880.com/Portal/images/startpage/footer/facebook.webp, //static.11880.com/Portal/images/startpage/footer/facebook@2x.webp 1.5x, //static.11880.com/Portal/images/startpage/footer/facebook@3x.webp 2x" class="unveil unveil-placeholder" alt="Facebook" title="Facebook" width="39" height="39">
+                </a>
+                <a rel="noopener nofollow" href="https://www.tiktok.com/@11880.com" target="_blank" aria-label="https://www.tiktok.com/@11880.com">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="//static.11880.com/Portal/images/startpage/footer/tiktok.webp" data-srcset="//static.11880.com/Portal/images/startpage/footer/tiktok.webp, //static.11880.com/Portal/images/startpage/footer/tiktok@2x.webp 1.5x, //static.11880.com/Portal/images/startpage/footer/tiktok@3x.webp 2x" class="unveil unveil-placeholder" alt="TikTok" title="TikTok" width="39" height="39">
+                </a>
+                <a rel="noopener nofollow" href="https://www.instagram.com/11880.com_official" target="_blank" aria-label="https://www.instagram.com/11880.com_official">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="//static.11880.com/Portal/images/startpage/footer/instagram.webp" data-srcset="//static.11880.com/Portal/images/startpage/footer/instagram.webp, //static.11880.com/Portal/images/startpage/footer/instagram@2x.webp 1.5x, //static.11880.com/Portal/images/startpage/footer/instagram@3x.webp 2x" class="unveil unveil-placeholder" alt="Instagram" title="Instagram" width="39" height="39">
+                </a>
+                <a rel="noopener nofollow" href="https://www.xing.com/pages/11880internetservicesag" target="_blank" aria-label="https://www.xing.com/pages/11880internetservicesag">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="//static.11880.com/Portal/images/startpage/footer/xing.webp" data-srcset="//static.11880.com/Portal/images/startpage/footer/xing.webp, //static.11880.com/Portal/images/startpage/footer/xing@2x.webp 1.5x, //static.11880.com/Portal/images/startpage/footer/xing@3x.webp 2x" class="unveil unveil-placeholder" alt="Xing" title="Xing" width="39" height="39">
+                </a>
+                <a rel="noopener nofollow" href="https://de.linkedin.com/company/11880-internet-services-ag" target="_blank" aria-label="https://de.linkedin.com/company/11880-internet-services-ag">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="//static.11880.com/Portal/images/startpage/footer/linkedIn.webp" data-srcset="//static.11880.com/Portal/images/startpage/footer/linkedIn.webp, //static.11880.com/Portal/images/startpage/footer/linkedIn@2x.webp 1.5x, //static.11880.com/Portal/images/startpage/footer/linkedIn@3x.webp 2x" class="unveil unveil-placeholder" alt="LinkedIn" title="LinkedIn" width="39" height="39">
+                </a>
+            </div>
+        </div>
+        <div>
+            <div class="h2">Wir sind Partner von:</div>
+            <div class="partner-logos-image-list">
+    <a rel="noopener" href="https://www.google.com/partners/agency?id=8142903332" class="footer-image-link" target="_blank">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="//static.11880.com/Portal/images/startpage/footer/google-partner.webp" class="unveil unveil-placeholder" width="75" height="72" alt="Google Partner" title="Google Partner">
+    </a>
+    <a rel="noopener" href="https://msadvertisingpartnerprogram.powerappsportals.com/partner-directory-profile-full/?partnerProfileID=e5e6d3bd-d92e-ef11-840a-6045bd0a1212" class="footer-image-link" target="_blank">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="//static.11880.com/Portal/images/startpage/footer/msa-elite-badge_2025.webp" class="unveil unveil-placeholder" width="209" height="72" alt="Microsoft Advertising Channel Elite Partner" title="Microsoft Advertising Channel Elite Partner">
+    </a>
+</div>
+        </div>
+        <div>
+            <div class="h2">Geprüfte und prämierte Qualität:</div>
+            <div class="image-list">
+    <a rel="noopener" href="https://unternehmen.11880.com/ueber-uns#auszeichnungen" class="footer-image-link" target="_blank">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="//static.11880.com/Portal/images/startpage/footer/11880_tuev.webp" class="unveil footer-image-link--tuev unveil-placeholder" width="72" height="72" alt="TÜV Nord" title="TÜV Nord">
+    </a>
+    <a rel="noopener" href="https://www.ekomi.de/bewertungen-11880-com.html" class="footer-image-link" target="_blank">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="//static.11880.com/Portal/images/startpage/footer/11880_ekomi.webp" class="unveil footer-image-link--ekomi unveil-placeholder" width="72" height="72" alt="eKomi Siegel" title="eKomi Siegel">
+    </a>
+</div>
+        </div>
+    </footer>
+
+        
+
+</section>
+<span id="viewDetectorMobile" class="mobile"></span>
+<span id="viewDetectorTablet" class="tablet"></span>
+<span id="viewDetectorDesktop" class="desktop"></span>
+<div id="trackingHolder" data-sid="98767c665c950e3d-AMS" data-host="//statistics.11880.com/" style="visibility: hidden; position: absolute; left: -5000px; top: 0; z-index: 0"><img id="tracking" src="//statistics.11880.com/trackingpix.png?sid=98767c665c950e3d-AMS" height="1" width="1" alt=""></div>
+<template id="suggest-entity">
+
+<div class="sb-auto-suggest suggest-entity" data-bind="visible: showSuggest() &amp;&amp; combinedItems().length">
+    <ul data-bind="foreach: $component.combinedItems">
+        <li data-bind="attr: { 'class': $data.type }"><button data-bind="click: $component.selectAutoSuggestItem">
+                <span data-bind="html: $data.noHighlight ? $data.entity.displayName || $data.entity.name :
+                                     kt.Util.String.Highlight.add($data.entity.displayName || $data.entity.name, $component.entityInput())"></span>
+
+                <span data-bind="if: ($data.type === 'history') &amp;&amp; $data.location">
+                    in <span data-bind="text: $data.location.name"></span>
+                </span>
+            </button>
+        </li>
+    </ul>
+</div>
+
+</template>
+
+<template id="suggest-location">
+
+<div class="sb-auto-suggest suggest-location" data-bind="visible: showSuggest() &amp;&amp; combinedItems().length">
+    <ul data-bind="foreach: combinedItems">
+        <li data-bind="attr: { 'class': $data.type }"><button data-bind="html: $component.search.getHighlightedPartName($data, 'location'),
+                           click: $component.selectAutoSuggestItem"></button></li>
+    </ul>
+</div>
+
+<div class="did-you-mean" data-bind="visible: showDidYouMean">
+    <p data-bind="visible: !didYouMeanNoMatch()">
+        <span class="hidden-xs">Der von Ihnen eingegebene Ort war uneindeutig.</span>
+        Meinten Sie z.B. ...
+    </p>
+    <ul data-bind="visible: !didYouMeanNoMatch(),
+                   foreach: didYouMeanItems">
+        <li><button data-bind="click: $component.selectAutoSuggestItem,
+                          html: $component.search.getHighlightedPartName($data, 'location'),
+                          attr: {
+                              'data-geo-x': location.geo.x,
+                              'data-geo-y': location.geo.y,
+                              'data-where': location.where,
+                              'data-street': location.address,
+                              'data-address-name': location.citySlug
+                          }"></button>
+        </li>
+    </ul>
+    <p data-bind="visible: !didYouMeanNoMatch() &amp;&amp; didYouMeanHasMoreResults()">
+        Es gibt noch mehr mögliche Orte für Ihre Suche. Bitte grenzen Sie die Suche etwas weiter ein.
+    </p>
+    <p data-bind="visible: didYouMeanNoMatch">
+        Zu Ihrer Suche wurde kein passender Ort gefunden.
+    </p>
+    <ul data-bind="visible: didYouMeanNoMatch">
+        <li>
+            <button data-bind="click: function() { showDidYouMean(false); }">schließen</button>
+        </li>
+    </ul>
+</div>
+
+</template>
+
+<template id="search-part">
+
+    <div class="search-part form-group form-group-lg" data-bind="attr: { 'class': cssClass }">
+        <input type="search" autocomplete="new" class="form-control search-input" placeholder="" data-bind="textInput: delegate.input,
+                      hasFocus: delegate.inputHasFocus,
+                      attr: {
+                        'id': idInput,
+                        'name': inputName,
+                        'value': delegate.input,
+                        'class': cssClassInput,
+                        'tabindex': tabIndex,
+                        'placeholder': delegate.options.placeholder,
+                        'data-suggest-from': suggestFrom,
+                        'autofocus': autofocus,
+                        'autocomplete': 'off',
+                        'aria-label': ariaLabel,
+                        'data-placeholder': delegate.options.placeholder
+                      },
+                      event: { keydown: delegate.onKeydown, keyup: delegate.onKeyup },
+                      placeholder">
+            <span class="spinner" data-bind="visible: delegate.showSpinner"></span>
+            <span class="icon-empty-input" data-bind="visible: delegate.showClearInput,
+                             click: delegate.onClickClearInput"></span>
+
+        <div data-bind="component: {
+            name: 'search-suggest',
+            params: delegate.getSuggestParams()
+        }"></div>
+    </div>
+
+</template>
+
+<template id="search-suggest">
+
+    <div class="sb-auto-suggest search-suggest" data-bind="visible: delegate.suggestIsVisible,
+                        attr: { 'class': cssClass }">
+        <ul data-bind="foreach: delegate.combinedItems">
+            <li data-bind="attr: { 'class': $data._type }, style: { 'background-color': $data.groupColor , 'padding-left': $data.groupColor ? '10px' : undefined, 'margin-top': $data.groupStart ? '10px' : undefined }"><a href="javascript:void(0)" data-bind="html: $component.delegate.getItemLabelHtml($data),
+                                   click: $component.delegate.onClickSuggestItem"></a></li>
+        </ul>
+    </div>
+
+    <div class="did-you-mean" data-bind="visible: delegate.showDidYouMean">
+        <p data-bind="visible: !delegate.didYouMeanNoMatch()">
+            <span class="hidden-xs">Der von Ihnen eingegebene Ort war uneindeutig.</span>
+            Meinten Sie z.B. ...
+        </p>
+        <ul data-bind="visible: !delegate.didYouMeanNoMatch(),
+                   foreach: delegate.didYouMeanResults">
+            <li><a href="javascript: void(0)" data-bind="click: $component.delegate.onClickSuggestItem,
+                          html: $component.delegate.getItemLabelHtml($data),
+                          attr: {
+                              'data-geo-x': geo.x,
+                              'data-geo-y': geo.y,
+                              'data-where': where,
+                              'data-street': address,
+                              'data-address-name': citySlug
+                          }"></a>
+            </li>
+        </ul>
+        <p data-bind="visible: !delegate.didYouMeanNoMatch() &amp;&amp; delegate.didYouMeanHasMoreResults()">
+            Es gibt noch mehr mögliche Orte für Ihre Suche. Bitte grenzen Sie die Suche etwas weiter ein.
+        </p>
+        <p data-bind="visible: delegate.didYouMeanNoMatch">
+            Zu Ihrer Suche wurde kein passender Ort gefunden.
+        </p>
+        <ul data-bind="visible: delegate.didYouMeanNoMatch">
+            <li>
+                <a href="javascript:void(0);" data-bind="click: delegate.onClickCloseDidYouMean">schließen</a>
+            </li>
+        </ul>
+    </div>
+
+</template>
+
+
+        <script type="text/plain" class="cmplazyload" data-cmp-vendor="c35017" data-cmp-purpose="9">
+        piAId      = '822373';
+        piCId      = '1149';
+        piHostname = 'pdt.11880.com';
+
+        (function () {
+            function loadAsynchronously() {
+                var scriptTag = document.createElement('script');
+
+                scriptTag.type = 'text/javascript';
+                scriptTag.src  = ('https:' === document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+
+                var firstScriptTag = document.getElementsByTagName('script')[0];
+
+                firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
+            }
+
+            loadAsynchronously();
+        })();
+    </script>
+
+
+    </section>
+        <script type="text/javascript" data-cfasync="false" src="//static.11880.com/Portal/js/common.min+1758798149967.js"></script>
+    <script type="text/javascript" src="//static.11880.com/Portal/js/portaldetailentry.min+1758798149967.js"></script>
+
+        <script type="text/javascript">
+                if (!kt.Data) kt.Data = {};
+                    </script>
+</div>
+    <template id="search-bar-header">
+        <div class="hotfix-header">
+            <div role="tabpanel" class="tab-pane active">
+                <form method="post" action="" class="form-inline" data-bind="submit: kt.Service.Search.Delegate('header').onSubmit">
+                    <div class="h3 hidden-lg hidden-md">Suche im Branchenbuch</div>
+                    <div class="row">
+                        <search-part params="{
+                        instance: 'header',
+                        part: 'entity',
+                        cssClass: 'col-xs-12 col-sm-4 col-md-5 form-group form-group-lg',
+                        cssClassInput: 'form-control search-and-find-branch-input',
+                        ariaLabel: 'Branche',
+                        tabIndex: 95
+                    }"></search-part>
+                        <search-part params="{
+                        instance: 'header',
+                        part: 'location',
+                        cssClass: 'col-xs-12 col-sm-4 col-md-4 col-lg-5 form-group form-group-lg',
+                        cssClassInput: 'form-control search-and-find-location-input',
+                        ariaLabel: 'Ort',
+                        tabIndex: 96
+                    }"></search-part>
+                        <div class="col-xs-12 col-sm-4 col-md-2 search-bar-header-button">
+                            <button type="submit" class="btn btn-default-highlight btn-find" aria-label="Finden" tabindex="97">
+                                <span class="btn-label">Finden</span>
+                                <span class="icon-search"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </template>
+
+
+
+
+<script type="text/javascript">
+            var TgCoreAnalyzer = {"serverTime":"30.09.2025 22:31:48","version":"1758798149967","tag":"v1.319.1"};
+        </script>
+
+<script async="" type="text/javascript" data-cmp-ab="2" src="https://cdn.consentmanager.net/delivery/customdata/bV8xLndfNTYzNjAucl9HRFBSLmxfZW4uZF8yNzg3NC54XzQ2LnYucC50XzI3ODc0Lnh0XzMx.js"></script><iframe data-cmp-ab="1" style="display: none;" src="https://cdn.consentmanager.net/delivery/crossdomain.html" name="__cmpcdframe" title="Intentionally hidden, please ignore" role="none" tabindex="-1"></iframe><iframe style="display: none;" name="__cmpLocator" title="Intentionally hidden, please ignore" role="none" tabindex="-1"></iframe><iframe style="display: none;" name="__uspapiLocator" title="Intentionally hidden, please ignore" role="none" tabindex="-1"></iframe><iframe style="display: none;" name="__tcfapiLocator" title="Intentionally hidden, please ignore" role="none" tabindex="-1"></iframe><iframe style="display: none;" name="__gppLocator" title="Intentionally hidden, please ignore" role="none" tabindex="-1"></iframe><div><iframe id="cross-domain-iframe" src="https://static.11880.com/Portal/html/xdls.html" style="display: none;"></iframe></div><div id="cmpboxrecall" class="cmpboxrecall cmpstyleroot"><a class="cmpboxrecalllink" href="#" tabindex="0" aria-haspopup="dialog" role="button" draggable="false"><img style="width:20px; height:20px;" class="cmpboxrecallicon" width="20" height="20" alt="Privacy settings" title="Privacy settings" data-cmp-ab="1" src="https://cdn.consentmanager.net/delivery/recall/logos/56360"><span class="cmpboxrecalltxt cmptxt_recallbtn">Privacy settings</span></a></div><iframe height="0" width="0" style="display: none; visibility: hidden;"></iframe><style type="text/css">@keyframes cmp_pulse{0%{transform:scale(.9);box-shadow:0 0 0 0 rgba(255,211,65,.7)}70%{transform:scale(1);box-shadow:0 0 0 10px transparent}to{transform:scale(.9);box-shadow:0 0 0 0 transparent}}@keyframes cmp_pulse2{0%{transform:scale(.9);box-shadow:0 0 0 0 rgba(255,39,39,.8)}70%{transform:scale(1);box-shadow:0 0 0 10px transparent}to{transform:scale(.9);box-shadow:0 0 0 0 transparent}}.cmpstyleroot,.cmpstyleroot *{--x6pt:6pt;--x7pt:7pt;--x8pt:8pt;--x9pt:9pt;--x10pt:10pt;--x11pt:11pt;--x12pt:12pt;--clrBackground:#FFFFFF;--clrHeadline:#3B3B3B;--clrText:#5F5F5F;--clrTextSecondary:#CFCFCF;--clrButton:#3276AE;--clrButtonText:#FFFFFF;--clrLink:#666666;--clrHighlight:#FFFDCD}body div#cmpwrapper.cmpwrapper:empty,div#cmpwrapper.cmpwrapper,div#cmpwrapper.cmpwrapper:empty,div.cmpwrapper,div.cmpwrapper:empty{display:block!important}.cmpstyleroot.cmpboxwcag,.cmpstyleroot.cmpboxwcag *{--x6pt:0.5000rem;--x7pt:0.5834rem;--x8pt:0.6666rem;--x9pt:0.7500rem;--x10pt:0.8333rem;--x11pt:0.9166rem;--x12pt:1.0000rem}.cmpbox{position:fixed;font-family:Arial,sans-serif;background-color:var(--clrBackground);-webkit-box-shadow:0 0 5px 0 rgba(0,0,0,.75);-moz-box-shadow:0 0 5px 0 rgba(0,0,0,.75);box-shadow:0 0 5px 0 rgba(0,0,0,.75);box-sizing:border-box;transition-property:background-color,height,width,max-height,max-width,display,position,left,top,bottom,right,transform;transition-duration:.9s;transition-timing-function:ease;z-index:9999999;max-height:100vh;max-width:100vw;text-underline-position:under}.cmpbox.cmpnotransition{transition:none}.cmpbox IMG,.cmpbox SVG,.cmpbox img,.cmpbox svg,.cmpboxrecall IMG,.cmpboxrecall SVG,.cmpboxrecall img,.cmpboxrecall svg{display:inline-block!important}.cmpboxinner,.cmpboxinner2{height:100%;max-width:1400px;margin-left:auto;margin-right:auto}.cmpfullscreen .cmpboxinner{display:flex;flex-direction:column}.cmpbox0{bottom:0;right:0;width:600px}.cmpbox1{bottom:0;left:0;width:100%}.cmpbox2{bottom:0;-webkit-transform:translate(-50%,0);-moz-transform:translate(-50%,0);-ms-transform:translate(-50%,0);-o-transform:translate(-50%,0);transform:translate(-50%,0)}.cmpbox2,.cmpbox3,.cmpbox4{left:50%;width:600px}.cmpbox3{position:fixed;top:50%;-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.cmpbox4{top:0;-webkit-transform:translate(-50%,0);-moz-transform:translate(-50%,0);-ms-transform:translate(-50%,0);-o-transform:translate(-50%,0);transform:translate(-50%,0)}.cmpbox5,.cmpbox8.cmpfullscreen{top:0;left:0;width:100%}.cmpbox6,.cmpbox7{top:0;height:100%;max-width:300px}.cmpbox6{right:0}.cmpbox7{left:0}.cmpbox8{width:100%;position:relative!important;margin-left:auto;margin-right:auto}.cmpbox9{bottom:0;left:0;width:600px}.cmpbox10{top:0;left:0;width:600px}.cmpbox11{top:0;right:0;width:600px}.cmpbox8.cmpfullscreen{position:absolute!important}.cmpboxBG{position:fixed;left:0;top:0;width:100%;height:100%;background-color:#cfcfcf;opacity:.5;filter:alpha(opacity=50);z-index:8999999}.cmpbox *,.cmpbox>*{font-family:Arial,sans-serif;text-decoration:none;box-sizing:border-box;border:0 solid #fff;vertical-align:middle;transition-property:background-color,height,width,max-height,max-width,display,position;transition-duration:.9s;transition-timing-function:ease}.cmpboxh2,.cmpboxhl{font-size:var(--x12pt);color:var(--clrHeadline)}.cmpboxhl{vertical-align:baseline}.cmpboxh2{font-weight:400;opacity:.8;margin-bottom:.5em;margin-top:2em}.cmpboxh2,.cmpboxhl *,.cmpcookiesdescrboxcontent *{vertical-align:baseline}.cmpcornerbtn .cmpboxhl{max-width:calc(100% - 200px)}.cmpboxbtns{text-align:center;min-height:50px;flex-shrink:0}.cmpboxtxtdiv{z-index:33333;position:relative}.cmpboxtxt,.cmpcookieinfocontent p,.cmpcookiesdescrboxcontent p,.cmpprpsdescr{font-size:var(--x11pt);line-height:1.3em;color:var(--clrText);text-align:justify}.cmpboxbtn,.cmpboxbtn *,.cmpboxtxt,.cmpboxtxt *,.cmpmore *,.cmpprpsdescr,.cmpprpsdescr *{vertical-align:baseline}.cmpprpsdescr{margin-bottom:10px}.cmpprpshl{margin-top:15px;margin-bottom:5px}.cmpcompanyaddr,.cmpdpoinfo{margin-top:10px}.cmpboxbtn{font-size:var(--x11pt);margin:10px;-webkit-box-shadow:0 0 5px 0 rgba(0,0,0,.5);-moz-box-shadow:0 0 5px 0 rgba(0,0,0,.5);box-shadow:0 0 5px 0 rgba(0,0,0,.5);width:200px;max-width:100%;display:inline-block;text-align:center;position:relative;height:auto;padding:7px 0 7px 10px;border-radius:3px;line-height:normal}.cmpboxbtnyescustom2disabled,.cmpboxbtnyescustomdisabled{cursor:not-allowed!important;opacity:.5}.cmpboxbtn.cmpboxbtnsave{padding-left:0}.cmpbox1 .cmpboxcontent{display:inline-block;max-width:70%;padding-bottom:0}.cmpbox1 .cmpboxbtns{display:inline-block;min-width:30%;margin-top:40px;max-width:30%}.cmpbox5 .cmpboxcontent,.cmpbox8 .cmpboxcontent{display:inline-block;max-width:70%;padding-bottom:0}.cmpbox5 .cmpboxbtns,.cmpbox8 .cmpboxbtns{display:inline-block;min-width:30%;margin-top:40px;max-width:30%}.cmpfullscreen.cmpbox1 .cmpboxbtns,.cmpfullscreen.cmpbox5 .cmpboxbtns,.cmpfullscreen.cmpbox8 .cmpboxbtns{display:block;margin-top:10px;max-width:100%;width:100%}@media (max-width:1500px){.cmpbox1 .cmpboxcontent{max-width:calc(100% - 450px)}.cmpbox1 .cmpboxbtns{min-width:450px}.cmpbox5 .cmpboxcontent,.cmpbox8 .cmpboxcontent{max-width:calc(100% - 450px)}.cmpbox5 .cmpboxbtns,.cmpbox8 .cmpboxbtns{min-width:450px}}@media (max-width:1200px){.cmpbox1 .cmpboxcontent{max-width:calc(100% - 250px)}.cmpbox1 .cmpboxbtns{width:250px;min-width:250px}.cmpbox5 .cmpboxcontent,.cmpbox8 .cmpboxcontent{max-width:calc(100% - 250px)}.cmpbox5 .cmpboxbtns,.cmpbox8 .cmpboxbtns{width:250px;min-width:250px}.cmpfullscreen.cmpbox1 .cmpboxbtns,.cmpfullscreen.cmpbox5 .cmpboxbtns,.cmpfullscreen.cmpbox8 .cmpboxbtns{display:block;margin-top:10px;max-width:100%;width:100%}.cmpfullscreen .cmpboxbtn{display:inline-block;margin-bottom:10px}}@media (max-width:800px){.cmpbox1 .cmpboxcontent{max-width:100%;width:100%;display:block}.cmpbox1 .cmpboxbtns{margin-top:0}.cmpbox1 .cmpboxbtns,.cmpbox5 .cmpboxcontent,.cmpbox8 .cmpboxcontent{max-width:100%;width:100%;display:block}.cmpbox5 .cmpboxbtns,.cmpbox8 .cmpboxbtns{width:100%;display:block;max-width:100%;margin-top:0}.cmpfullscreen.cmpbox1 .cmpboxbtns,.cmpfullscreen.cmpbox5 .cmpboxbtns,.cmpfullscreen.cmpbox8 .cmpboxbtns{margin-top:10px}.cmpboxbtn{display:inline-block;margin:10px}}@media (max-width:600px){.cmpbox0,.cmpbox2,.cmpbox3,.cmpbox4{width:100%}}@media (max-width:400px){.cmpbox6,.cmpbox7{width:100%}}.cmpboxbtnno,A.cmpboxbtnno,A.cmpboxbtnno:link{background-color:var(--clrButton);color:var(--clrButtonText)}.cmpboxbtncustom,.cmpboxbtnsettings,A.cmpboxbtncustom,A.cmpboxbtncustom:link,A.cmpboxbtnsettings,A.cmpboxbtnsettings:link{background-color:var(--clrButton);color:var(--clrButtonText);padding-left:0}.cmpboxbtnaccept,.cmpboxbtnreject,.cmpboxbtnsave,.cmpboxbtnyes,A.cmpboxbtnaccept,A.cmpboxbtnaccept:link,A.cmpboxbtnreject,A.cmpboxbtnreject:link,A.cmpboxbtnsave,A.cmpboxbtnsave:link,A.cmpboxbtnyes,A.cmpboxbtnyes:link{background-color:var(--clrButton);color:var(--clrButtonText)}.cmpboxbtn,.cmpmorelink{-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none}.cmpboxbtn SVG,.cmpboxbtn span,.cmpboxbtn svg{vertical-align:middle}.cmplogo{position:absolute}.cmplogo2,.cmplogo2 span{color:#666;line-height:2px}.cmplogo2{position:absolute;padding:2px;right:2px;bottom:0}.cmplogo2 span{text-decoration:none;margin-left:5px}.cmplogo2 A,.cmplogo2 A:link{display:inline-block;font-size:var(--x7pt);color:#575d80;text-decoration:none;line-height:2px}.cmplogo2,.cmplogo2 span,.cmplogo2.cmplogoXL,.cmplogo2.cmplogoXL A,.cmplogo2.cmplogoXL A:link,.cmplogo2.cmplogoXL span{font-size:var(--x7pt)}.cmplogo2.cmplogoXXL{background:rgba(0,0,0,.1);border-radius:15px;padding-left:10px;padding-right:10px;margin-bottom:2px;opacity:.4}.cmplogo2.cmplogoXXL:focus,.cmplogo2.cmplogoXXL:hover{opacity:1}.cmplogo2.cmplogoXXL,.cmplogo2.cmplogoXXL A,.cmplogo2.cmplogoXXL A:link,.cmplogo2.cmplogoXXL span{font-size:var(--x9pt)}.cmpdl2{width:16px;height:16px;border:0 solid #fff;padding:0;margin:0 2px 0 0}.cmplogo2h,.cmplogo2hx{vertical-align:middle}.cmplogo2h{display:none}.cmplogo2:focus .cmplogo2h,.cmplogo2:hover .cmplogo2h,A.cmpboxrecalllink:focus .cmpboxrecalltxt,A.cmpboxrecalllink:hover .cmpboxrecalltxt{display:inline}.cmplogo2 .cmplogo2h.cmplogo2hvis{display:inline!important}.cmplanguage{display:block;border-radius:5px;position:absolute;padding:6px 3px;text-align:left;left:3px;bottom:3px;font-size:var(--x7pt);line-height:2px;color:#666;transition:.4s all ease;border:1px solid transparent;cursor:pointer}.cmplanguage:focus,.cmplanguage:hover{background-color:#fffdcd;border:1px solid #ffd341;-webkit-box-shadow:0 0 5px 0 rgba(0,0,0,.25);-moz-box-shadow:0 0 5px 0 rgba(0,0,0,.25);box-shadow:0 0 5px 0 rgba(0,0,0,.25)}.cmplangicon{width:16px;height:auto;-webkit-filter:grayscale(60%);filter:grayscale(60%)}.cmplangiconiso{height:1em;line-height:1.25em;font-size:8pt;width:1.5em;display:inline-block;vertical-align:middle;text-align:center}.cmplanguageloc{line-height:1em;font-size:var(--x6pt);position:absolute;right:0;bottom:0;color:#000;border-radius:30px;background-color:rgba(255,255,255,.8);padding:2px;white-space:nowrap}.cmplangicon:focus,.cmplangicon:hover,.cmplanguage:focus .cmplangicon,.cmplanguage:hover .cmplangicon{-webkit-filter:grayscale(0%);filter:grayscale(0%)}.cmpaltlang,.cmpaltlangs{border-radius:5px;z-index:33334}.cmpaltlangs{position:absolute;bottom:-1px;left:-1px;background-color:#fffdcd;border:1px solid #ffd341;width:144px;-webkit-box-shadow:0 0 5px 0 rgba(0,0,0,.25);-moz-box-shadow:0 0 5px 0 rgba(0,0,0,.25);box-shadow:0 0 5px 0 rgba(0,0,0,.25)}.cmpaltlang{display:inline-block;padding:6px 3px;font-size:var(--x7pt);line-height:2px;color:#666;border:1px solid #f7e939;background-color:#ffffe3;margin:2px;cursor:pointer;position:relative}.cmpaltlang:focus,.cmpaltlang:hover{background-color:#fff;-webkit-box-shadow:0 0 5px 0 rgba(0,0,0,.25);-moz-box-shadow:0 0 5px 0 rgba(0,0,0,.25);box-shadow:0 0 5px 0 rgba(0,0,0,.25)}.cmpaltlangcurrent{display:block;cursor:pointer}.cmpaltlangcurrent>div{display:inline-block;position:relative;padding:6px 3px}.cmpmore{text-align:center;font-size:var(--x9pt);color:var(--clrLink);line-height:1em}.cmpmorelink,A.cmpmorelink,A.cmpmorelink:link{padding:10px;display:inline-block}.cmpimg{width:15px;height:15px;position:absolute;left:10px;top:0;border:0;margin-top:.6em}.cmpdl{max-height:50px;max-width:200px;border:0}.cmptblbox{height:calc(100% - 60px);overflow-y:auto;padding-right:5px;max-width:800px;min-height:100px;margin-right:auto;margin-left:auto;width:100%}.cmpbox:dir(rtl) .cmptblbox,.cmpbox[dir=rtl] .cmptblbox{padding-right:0;padding-left:5px}.cmpboxheadline{max-width:800px;margin-right:auto;margin-left:auto;width:100%;flex-shrink:0;vertical-align:baseline}.cmpboxnavi{width:200px;float:left}.cmpboxnaviitem{border:1px solid silver;border-radius:5px;padding:10px;margin-bottom:5px;cursor:pointer}.cmpbox[dir=rtl] .cmpboxnaviitem{padding-right:30px}.cmpboxnaviitem *{vertical-align:middle}.cmpboxnaviitem img{margin-right:5px}.cmpboxnaviitem .cmptogglelink{display:inline-block;text-align:center}.cmpbox:dir(rtl) .cmptblbox,.cmpbox[dir=rtl] .cmptblbox{margin-right:0;margin-left:5px}.cmpboxnaviitemactive{background-color:var(--clrHighlight)}.cmpboxdetails{float:left;width:calc(100% - 200px);padding-left:15px}.cmpcookienonavi .cmpboxdetails{float:none;width:100%;padding-left:0}@media (max-width:570px){.cmpboxnavi{width:100%;float:none}.cmpboxnaviitem{border:1px solid silver;border-radius:5px;padding:5px;margin-bottom:3px;font-size:var(--x10pt)}.cmpboxnaviitemactive{background-color:var(--clrHighlight)}.cmpboxdetails{float:none;width:100%;padding-left:0}}.cmptbl{border:0 solid #fff;width:100%}.cmptbl TH{font-size:var(--x10pt);font-weight:700;border-bottom:2px solid var(--clrTextSecondary);color:var(--clrText)}.cmpclose{position:absolute;right:2px;top:2px}.cmptbl Td{font-size:var(--x9pt);text-align:center;color:var(--clrText)}.cmpcookietbl Td,td.cmptdborder{border-bottom:1px solid silver}.cmpcookietbl Td{font-size:var(--x9pt);text-align:left;color:var(--clrText)}td.cmpvendname{text-align:right}.cmpimgsaveno,.cmpimgyesno,.cmpimgyesno svg,.cmptogglespan svg,.cmpwelcomeprpsbtn .cmpimgsaveno,.cmpwelcomeprpsbtn .cmpimgyesno{border:0 solid #fff;width:40px;height:20px;color:var(--clrTextSecondary)}.cmpboxwelcomeprps{text-align:left;display:flex;flex-wrap:wrap}.cmpwelcomeprpsbox{display:flex;flex-direction:column;position:relative;width:100%;cursor:pointer}.cmpwelcomeprpsboxinner{padding-right:28px}.cmpwelcomeprpsbox:after,.cmpwelcomeprpsbox:before{content:"";position:absolute;top:calc(1em - 4px);width:6px;border:1px solid var(--clrTextSecondary)}.cmpbox table caption,.cmpwelcomeprpsboxnoarrow:after,.cmpwelcomeprpsboxnoarrow:before,div.cmpexpandcontent{display:none}.cmpwelcomeprpsbox:hover::after,.cmpwelcomeprpsbox:hover::before,.cmpwelcomeprpsboxactive:hover::after,.cmpwelcomeprpsboxactive:hover::before{border:1px solid var(--clrText)}.cmpwelcomeprpsbox:before{transform:rotateZ(45deg);-webkit-transform:rotateZ(-45deg);right:10px}.cmpwelcomeprpsbox:after{transform:rotateZ(-45deg);-webkit-transform:rotateZ(45deg);right:15px}.cmpwelcomeprpsdescr,.cmpwelcomeprpsvendors{transition:all .5s ease;visibility:visible;opacity:1;height:auto;overflow:visible;width:100%}.cmpwelcomeprpsdescrinactive,.cmpwelcomeprpsvendorsinactive{visibility:hidden;opacity:0;height:0;overflow:hidden;margin:0!important;padding:0!important}.cmpwelcomeprpsboxactive:after,.cmpwelcomeprpsboxactive:before{content:"";position:absolute;top:calc(1em - 4px);width:6px;border:1px solid var(--clrTextSecondary)}.cmpwelcomeprpsboxactive:before{transform:rotateZ(45deg);-webkit-transform:rotateZ(45deg);right:11px}.cmpwelcomeprpsboxactive:after{transform:rotateZ(-45deg);-webkit-transform:rotateZ(-45deg);right:15px}.cmpwelcomeprps{column-span:none;display:inline-flex;margin-bottom:5px;width:240px;text-align:left;margin-right:15px;align-items:center}.cmpwelcomeprpsbox .cmpwelcomeprps{width:100%}.cmpbox:dir(rtl) .cmpwelcomeprps,.cmpbox[dir=rtl] .cmpwelcomeprps{margin-right:0;margin-left:15px}.cmpwelcomeprpsbtn{display:inline;margin-right:5px;flex-shrink:0}.cmpbox:dir(rtl) .cmpwelcomeprpsbtn,.cmpbox[dir=rtl] .cmpwelcomeprpsbtn{margin-right:0;margin-left:5px}.cmpwelcomeprpstxt{display:inline;padding-top:2px;cursor:pointer;vertical-align:baseline}.cmpcarouselexpanded .cmpboxnavi.cmpcarouselexpandnavi .cmpboxnaviitem,.cmpwelcomeprpstxt.cmpwelcomeprpstxtnopointer{cursor:auto}.cmpbox.cmpfullscreen{width:100%;height:100%;transform:none!important;left:0;top:0;max-width:unset;max-height:unset}TD.cmpallprps,TD.cmpallvend,TH.cmpallprps,TH.cmpallvend{background-color:var(--clrHighlight)}TD.cmpcenter,TH.cmpcenter{text-align:center}TD.cmpsmallborder,TH.cmpsmallborder{border-bottom:1px solid var(--clrTextSecondary)}.cmpboxtxt svg,.cmppurposeicon svg{width:16px;height:16px}.cmpcolorcodingtxt{font-size:var(--x10pt);color:#333;padding:5px;line-height:1.2em}.cmpvendorpurposes svg{fill:#333;width:14px;height:14px}.cmpcolorcodingtxtconsent{color:#333;font-weight:700}.cmpvendorlegintpurposes svg{fill:#b4b4b4;width:14px;height:14px}.cmpcolorcodingtxtlegint{color:#b4b4b4;font-weight:700}.cmpvendorfeatures svg{fill:#5781ad;width:14px;height:14px}.cmpcolorcodingtxtfeatures{color:#5781ad;font-weight:700}.cmpboxrecall,.cmpboxrecall *{line-height:1.5em;vertical-align:middle}.cmpboxrecall{position:fixed;bottom:10px;left:10px;border-radius:30px;padding:3px;z-index:7999999}.cmpboxrecall *{font-size:var(--x9pt)}.cmpboxrecalltxt{display:none;font-family:Arial,sans-serif;padding-right:10px}.cmpbox:dir(rtl) .cmpboxrecalltxt,.cmpbox[dir=rtl] .cmpboxrecalltxt{padding-right:0;padding-left:10px}A.cmpboxrecalllink,A.cmpboxrecalllink:active,A.cmpboxrecalllink:focus,A.cmpboxrecalllink:hover,A.cmpboxrecalllink:link,A.cmpboxrecalllink:visited{display:block;height:20px;color:#0b9ac5;text-decoration:none}.cmpboxrecall{background-color:#f7fcff;-webkit-box-shadow:0 0 5px 0 rgba(0,0,0,.25);-moz-box-shadow:0 0 5px 0 rgba(0,0,0,.25);box-shadow:0 0 5px 0 rgba(0,0,0,.25)}@media print{.cmpboxrecall{display:none!important}}.cmprecallwarning,.cmprecallwarning2{box-shadow:0 0 0 0 rgba(255,39,39,.8);transform:scale(1);padding:20px}.cmprecallwarning{background-color:rgba(255,237,176,.86)!important;animation:cmp_pulse 2s infinite;border-radius:100px}.cmprecallwarning A.cmpboxrecalllink{height:100%}.cmprecallwarning:hover{background-color:#ffedb0!important}.cmprecallwarning2{background-color:#fff!important;animation:cmp_pulse2 1s infinite;margin-bottom:100px}.cmprecallwarning2:hover{background-color:#f4e1a8!important}.cmprecallwarning2 .cmpboxrecalllink{display:inline-block!important;width:30px!important;height:30px!important}.cmprecallwarningA{background-color:#fff3f3!important;padding:30px;animation:cmp_pulse2 1s infinite}.cmprecallwarningB{background-color:#ff9898!important;padding:30px;animation:cmp_pulse2 3s infinite}.cmptdchoice{width:100px}.cmponofftext{display:block;font-size:var(--x8pt);color:var(--clrText)}.cmppurposedescription{position:absolute;left:calc(50% - 400px);top:25%;background-color:var(--clrBackground);margin-left:auto;margin-right:auto;padding:20px;box-shadow:0 0 15px 0 rgba(0,0,0,.25);width:800px;max-width:75%;max-height:75%;overflow-y:auto}@media (max-width:820px){.cmppurposedescription{left:12%;top:12%}}.cmppurposedescrboxhl,.cmppurposedescrtext{font-size:var(--x11pt);color:var(--clrHeadline)}.cmppurposedescrtext{line-height:1.2em;color:var(--clrText);text-align:justify}.cmpageverifybox{max-width:300px;margin-left:auto;margin-right:auto}.cmpageverifybox SELECT.cmpageverify{display:inline-block;padding:3px;line-height:2em;font-size:var(--x11pt);border:0 solid #fff;margin:0 0 5px}.cmpageverifybox SELECT.cmpageverifyday,.cmpageverifybox SELECT.cmpageverifymonth{margin-left:10px}.cmpageverifytype1 SELECT.cmpageverify,.cmpageverifytype4 SELECT.cmpageverify{display:inline-block;width:100%}.cmpageverifytype2 SELECT.cmpageverify{display:inline-block;width:calc(50% - 10px)}.cmpageverifytype3 SELECT.cmpageverify{display:inline-block;width:calc(33% - 20px)}.cmpageverifybox INPUT.cmpagewrong,.cmpageverifybox SELECT.cmpagewrong{background-color:#f6592c;color:#fff}.cmpageverifyagetxt,.cmpageverifydaytxt,.cmpageverifymonthtxt,.cmpageverifyyeartxt{font-size:smaller}INPUT.cmpageverifyage,INPUT.cmpageverifyday,INPUT.cmpageverifymonth,INPUT.cmpageverifyyear{border:1px solid var(--clrTextSecondary);padding-left:.5rem;padding-right:.5rem;text-align:center;margin-left:2px;margin-right:2px;border-radius:2px}INPUT.cmpageverifyyear{width:5rem}INPUT.cmpageverifyage,INPUT.cmpageverifyday,INPUT.cmpageverifymonth{width:3rem}.cmpcookieinfobox,.cmpcookiesdescrbox{height:100%}.cmpcookieinfobox .cmpboxdetails,.cmpcookiesdescrbox .cmpboxdetails{display:flex;flex-direction:column;height:100%}@media (max-height:926px) and (max-width:480px) and (orientation:portrait){.cmpcookieinfobox,.cmpcookiesdescrbox{display:flex;flex-direction:column}.cmpcookieinfobox .cmpboxdetails,.cmpcookiesdescrbox .cmpboxdetails{display:contents}}.cmpcookieinfocontent h4,.cmpcookiesdescrboxcontent h4,.cmpcookiesdescrboxh2,.cmpcookiesdescrboxhl{font-size:var(--x11pt);color:var(--clrHeadline)}.cmpcookiesdescrtable{flex-grow:10;overflow-y:auto}.cmpcookieinfobox .cmpcookiesdescrboxcontent,.cmpcookiesdescrbox .cmpcookiesdescrboxcontent{flex-grow:1;flex-shrink:1;overflow:auto}.cmpcookieinfobox .cmpboxbtnsmore,.cmpcookiesdescrbox .cmpboxbtnsmore{flex-grow:0;flex-shrink:0}@media (max-width:321px),(max-height:321px){.cmpbox{font-size-adjust:.38!important;line-height:1.05em!important;padding:5px!important}}@media (max-height:450px) and (max-width:450px){.cmpbox{max-height:100%!important;max-width:100%!important;height:100%!important;width:100%!important}.cmpboxinner{flex-direction:column!important}.cmpboxbtns{min-height:auto!important}.cmpboxbtn,.cmpboxbtns{max-width:100%!important}}@media (max-height:600px) and (min-width:926px){.cmpbox3{height:100%}.cmpbox3 .cmpboxinner{display:flex;flex-direction:column}.cmpbox3 .cmpboxinner .cmpboxcontent{overflow:auto}}@media (max-width:414px) and (max-height:736px),(max-width:736px) and (max-height:414px){.cmpbox{padding:10px!important}}.cmpbox6 .cmpboxinner,.cmpbox7 .cmpboxinner{display:flex;flex-direction:column}.cmpbox6 .cmpboxcontent,.cmpbox7 .cmpboxcontent{flex-grow:1;overflow:auto}@media (max-height:926px) and (max-width:480px) and (orientation:portrait){.cmpbox{width:100%;max-height:60%;min-height:300px;height:300px;overflow:auto!important;-webkit-overflow-scrolling:auto!important;padding:15px!important}.cmpboxinner{display:flex;flex-direction:column}.cmpboxcontent{flex-grow:1;overflow:auto;-webkit-overflow-scrolling:auto}.cmpboxbtns{flex-grow:1}.cmpbox.cmpfullscreen{max-height:100%!important;height:100%!important}.cmpboxbtn{margin:5px}A.cmpmorelink:link{padding:3px}.cmpwelcomeprps{width:100%}}@media (max-width:926px) and (max-height:480px) and (orientation:landscape){.cmpbox{width:100%;max-height:90%;min-height:150px;height:350px;overflow:auto!important;-webkit-overflow-scrolling:auto!important;padding:15px!important}.cmpboxinner{display:flex;flex-direction:row}.cmpboxcontent{flex-grow:1;overflow:auto;-webkit-overflow-scrolling:auto}.cmpboxbtns{flex-grow:1;flex-shrink:1;min-height:50px;max-width:250px!important;width:100%}.cmpfullscreen .cmpboxbtns{flex-shrink:0;max-width:100%!important;width:100%}.cmpboxbtn{margin:5px}.cmpbox.cmpfullscreen{max-height:100%!important;height:100%!important}A.cmpmorelink:link{padding:3px}.cmpcornerbtn .cmpboxbtns{padding-top:50px}}@media (max-width:650px) and (min-width:570px){.cmpboxCustomMenu1 .cmpcookieinfotable-wrapper{display:block}.cmpboxCustomMenu1 .cmpcookieinfotable-header{margin-bottom:10px;display:block;grid-template-columns:none}.cmpboxCustomMenu1 .cmpcookieinfotable-body{display:block;grid-template-columns:none}.cmpboxCustomMenu1 .cmpcookieinfotable-cell,.cmpboxCustomMenu1 .cmpcookieinfotable-cellHeader{display:block;width:100%;box-sizing:border-box}.cmpboxCustomMenu1 .cmpcookieinfotable-row{display:flex;flex-direction:column;margin-bottom:10px;padding:10px}}@media (max-width:520px){.cmpcookieinfotable-wrapper{display:block}.cmpcookieinfotable-header{margin-bottom:10px}.cmpcookieinfotable-body,.cmpcookieinfotable-header{display:block;grid-template-columns:none}.cmpcookieinfotable-cell,.cmpcookieinfotable-cellHeader{display:block;width:100%;box-sizing:border-box}.cmpcookieinfotable-row{display:flex;flex-direction:column;margin-bottom:10px;padding:10px}}.cmpcookieinfotable{width:100%}.cmpcookieinfotable td,.cmpcookieinfotable th{text-align:left}.cmpcookieinfotable_descr{font-size:smaller;padding-bottom:10px}.cmppurposebox2,.cmpvendorbox2{text-align:left!important;position:relative;padding-right:20px}.cmpbox:dir(rtl) .cmppurposebox2,.cmpbox:dir(rtl) .cmpvendorbox2,.cmpbox[dir=rtl] .cmppurposebox2,.cmpbox[dir=rtl] .cmpvendorbox2{padding-right:0;padding-left:20px}.cmpvendorinfohl{font-weight:700;margin-top:15px}.cmpdatacategory{background-color:rgba(0,0,0,.2);padding:3px;border-radius:5px;margin-right:5px;line-height:2em}.cmplazypreviewiframe{position:relative;overflow:hidden;box-sizing:border-box;font-family:Arial,sans-serif;background-repeat:no-repeat;background-position:center;background-size:cover}.cmplazypreviewiframe *,.cmplazypreviewiframe>*{font-family:Arial,sans-serif;text-decoration:none;box-sizing:border-box;border:0 solid #fff;vertical-align:middle}.cmplazypreviewmsg{margin:0;position:absolute;top:50%;-ms-transform:translateY(-50%);transform:translateY(-50%);background-color:rgba(255,255,255,.95);width:100%;padding:20px}.cmplazypreviewmsg *{font-size:var(--x11pt);color:#242424}.cmplazypreviewmsginner{max-width:90%;width:640px;margin-left:auto;margin-right:auto}.cmplazyhl{font-weight:700}.cmplazybtn{text-align:center;cursor:pointer}.cmplazycb{font-size:var(--x10pt);text-align:center}.cmphelpicon,.cmpsubvendoricon{width:16px;height:16px;max-width:16px;max-height:16px;margin-right:2px;margin-left:4px}.cmpsubvendoricon{width:14px;height:14px;max-width:14px;max-height:14px}.cmpbox:dir(rtl) .cmphelpicon,.cmpbox[dir=rtl] .cmphelpicon{margin-right:4px;margin-left:2px}.cmphelpicon path,.cmpsubvendoricon path{fill:#666}.cmpvendoricon{width:16px;height:16px;max-width:16px;max-height:16px;padding:0;margin:0 2px 0 4px}.cmpvendboxclose,A.cmpvendboxclose,A.cmpvendboxclose:link{position:absolute;right:5px;top:5px}.cmpvendboxclose svg{width:16px;height:16px;fill:#666}.cmplisticon{width:14px;height:14px;margin-top:3px;margin-right:5px;flex-shrink:0}.cmpbox:dir(rtl) .cmplisticon,.cmpbox[dir=rtl] .cmplisticon{margin-right:0;margin-left:5px}.cmpcarousel{display:flex;flex-direction:column;overflow:hidden}.cmpboxnavi.cmpcarouselexpandnavi,.cmpboxnavi.cmpcarouselnavi{width:100%;float:none}.cmpcarouselcontent{padding:15px}.cmpboxdetailscarousel{float:none;width:100%;padding:0}@media (max-width:926px) and (max-height:480px) and (orientation:landscape){.cmpboxdetailscarousel{display:block;overflow-y:auto}.cmpcarouselexpandnavi,.cmpcarouselnavi{overflow:auto}}.cmpcarouselnavi .cmpboxnaviitem{position:relative}.cmpcarouselnavi .cmpboxnaviitem:after,.cmpcarouselnavi .cmpboxnaviitem:before{content:"";position:absolute;top:calc(50% - 2px);width:6px;border:1px solid var(--clrText)}.cmpcarouselnavi .cmpboxnaviitem:before{transform:rotateZ(45deg);-webkit-transform:rotateZ(-45deg);right:10px}.cmpcarouselnavi .cmpboxnaviitem:after{transform:rotateZ(-45deg);-webkit-transform:rotateZ(45deg);right:15px}.cmpcarouselnavi .cmpboxnaviitemactive:after,.cmpcarouselnavi .cmpboxnaviitemactive:before{content:"";position:absolute;top:calc(50% - 2px);width:6px;border:1px solid var(--clrTextSecondary)}.cmpcarouselnavi .cmpboxnaviitemactive:before{transform:rotateZ(45deg);-webkit-transform:rotateZ(45deg);right:10px}.cmpcarouselnavi .cmpboxnaviitemactive:after{transform:rotateZ(-45deg);-webkit-transform:rotateZ(-45deg);right:15px}@media print{.cmpbox{display:none!important;visibility:hidden!important}}.cmpboxcontentpass .cmpmore{color:#666}.cmpcontentpasslogin{flex:0 0 auto!important}.cmpcontentpassloginlogo{margin-right:.4em!important;margin-left:.75em!important;margin-bottom:-.1em!important;height:.9em!important}.cmpcontentpassboxmiddle,.cmpcontentpassboxmiddle2{display:flex}.cmpcontentpassboxleft{width:50%;margin-right:30px}.cmpcontentpassboxright,.cmpwelectboxright{width:50%;margin-left:30px}.cmpcontentpassboxmiddle.cmpcontentpass.cmpwelect .cmpcontentpassboxleft,.cmpcontentpassboxmiddle.cmpcontentpass.cmpwelect .cmpcontentpassboxright,.cmpcontentpassboxmiddle.cmpcontentpass.cmpwelect .cmpwelectboxright,.cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpcontentpassboxleft,.cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpcontentpassboxright,.cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpwelectboxright{width:calc(33% - 20px)}.cmpcontentpassboxmiddle.cmpcontentpass.cmpwelect .cmpcontentpassboxright,.cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpcontentpassboxright{margin-left:0}.cmpcontentpassboxbottom,.contentpassboxstyle2 .cmpcontentpassboxleft+.cmpcontentpassboxright,.contentpassboxstyle2 .cmpcontentpassboxleft+.cmpwelectboxright,.contentpassboxstyle3 .cmpcontentpassboxleft+.cmpcontentpassboxright,.contentpassboxstyle3 .cmpcontentpassboxleft+.cmpwelectboxright{margin-top:60px}.cmpcontentpassboxbottom2{margin-bottom:60px}.contentpassboxstyle2,.contentpassboxstyle3{display:flex;flex-direction:row}.contentpassboxstyle2 .cmpcontentpassboxbottom2,.contentpassboxstyle3 .cmpcontentpassboxbottom2{margin-bottom:0}.contentpassboxstyle2 .cmpcontentpassboxmiddle2{width:calc(50% - 30px);margin-right:30px;display:flex;flex-direction:column}.contentpassboxstyle2 .cmpcontentpassboxbottom,.contentpassboxstyle3 .cmpcontentpassboxmiddle2{width:calc(50% - 30px);margin-left:30px;display:flex;flex-direction:column}.contentpassboxstyle2 .cmpcontentpassboxbottom{margin-top:0}.contentpassboxstyle3 .cmpcontentpassboxbottom2{width:calc(50% - 30px);margin-top:0;margin-right:30px;display:flex;flex-direction:column}.contentpassboxstyle2 .cmpcontentpassboxleft,.contentpassboxstyle2 .cmpcontentpassboxright,.contentpassboxstyle2 .cmpwelectboxright,.contentpassboxstyle3 .cmpcontentpassboxleft,.contentpassboxstyle3 .cmpcontentpassboxright,.contentpassboxstyle3 .cmpwelectboxright{width:100%!important;margin:0}.cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpcontentpassboxleft,.cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpcontentpassboxright,.cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpwelectboxright,.cmpcontentpassboxmiddle3.cmpcontentpass.cmpwelect .cmpcontentpassboxleft,.cmpcontentpassboxmiddle3.cmpcontentpass.cmpwelect .cmpcontentpassboxright,.cmpcontentpassboxmiddle3.cmpcontentpass.cmpwelect .cmpwelectboxright{margin-top:30px}.contentpassboxstyle1 .cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpcontentpassboxleft,.contentpassboxstyle1 .cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpcontentpassboxright,.contentpassboxstyle1 .cmpcontentpassboxmiddle2.cmpcontentpass.cmpwelect .cmpwelectboxright,.contentpassboxstyle2 .cmpcontentpassboxleft,.contentpassboxstyle3 .cmpcontentpassboxleft{margin-top:0!important}.cmpcontentpassloginlogo{width:.9em}.cmpcontentpasssignuplogo,.cmpwelectlogo{width:.9em;height:.9em;margin-right:10px}.cmpwelectiframe{width:100%;height:640px;max-height:80vh;border:0 solid #fff;background-color:transparent}@media (max-height:926px) and (max-width:480px) and (orientation:portrait),(max-height:480px) and (max-width:926px) and (orientation:landscape){.cmpcontentpassbox.contentpassboxstyle2,.cmpcontentpassbox.contentpassboxstyle3{display:block!important}.cmpcontentpassbox.contentpassboxstyle2 .cmpcontentpassboxmiddle,.cmpcontentpassbox.contentpassboxstyle2 .cmpcontentpassboxmiddle2,.cmpcontentpassbox.contentpassboxstyle3 .cmpcontentpassboxmiddle,.cmpcontentpassbox.contentpassboxstyle3 .cmpcontentpassboxmiddle2,.cmpcontentpassboxmiddle,.cmpcontentpassboxmiddle2{display:block!important;margin-right:0!important;margin-left:0!important;width:100%!important}.cmpcontentpassboxleft{width:100%!important;margin-right:0!important;margin-top:30px}.cmpcontentpassboxright{width:100%!important;margin-left:0!important;margin-top:30px}.cmpcontentpassbox .cmpcontentpassboxmiddle .cmpcontentpassboxbottom,.cmpcontentpassbox .cmpcontentpassboxmiddle .cmpcontentpassboxbottom2,.cmpcontentpassbox .cmpcontentpassboxmiddle2 .cmpcontentpassboxbottom,.cmpcontentpassbox .cmpcontentpassboxmiddle2 .cmpcontentpassboxbottom2,.cmpcontentpassboxbottom,.cmpcontentpassboxbottom2{display:block!important;width:100%!important;margin-top:30px!important;margin-left:0!important;margin-right:0!important}.cmpwelectboxright{width:100%!important;margin-left:0!important;margin-top:30px}.cmpboxcontentpass .cmpboxinner{display:flex!important;flex-direction:column!important}}.cmpvendortogglebox{display:flex}.cmpvendortoggleboxd{display:flex;padding-right:20px}.cmppurposetoggleboxd>span,.cmpvendortoggleboxd>span{align-self:center;padding-right:10px}.cmppurposetoggleboxd>a,.cmpvendortoggleboxd>a{align-self:center}.cmppurposetoggleboxd .cmponofftext,.cmpvendortoggleboxd .cmponofftext{display:inline}.cmppurposetogglebox{display:flex}.cmppurposetoggleboxd{display:flex;padding-right:20px}.cmpexplicitconsentbtn{padding:3px 8px;font-size:var(--x9pt);-webkit-box-shadow:0 0 5px 0 rgba(0,0,0,.5);-moz-box-shadow:0 0 5px 0 rgba(0,0,0,.5);box-shadow:0 0 5px 0 rgba(0,0,0,.5);border-radius:3px}span.cmptooltiplink{display:inline-block;position:relative;border-bottom:1px dotted var(--clrText);color:inherit}.cmptooltip{min-width:220px;max-width:400px;position:absolute;background-color:#fff;top:calc(100% + 10px);left:50%;transform:translate(-50%,0);padding:3px;border-radius:3px;z-index:99999999;border:1px solid var(--clrTextSecondary);box-shadow:0 1px 8px rgba(0,0,0,.2);visibility:hidden;opacity:0;transition:opacity .8s}span.cmptooltiplink:active .cmptooltip,span.cmptooltiplink:focus .cmptooltip,span.cmptooltiplink:hover .cmptooltip{visibility:visible;opacity:1}i.cmptooltiparrow{position:absolute;bottom:100%;left:50%;margin-left:-12px;width:24px;height:12px;overflow:hidden}i.cmptooltiparrow::after{content:"";position:absolute;width:12px;height:12px;left:50%;transform:translate(-50%,50%) rotate(45deg);background-color:var(--clrBackground);border:1px solid var(--clrTextSecondary);box-shadow:0 1px 8px rgba(0,0,0,.1)}.cmpboxbtnnocorner{z-index:99999}.cmpboxbtncustomcorner svg,.cmpboxbtnnocorner svg,.cmpboxbtnsavecorner svg,.cmpboxbtnyescorner svg{fill:currentColor}.cmpboxcookieicon{display:block;float:right;width:200px;margin-top:50px}.cmpboxcookieicon svg,.cmpboxcookieiconsilhouette svg.cmpcookieiconsilhouette{width:100%;height:auto}.cmpboxcookieiconsilhouette{position:absolute;right:0;top:0;width:50%;z-index:-3;max-height:100%;overflow:hidden}.cmpboxcookieiconsilhouette .silhouetteFill{fill:var(--clrButton);opacity:.1}@media (max-height:926px) and (max-width:480px) and (orientation:portrait){.cmpboxcookieicon{width:100px}}.cmpsliderbox{transition:all .8s ease;position:relative;z-index:0}.cmpsliderpanel,.cmpsliderpointer{position:absolute;top:.6em;left:0;margin-left:45px;border-radius:30px;width:1px;background-color:var(--clrButton)}.cmpsliderpointer{transition:all .8s ease;padding-left:14px;padding-top:14px;height:1px;z-index:10}.cmpsliderpanel{padding-left:5px;height:100%;opacity:.1;z-index:1}.cmpsliderpanel.cmpsliderpanelActive{height:0;opacity:.8;top:calc(.6em + 4px);z-index:2}.cmpsliderstationouter{position:relative}.cmpsliderstation{position:absolute;top:.7em;left:0;margin-left:45px;border-radius:30px;padding-left:12px;padding-top:12px;width:1px;height:1px;background-color:var(--clrButton);opacity:.5;z-index:3}.cmpslideritemActive .cmpsliderstation{opacity:.8;z-index:4}.cmpslideritem{margin-left:90px;margin-bottom:10px;padding:5px;border-radius:5px;cursor:pointer}.cmpslideritem .cmpsliderhl,.cmpslideritem .cmpslidertxt{opacity:.8}.cmpslideritemActive .cmpsliderhl,.cmpslideritemActive .cmpslidertxt{opacity:1}.cmpslideritem,.cmpslideritemouterActive{position:relative}.cmpslideritem:last-of-type{margin-bottom:0}.cmpsliderhl{color:var(--clrHeadline);font-size:var(--x11pt);font-weight:700}.cmpslidertxt{color:var(--clrText)}.cmpslidercenter{-webkit-transform:translate(-50%,0);-moz-transform:translate(-50%,0);-ms-transform:translate(-50%,0);-o-transform:translate(-50%,0);transform:translate(-50%,0)}.cmplastupdate,.cmptcfcookieinfo{display:block;position:absolute;bottom:3px;line-height:1em;color:var(--clrText);border:1px solid transparent;cursor:pointer;border-radius:5px;text-align:left;font-size:var(--x7pt);transition:.4s all ease}.cmplastupdate{padding:8px 3px 6px;left:32px;opacity:.5}.cmplastupdate.cmpwithtcf{left:76px}.cmplastupdate:hover{opacity:1;background-color:#fffdcd;border:1px solid #ffd341;-webkit-box-shadow:0 0 5px 0 rgba(0,0,0,.25);-moz-box-shadow:0 0 5px 0 rgba(0,0,0,.25);box-shadow:0 0 5px 0 rgba(0,0,0,.25)}.cmptcfcookieinfo{padding:3px 3px 4px;left:30px;background-color:var(--clrBackground)}.cmptcfcookieinfo:focus,.cmptcfcookieinfo:hover{background-color:#fffdcd;border:1px solid #ffd341;-webkit-box-shadow:0 0 5px 0 rgba(0,0,0,.25);-moz-box-shadow:0 0 5px 0 rgba(0,0,0,.25);box-shadow:0 0 5px 0 rgba(0,0,0,.25)}.cmpboxDSA .cmpboxdsaaddetaildescr .cmpboxbtn.cmpboxbtnyes,.cmptcfcookieinfo SVG,.cmptcfcookieinfo svg{margin-left:0}.cmptcfcookieinfo .cmptcfcookieinfotxt{padding:5px 3px 2px;display:none}.cmptcfcookieinfo:hover .cmptcfcookieinfoicon{display:none}.cmpboxtxtdivpurposeicon,.cmptcfcookieinfo:hover .cmptcfcookieinfotxt{display:inline-block}svg.cmpexternallinkicon,svg.cmpicon,svg.cmpicosvgfill,svg.cmppurposeicon,svg.cmptcficon{fill:currentColor;height:1em;width:1em;margin-right:.5em}svg.cmpexternallinkicon,svg.cmptcficon{margin-left:.5em}.cmpbox u{text-decoration:underline!important}.cmpfadein{opacity:0;transition-property:opacity;transition-duration:.9s;transition-timing-function:ease}.cmpflyin{left:-600px!important;right:600px!important}.cmpflyinR{left:calc(100vw + 600px)!important;right:calc(-100vw - 600px)!important}.cmpflyinT{top:-600px!important;bottom:calc(100vh + 1200px)!important}.cmpflyinB{top:calc(100vh + 600px)!important;bottom:calc(-100vh - 1200px)!important}.cmpflyin2,.cmpflyin3{transition-property:left,right;transition-duration:1.9s;transition-timing-function:ease}.cmpflyin3{transition-property:top,bottom}.cmppolicybox{display:flex;flex-direction:column;height:100%}.cmppolicybox .cmppolicycontent{flex-grow:1;flex-shrink:1;overflow:auto}.cmppolicybox .cmpboxbtnsmore{flex-grow:0;flex-shrink:0}.cmpadchoiceslearnmorelink,.cmpadchoicesoolink{display:flex;align-items:center;justify-content:center;width:100%}.cmpadchoicesoolink{color:var(--clrButtonText);background-color:var(--clrButton);font-weight:700;margin:0 0 10px}.cmpadchoiceslearnmorelink{color:var(--clrButton);background-color:var(--clrButtonText);margin:0}.cmpqrcontent,.cmpqrcontentalternative{text-align:center}.cmpqrcontent canvas,.cmpqrcontent img{border:5px solid #fff;border-radius:5px}.cmpqrouter{position:relative}.cmpqrspinner{width:100%;height:140px;align-items:center;justify-content:center;position:absolute;bottom:-70px;right:-120px}.cmpqrspinner .cmploadingspinner{width:60px;height:60px}.cmpqrspinner .cmploadingspinner div{border:6px solid var(--clrHeadline);border-color:var(--clrHeadline) transparent transparent transparent}.cmpboxdsaouter{max-width:800px;margin-left:auto;margin-right:auto}.cmpboxdsaaddetailouter,.cmpboxdsaaddetailoutersingle{border:1px solid silver;border-radius:5px;margin-bottom:50px}.cmpboxdsaaddetailouter{display:flex}.cmpboxdsaaddetail,.cmpboxdsaaddetailimg{padding:30px}.cmpboxdsaaddetailouter .cmpboxdsaaddetail,.cmpboxdsaaddetailouter .cmpboxdsaaddetailimg{width:100%}.cmpboxdsaaddetailimg{align-self:center;text-align:center}.cmpboxdsaaddetailimg img{max-width:100%;max-height:100%;width:100%}.cmpboxdsaaddetailline{margin-bottom:15px}.cmpboxdsaaddetailhl{color:var(--clrHeadline);font-weight:700;font-size:var(--x11pt)}.cmpboxdsaaddetailname{color:var(--clrText);font-size:var(--x8pt);opacity:.8;margin-bottom:.5em}.cmpboxdsaaddetaildescr,.cmpboxdsaaddetaildescritem{color:var(--clrText);font-size:var(--x10pt)}.cmpboxdsaaddetaildescrimg{text-align:center}.cmpboxdsaaddetaildescrimg img{width:100%;max-width:380px;max-height:600px}.cmpboxdsaaddetaildescritem{padding-left:2.5em;margin-left:.5em;padding-bottom:10px;padding-top:5px;background-repeat:no-repeat;background-size:24px;background-position:0 5px}.cmpboxDSA .cmpboxinner{overflow-y:auto}.cmpboxDSA .cmpclose,.cmpclose svg{fill:var(--clrHeadline);width:20px;height:20px;display:block}.cmpboxDSA .cmpboxh2 img{vertical-align:text-bottom;height:1.2em;margin-right:.5em}.cmpboxdsaview{height:1.3em;margin-left:.5em}@media (max-height:926px) and (max-width:480px) and (orientation:portrait){.cmpboxdsaaddetailouter{display:block}.cmpboxdsaaddetaildescrimg img{max-width:100%}}@keyframes cmploadingspinner{0%{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes cmploadingspinner21{0%{transform:scale(0)}to{transform:scale(1)}}@keyframes cmploadingspinner23{0%{transform:scale(1)}to{transform:scale(0)}}@keyframes cmploadingspinner22{0%{transform:translate(0,0)}to{transform:translate(24px,0)}}.skippmsg,.skippmsg *{--clrBackground:#FFFFFF;--clrHeadline:#3B3B3B;--clrText:#5F5F5F;--clrTextSecondary:#CFCFCF;--clrButton:#3276AE;--clrButtonText:#FFFFFF;--clrLink:#666666;--clrHighlight:#FFFDCD}.cmpspinnercenter{text-align:center!important}.cmploadingspinner{display:inline-block;position:relative;width:120px;height:120px;border-radius:50%;overflow:hidden}.cmploadingspinner div{box-sizing:border-box;display:block;position:absolute;width:100%;height:100%;border:12px solid var(--clrButton);border-radius:50%;animation:cmploadingspinner 1.2s cubic-bezier(.5,0,.5,1) infinite;border-color:var(--clrButton) transparent transparent transparent}.cmploadingspinner div:nth-child(1){animation-delay:-.45s}.cmploadingspinner div:nth-child(2){animation-delay:-.3s}.cmploadingspinner div:nth-child(3){animation-delay:-.15s}.cmploadingspinner2{display:inline-block;position:relative;width:80px;height:80px}.cmploadingspinner2 div{position:absolute;top:33px;width:13px;height:13px;border-radius:50%;background:var(--clrButton);animation-timing-function:cubic-bezier(0,1,1,0)}.cmploadingspinner2 div:nth-child(1){left:8px;animation:cmploadingspinner21 .6s infinite}.cmploadingspinner2 div:nth-child(2),.cmploadingspinner2 div:nth-child(3){left:8px;animation:cmploadingspinner22 .6s infinite}.cmploadingspinner2 div:nth-child(3){left:32px}.cmploadingspinner2 div:nth-child(4){left:56px;animation:cmploadingspinner23 .6s infinite}.cmpcookieinfotable-container{position:relative;width:100%;overflow-x:auto}.cmpcookieinfotable-wrapper{display:grid;width:100%}.cmpcookieinfotable-body,.cmpcookieinfotable-header{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--clrTextSecondary)}.cmpcookieinfotable-body{background-color:var(--clrBackground)}.cmpcookieinfotable-row{display:contents;margin-bottom:5px}.cmpcookieinfotable-cell,.cmpcookieinfotable-cellHeader{position:relative;padding:10px;border-bottom:1px solid var(--clrTextSecondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-sizing:border-box;text-align:left}.cmpcookieinfotable-cellHeader{font-weight:700}.cmpcookieinfotable-description{grid-column:1/-1;background-color:#f3f3f3;padding:15px;margin-top:10px;margin-bottom:10px;border-top:2px solid var(--clrTextSecondary);border-bottom:2px solid var(--clrTextSecondary)}
+
+
+/*CLIENT CUSTOM CSS*/.cmpstyleroot, .cmpstyleroot *
+{
+    --clrBackground:    #FFFFFF;
+    --clrHeadline:      #3B3B3B;
+    --clrText:          #5F5F5F;
+    --clrTextSecondary: #CFCFCF;
+    --clrButton:        #3276AE;
+    --clrButtonText:    #FFFFFF;
+    --clrLink:          #666666;
+    --clrHighlight:     #FFFDCD;
+}.cmplogo {right: 20px; top: 20px;}
+.cmpbox:dir(rtl) .cmplogo, .cmpbox[dir="rtl"] .cmplogo {left: 20px; top: 20px; right:auto;}@media (max-width: 570px){.cmplogo{ display: none !important;}}
+    @media (max-height: 926px) and (max-width: 480px) and (orientation: portrait){.cmplogo{display: none !important;}}
+    @media (max-width: 926px) and (max-height: 480px) and (orientation: landscape){.cmplogo{display: none !important;}} *.cmpboxhl{font-size:12pt;color:var(--clrHeadline);padding-bottom:10px;font-weight:bold;} *.cmpboxtxt, td.cmpvendname{font-size:11pt;color:var(--clrText);}.cmpwelcomeprpstxt, .cmpwelcomeprpstxt A:link, .cmpwelcomeprpsbtn, .cmpwelcomeprpsbtn A:link, .cmpwelcomeprpsbtn span{font-size:11pt;color:var(--clrText);} *.cmpboxtxt{padding-bottom:20px;}.cmpwelcomeprpstxt, .cmpwelcomeprpstxt A:link, .cmpwelcomeprpsbtn, .cmpwelcomeprpsbtn A:link, .cmpwelcomeprpsbtn span{font-size:11pt;color:var(--clrText);}.cmpboxwelcomeprps{margin-bottom:20px;}.cmpmore{font-size:9pt;} .cmpsavemychoice, .cmpsavemychoice label{font-size:9pt;color:var(--clrText);} .cmpmorelink, A.cmpmorelink, A.cmpmorelink:link, .cmpmore A, .cmpmore A:link{font-size:9pt;color:var(--clrLink);} .cmpsavemychoice, .cmpsavemychoice label{font-size:9pt;color:var(--clrText);}  *.cmpboxbtnyes, A.cmpboxbtnyes, A.cmpboxbtnyes:link{font-size:11pt;color:var(--clrButtonText);background-color:var(--clrButton);} *.cmpboxbtnno, A.cmpboxbtnno, A.cmpboxbtnno:link{font-size:11pt;color:var(--clrButtonText);background-color:var(--clrButton);} *.cmpboxbtnsave, A.cmpboxbtnsave, A.cmpboxbtnsave:link{font-size:11pt;color:var(--clrButtonText);background-color:var(--clrButton);} *.cmpboxbtncustom, A.cmpboxbtncustom, A.cmpboxbtncustom:link{font-size:11pt;color:var(--clrButtonText);background-color:var(--clrButton);} .cmpfullscreen *.cmpboxbtnyes, .cmpfullscreen A.cmpboxbtnyes, .cmpfullscreen A.cmpboxbtnyes:link{font-size:11pt;color:var(--clrButtonText);background-color:var(--clrButton);} *.cmpexplicitconsentbtn, A.cmpexplicitconsentbtn, A.cmpexplicitconsentbtn:link, *.cmpexplicitconsentbtnon, A.cmpexplicitconsentbtnon, A.cmpexplicitconsentbtnon:link{color:var(--clrButtonText);background-color:var(--clrButton);} *.cmpexplicitconsentbtnoff, A.cmpexplicitconsentbtnoff, A.cmpexplicitconsentbtnoff:link{color:var(--clrButtonText);background-color:var(--clrButton);} .cmpfullscreen .cmpmorelink, .cmpfullscreen A.cmpmorelink, .cmpfullscreen A.cmpmorelink:link{font-size:9pt;color:var(--clrLink);} *.cmpboxbtnyes svg{fill:currentColor;width:1em;height:1em;}*.cmpboxbtnno svg{fill:currentColor;width:1em;height:1em;}*.cmpboxbtnaccept svg{fill:currentColor;width:1em;height:1em;vertical-align: middle;}*.cmpboxbtnreject svg{fill:currentColor;width:1em;height:1em;vertical-align: middle;} *.cmpboxbtnyescustomchoices *.cmpimg, *.cmpboxbtnyescustomchoices svg{display:none !important;} *.cmpboxbtnyescustomchoices{padding-left:0px;} *.cmpbox{background-color:var(--clrBackground);border-top:solid 12px var(--clrButton);border-right:solid 0px var(--clrBackground);border-bottom:solid 5px var(--clrTextSecondary);border-left:solid 0px var(--clrBackground);padding-top:40px;padding-right:40px;padding-bottom:40px;padding-left:40px;} *.cmpclose{display:none;}  .cmpfullscreen *.cmpboxhl{font-size:12pt;color:var(--clrHeadline);font-weight:bold;} .cmpfullscreen *.cmpprpshl{font-size:12pt;color:var(--clrHeadline);font-weight:bold;} .cmpfullscreen *.cmpboxtxt, .cmpfullscreen, .cmpprpsdescr, td.cmpvendname, .cmpfullscreen A.cmpvendurl, .cmpfullscreen A.cmpvendurl:link{font-size:11pt;color:var(--clrText);} .cmpfullscreen.cmpbox{background-color:var(--clrBackground);} .cmpboxnaviitemactive, TD.cmpallvend, TH.cmpallvend, TD.cmpallprps, TH.cmpallprps{background-color:#FFFFFF;}@media (max-height: 926px) and (max-width: 480px) and (orientation: portrait) {.cmpbox{overflow:auto;max-width:100%; min-width:100%; }}@media (max-height: 480px) and (max-width: 926px) and (orientation: landscape) {.cmpbox{overflow:auto;max-height:100%; min-height:100%;}}.cmpbox{border-radius:8px;}.cmpboxrecall{left:auto !important; right:10px;}.cmptogglespan svg{width:40px; height:20px;}.cmptogglespan svg .cmpsvggreenfill{fill:#A8C43C !important;} .cmptogglespan svg .cmpsvggreenstroke{stroke:#A8C43C !important;}.cmptogglespan svg .cmpsvgredfill{fill:#02A8F4 !important;} .cmptogglespan svg .cmpsvgredstroke{stroke:#02A8F4 !important;}.cmptogglespan svg .cmpsvgwhitefill{fill:#FFFFFF !important;} .cmptogglespan svg .cmpsvgwhitestroke{stroke:#FFFFFF !important;}.cmptogglespan svg .cmpsvgblackfill{fill:#111111 !important;} .cmptogglespan svg .cmpsvgblackstroke{stroke:#111111 !important;}.cmptogglespan svg .cmpsvggrayfill{fill:#A8C43C !important;} .cmptogglespan svg .cmpsvggraystroke{stroke:#A8C43C !important;}.cmptogglespan svg .cmpsvggray2fill{fill:#AAAAAA !important;} .cmptogglespan svg .cmpsvggray2stroke{stroke:#AAAAAA !important;}.cmptogglespan svg .cmpsvgsilverfill{fill:#E5E5E5 !important;} .cmptogglespan svg .cmpsvgsilverstroke{stroke:#E5E5E5 !important;}.cmptogglespan svg .cmpsvgsilver2fill{fill:#DDDDDD !important;} .cmptogglespan svg .cmpsvgsilver2stroke{stroke:#DDDDDD !important;}.cmpbox{border-top-width: 0px !important;border-right-width: 0px !important;border-bottom-width: 0px !important;border-left-width: 0px !important;}.cmpboxbtncustom{background-color: #D3D1D1 !important;}.cmpboxbtnno{background-color: #0292D4 !important;}.cmpboxbtnrejectcustomchoices{background-color: #D3D1D1 !important;}.cmpboxbtnyes{background-color: #0292D4 !important;}.cmpboxhl{font-size: 14px !important;}.cmpboxtxt{font-size: 12px !important;text-align: left !important;font-family: "Arial" !important;}.cmplogo{margin-right: 14px !important;max-width: auto !important;}</style></body></html>
