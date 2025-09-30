@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: kr-postgres
+    environment:
+      POSTGRES_DB: kr_leads
+      POSTGRES_USER: kr_user
+      POSTGRES_PASSWORD: kr_password_change_in_production
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kr_user -d kr_leads"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: kr-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # App Service (später aktivieren wenn Dockerfile existiert)
+  # app:
+  #   build: .
+  #   container_name: kr-app
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - DATABASE_URL=postgresql://kr_user:kr_password_change_in_production@postgres:5432/kr_leads
+  #     - REDIS_URL=redis://redis:6379
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   volumes:
+  #     - ./app:/app/app
+  #     - ./data:/app/data
+  #     - ./logs:/app/logs
+  #   restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
