@@ -66,7 +66,8 @@ class ElevenEightyDetailScraper:
                 'additional_emails': self._extract_additional_emails(soup),
                 'company_info': self._extract_company_info(soup),
                 'industry': self._extract_industry(soup),
-                'full_address': self._extract_full_address(soup),
+                'address': self._extract_full_address(soup),
+                'locations': self._extract_multiple_locations(soup),
                 'verified': self._extract_verification_status(soup),
                 'metadata': self._extract_metadata(soup)
             }
@@ -401,6 +402,74 @@ class ElevenEightyDetailScraper:
                 metadata['entry_date'] = date_match.group(1)
         
         return metadata if metadata else None
+    
+    def _extract_multiple_locations(self, soup: BeautifulSoup) -> Optional[List[Dict]]:
+        """
+        Extrahiert mehrere Standorte falls vorhanden
+        
+        Viele Unternehmen haben mehrere Filialen/Standorte.
+        Diese werden oft in einer Liste oder Karte angezeigt.
+        
+        Returns:
+            Liste von Standorten mit jeweils Adresse, Telefon, etc.
+        """
+        locations = []
+        
+        # Suche nach "Weitere Standorte" oder ähnlichen Sections
+        location_sections = soup.find_all('div', class_=lambda x: x and ('standort' in str(x).lower() or 'filiale' in str(x).lower()))
+        
+        if not location_sections:
+            # Alternative: Suche nach mehreren Adress-Blöcken
+            location_sections = soup.find_all('div', {'itemtype': 'http://schema.org/PostalAddress'})
+        
+        # Wenn mehr als eine Adresse gefunden wurde
+        if len(location_sections) > 1:
+            for section in location_sections:
+                location = {}
+                
+                # Straße
+                street = section.find('span', {'itemprop': 'streetAddress'})
+                if street:
+                    location['street'] = street.get_text(strip=True)
+                
+                # PLZ
+                postal = section.find('span', {'itemprop': 'postalCode'})
+                if postal:
+                    location['postal_code'] = postal.get_text(strip=True)
+                
+                # Stadt
+                city = section.find('span', {'itemprop': 'addressLocality'})
+                if city:
+                    location['city'] = city.get_text(strip=True)
+                
+                # Telefon für diesen Standort
+                phone = section.find('a', href=re.compile(r'tel:'))
+                if phone:
+                    location['phone'] = phone['href'].replace('tel:', '').strip()
+                
+                # Name des Standorts (z.B. "Filiale Stuttgart")
+                location_name = section.find('h3')
+                if not location_name:
+                    location_name = section.find('h4')
+                if location_name:
+                    location['name'] = location_name.get_text(strip=True)
+                
+                if location:
+                    locations.append(location)
+        
+        # Suche auch nach "Weitere Filialen" Links
+        branch_links = soup.find_all('a', text=re.compile(r'weitere.*(standort|filiale)', re.I))
+        if branch_links:
+            if not locations:
+                locations = []
+            for link in branch_links[:5]:
+                locations.append({
+                    'type': 'additional_branch',
+                    'url': link.get('href', ''),
+                    'text': link.get_text(strip=True)
+                })
+        
+        return locations if locations else None
 
 
 async def enrich_with_details(
