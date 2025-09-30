@@ -203,7 +203,15 @@ class ElevenEightyScaper(BaseScraper):
         detail_url = None
         detail_link = entry.find('a', href=re.compile(r'/branchenbuch/'))
         if detail_link and detail_link.get('href'):
-            detail_url = self.BASE_URL + detail_link['href']
+            href = detail_link['href']
+            # Entferne /suche/ aus dem Pfad falls vorhanden
+            if href.startswith('/suche/branchenbuch/'):
+                href = href.replace('/suche/branchenbuch/', '/branchenbuch/')
+            # Baue vollständige URL
+            if href.startswith('http'):
+                detail_url = href
+            else:
+                detail_url = f"https://www.11880.com{href}"
         
         return ScraperResult(
             company_name=company_name,
