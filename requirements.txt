@@ -22,6 +22,12 @@ lxml==4.9.3
 playwright==1.40.0
 playwright-stealth==1.0.6
 
+# AI-Powered Scraping
+crawl4ai==0.2.77
+ollama==0.1.8
+trafilatura==1.6.2
+readability-lxml==0.8.1
+
 # Google Places API
 googlemaps==4.10.0
 

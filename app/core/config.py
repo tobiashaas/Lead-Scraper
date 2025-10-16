@@ -68,6 +68,16 @@ class Settings(BaseSettings):
     # Environment
     debug: bool = Field(default=True, description="Debug mode")
     environment: str = Field(default="development", description="Environment")
+    
+    # Ollama Configuration
+    ollama_host: str = Field(default="http://localhost:11434", description="Ollama API Host")
+    ollama_model: str = Field(default="llama3.2", description="Default Ollama model")
+    ollama_timeout: int = Field(default=120, description="Ollama request timeout (seconds)")
+    
+    # Crawl4AI Configuration
+    crawl4ai_enabled: bool = Field(default=True, description="Enable Crawl4AI scraping")
+    crawl4ai_word_count_threshold: int = Field(default=10, description="Minimum word count")
+    crawl4ai_max_retries: int = Field(default=3, description="Max retries for Crawl4AI")
 
 
 # Global Settings Instance

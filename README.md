@@ -10,8 +10,10 @@ KR-Lead-Scraper ist ein Python-basiertes Web-Scraping-Tool, das öffentliche Bra
 
 - 🔍 **Multi-Source Scraping**: Unterstützung für mehrere Branchenbücher
 - 🛡️ **Anti-Detection**: Tor Network Integration + Playwright Stealth Mode
-- 🤖 **AI-Powered**: Named Entity Recognition & Lead Scoring (geplant)
+- 🤖 **AI-Powered**: Crawl4AI + Ollama für intelligente Datenextraktion (lokal!)
+- 🧠 **Smart Scraper**: Hybrid-Scraper mit automatischen Fallbacks
 - 📊 **Data Quality**: Automatische Validierung, Deduplizierung & Normalisierung
+- 🗄️ **Database**: PostgreSQL mit SQLAlchemy Models
 - 🔄 **Rate Limiting**: Intelligentes Request-Management mit Redis
 - 🐳 **Docker Ready**: Einfaches Setup mit Docker Compose
 - 📈 **REST API**: FastAPI für einfachen Datenzugriff
@@ -87,9 +89,15 @@ KR-Lead-Scraper/
    docker-compose up -d
    ```
 
-7. **Database Migrations ausführen** (später)
+7. **Ollama Models installieren**
    ```bash
-   alembic upgrade head
+   chmod +x scripts/setup_ollama.sh
+   ./scripts/setup_ollama.sh
+   ```
+
+8. **Datenbank initialisieren**
+   ```bash
+   python scripts/init_db.py
    ```
 
 ## 🔧 Konfiguration
@@ -176,10 +184,10 @@ pytest tests/integration/
 - **Backend**: Python 3.11+, FastAPI, SQLAlchemy
 - **Database**: PostgreSQL 15
 - **Cache**: Redis 7
-- **Scraping**: Playwright, BeautifulSoup4, httpx
+- **Scraping**: Playwright, BeautifulSoup4, httpx, Trafilatura
+- **AI Scraping**: Crawl4AI, Ollama (llama3.2, mistral, qwen2.5)
 - **Anonymität**: Tor Network (stem, pysocks)
 - **Data Processing**: fuzzywuzzy, email-validator, phonenumbers
-- **AI/NLP**: spaCy (geplant)
 - **Testing**: pytest, pytest-asyncio
 - **DevOps**: Docker, Docker Compose
 

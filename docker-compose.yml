@@ -5,15 +5,15 @@ services:
     image: postgres:15-alpine
     container_name: kr-postgres
     environment:
-      POSTGRES_DB: kr_leads
-      POSTGRES_USER: kr_admin
-      POSTGRES_PASSWORD: uxu*rkj2yap7EWT-ubu
+      POSTGRES_DB: ${POSTGRES_DB:-kr_leads}
+      POSTGRES_USER: ${POSTGRES_USER:-kr_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kr_user -d kr_leads"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kr_user} -d ${POSTGRES_DB:-kr_leads}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -34,6 +34,28 @@ services:
       retries: 5
     restart: unless-stopped
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: kr-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    # Uncomment for GPU support (requires nvidia-docker)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
   # App Service (später aktivieren wenn Dockerfile existiert)
   # app:
   #   build: .
@@ -41,12 +63,15 @@ services:
   #   ports:
   #     - "8000:8000"
   #   environment:
-  #     - DATABASE_URL=postgresql://kr_user:kr_password_change_in_production@postgres:5432/kr_leads
+  #     - DATABASE_URL=postgresql://${POSTGRES_USER:-kr_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-kr_leads}
   #     - REDIS_URL=redis://redis:6379
+  #     - OLLAMA_HOST=http://ollama:11434
   #   depends_on:
   #     postgres:
   #       condition: service_healthy
   #     redis:
+  #       condition: service_healthy
+  #     ollama:
   #       condition: service_healthy
   #   volumes:
   #     - ./app:/app/app
@@ -57,3 +82,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  ollama_data:
