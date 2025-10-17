@@ -136,9 +136,7 @@ class SmartWebScraper:
 
         return chain
 
-    async def _scrape_with_method(
-        self, url: str, method: ScrapingMethod
-    ) -> dict[str, Any] | None:
+    async def _scrape_with_method(self, url: str, method: ScrapingMethod) -> dict[str, Any] | None:
         """
         Scraped mit spezifischer Methode
 

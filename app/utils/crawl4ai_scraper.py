@@ -64,9 +64,7 @@ class Crawl4AIOllamaScraper:
             "ollama_used": 0,
         }
 
-    async def extract_company_info(
-        self, url: str, use_llm: bool = True
-    ) -> dict[str, Any] | None:
+    async def extract_company_info(self, url: str, use_llm: bool = True) -> dict[str, Any] | None:
         """
         Extrahiert strukturierte Unternehmensinformationen
 
