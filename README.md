@@ -17,11 +17,16 @@ KR-Lead-Scraper ist ein Python-basiertes Web-Scraping-Tool, das öffentliche Bra
 
 - 🔍 **Multi-Source Scraping**: Unterstützung für mehrere Branchenbücher
 - 🛡️ **Anti-Detection**: Tor Network Integration + Playwright Stealth Mode
-- 🤖 **AI-Powered**: Crawl4AI + Ollama für intelligente Datenextraktion (lokal!)
+- 🤖 **AI-Powered**: Scrapegraph-AI + Ollama für intelligente Datenextraktion (lokal!)
 - 🧠 **Smart Scraper**: Hybrid-Scraper mit automatischen Fallbacks
+- 👥 **Employee Extraction**: Automatische Extraktion von Mitarbeiterdaten
 - 📊 **Data Quality**: Automatische Validierung, Deduplizierung & Normalisierung
 - 🗄️ **Database**: PostgreSQL mit SQLAlchemy Models
 - 🔄 **Rate Limiting**: Intelligentes Request-Management mit Redis
+- 🔐 **Authentication**: JWT-basierte API-Authentifizierung
+- 📝 **Structured Logging**: JSON-basiertes Logging mit Correlation IDs
+- 🐛 **Error Tracking**: Sentry Integration für Monitoring
+- 🔄 **CI/CD Pipeline**: GitHub Actions für Tests, Code Quality & Security
 - 🐳 **Docker Ready**: Einfaches Setup mit Docker Compose
 - 📈 **REST API**: FastAPI für einfachen Datenzugriff
 
