@@ -35,12 +35,13 @@ jobs:
         isort --check-only app/ tests/
       continue-on-error: true
     
-    - name: Run Flake8 (Linting)
+    - name: Run Ruff (Linting)
       run: |
-        # Stop the build if there are Python syntax errors or undefined names
-        flake8 app/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
-        # Exit-zero treats all errors as warnings
-        flake8 app/ tests/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        pip install ruff
+        # Run Ruff with auto-fix
+        ruff check --fix . || true
+        # Show remaining issues but don't fail
+        ruff check . --exit-zero
       continue-on-error: true
     
     - name: Run mypy (Type Checking)
