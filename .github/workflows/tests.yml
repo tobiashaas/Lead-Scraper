@@ -57,7 +57,7 @@ jobs:
     
     - name: Set up environment variables
       run: |
-        echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/kr_leads_test" >> $GITHUB_ENV
+        echo "DATABASE_URL=sqlite:///./test.db" >> $GITHUB_ENV
         echo "REDIS_URL=redis://localhost:6379/0" >> $GITHUB_ENV
         echo "SECRET_KEY=test-secret-key-for-github-actions-min-32-chars" >> $GITHUB_ENV
         echo "DEBUG=false" >> $GITHUB_ENV
