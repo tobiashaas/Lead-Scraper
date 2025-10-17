@@ -38,10 +38,9 @@ jobs:
     - name: Run Ruff (Linting)
       run: |
         pip install ruff
-        # Run Ruff with auto-fix
-        ruff check --fix . || true
-        # Show remaining issues but don't fail
-        ruff check . --exit-zero
+        # Run Ruff with auto-fix and show issues but don't fail
+        ruff check --fix . || echo "Ruff found some issues (non-blocking)"
+        ruff check . || echo "Remaining issues (non-blocking)"
       continue-on-error: true
     
     - name: Run mypy (Type Checking)
@@ -55,3 +54,5 @@ jobs:
         echo "## Code Quality Results 📊" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "✅ Code quality checks completed!" >> $GITHUB_STEP_SUMMARY
+        echo "Note: Some warnings may exist but are non-blocking" >> $GITHUB_STEP_SUMMARY
+        exit 0
