@@ -102,7 +102,7 @@ class AIWebScraper:
                 
                 # Try to parse entire response
                 return json.loads(result_text)
-            except:
+            except Exception:
                 # If parsing fails, return raw text
                 return {"raw_response": result_text}
                 

@@ -13,10 +13,7 @@ from app.core.config import settings
 # Password Hashing
 # Use argon2 instead of bcrypt to avoid 72-byte password limit
 # Argon2 is the winner of the Password Hashing Competition
-pwd_context = CryptContext(
-    schemes=["argon2"],
-    deprecated="auto"
-)
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
