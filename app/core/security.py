@@ -11,10 +11,10 @@ from passlib.context import CryptContext
 from app.core.config import settings
 
 # Password Hashing
-# Use bcrypt_sha256 to avoid 72-byte password limit
-# This hashes passwords with SHA256 first, then bcrypt
+# Use argon2 instead of bcrypt to avoid 72-byte password limit
+# Argon2 is the winner of the Password Hashing Competition
 pwd_context = CryptContext(
-    schemes=["bcrypt_sha256"],
+    schemes=["argon2"],
     deprecated="auto"
 )
 
