@@ -7,6 +7,7 @@ import asyncio
 
 BASE_URL = "http://localhost:8000"
 
+
 async def test_auth():
     """Test authentication flow"""
     async with httpx.AsyncClient() as client:
@@ -14,16 +15,16 @@ async def test_auth():
         print("Testing Authentication Endpoints")
         print("=" * 60)
         print()
-        
+
         # Test 1: Register new user
         print("1. Testing user registration...")
         register_data = {
             "username": "testuser",
             "email": "test@example.com",
             "password": "testpass123",
-            "full_name": "Test User"
+            "full_name": "Test User",
         }
-        
+
         try:
             response = await client.post(f"{BASE_URL}/api/v1/auth/register", json=register_data)
             if response.status_code == 201:
@@ -38,16 +39,13 @@ async def test_auth():
                 print(f"   {response.json()}")
         except Exception as e:
             print(f"   ❌ Error: {e}")
-        
+
         print()
-        
+
         # Test 2: Login
         print("2. Testing login...")
-        login_data = {
-            "username": "admin",
-            "password": "admin123"
-        }
-        
+        login_data = {"username": "admin", "password": "admin123"}
+
         try:
             response = await client.post(f"{BASE_URL}/api/v1/auth/login", json=login_data)
             if response.status_code == 200:
@@ -62,13 +60,13 @@ async def test_auth():
         except Exception as e:
             print(f"   ❌ Error: {e}")
             return
-        
+
         print()
-        
+
         # Test 3: Get current user
         print("3. Testing /me endpoint...")
         headers = {"Authorization": f"Bearer {access_token}"}
-        
+
         try:
             response = await client.get(f"{BASE_URL}/api/v1/auth/me", headers=headers)
             if response.status_code == 200:
@@ -81,12 +79,12 @@ async def test_auth():
                 print(f"   ❌ Failed: {response.status_code}")
         except Exception as e:
             print(f"   ❌ Error: {e}")
-        
+
         print()
-        
+
         # Test 4: Access protected endpoint (list users - admin only)
         print("4. Testing protected endpoint (list users)...")
-        
+
         try:
             response = await client.get(f"{BASE_URL}/api/v1/auth/users", headers=headers)
             if response.status_code == 200:
@@ -97,16 +95,17 @@ async def test_auth():
                 print(f"   ❌ Failed: {response.status_code}")
         except Exception as e:
             print(f"   ❌ Error: {e}")
-        
+
         print()
         print("=" * 60)
         print("✅ Authentication tests completed!")
         print("=" * 60)
 
+
 if __name__ == "__main__":
     print("\n⚠️  Make sure the API is running on http://localhost:8000")
     print("   Start with: uvicorn app.main:app --reload\n")
-    
+
     try:
         asyncio.run(test_auth())
     except KeyboardInterrupt:

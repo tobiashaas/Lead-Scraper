@@ -10,7 +10,7 @@ from app.core.sentry import (
     set_user_context,
     set_context,
     add_breadcrumb,
-    start_transaction
+    start_transaction,
 )
 from app.core.config import settings
 
@@ -44,19 +44,14 @@ print("1. Testing capture_message...")
 capture_message(
     "Test message from Sentry integration test",
     level="info",
-    test_context={"test_id": 123, "test_type": "integration"}
+    test_context={"test_id": 123, "test_type": "integration"},
 )
 print("   ✅ Message captured")
 print()
 
 # Test 2: Set User Context
 print("2. Testing user context...")
-set_user_context(
-    user_id=456,
-    username="test_user",
-    email="test@example.com",
-    role="admin"
-)
+set_user_context(user_id=456, username="test_user", email="test@example.com", role="admin")
 print("   ✅ User context set")
 print()
 
@@ -70,12 +65,9 @@ print()
 
 # Test 4: Custom Context
 print("4. Testing custom context...")
-set_context("scraping_job", {
-    "job_id": 789,
-    "source": "gelbe_seiten",
-    "city": "Stuttgart",
-    "industry": "IT"
-})
+set_context(
+    "scraping_job", {"job_id": 789, "source": "gelbe_seiten", "city": "Stuttgart", "industry": "IT"}
+)
 print("   ✅ Custom context set")
 print()
 
@@ -85,12 +77,7 @@ try:
     # Simulate an error
     result = 1 / 0
 except ZeroDivisionError as e:
-    capture_exception(
-        e,
-        operation="test_division",
-        numerator=1,
-        denominator=0
-    )
+    capture_exception(e, operation="test_division", numerator=1, denominator=0)
     print("   ✅ Exception captured")
 print()
 
@@ -99,15 +86,15 @@ print("6. Testing performance transaction...")
 with start_transaction(name="test_scraping_job", op="scraping") as transaction:
     # Simulate some work
     import time
-    
+
     # Child span 1
     with transaction.start_child(op="http", description="Fetch page") as span:
         time.sleep(0.1)
-    
+
     # Child span 2
     with transaction.start_child(op="db", description="Save results") as span:
         time.sleep(0.05)
-    
+
     # Child span 3
     with transaction.start_child(op="processing", description="Process data") as span:
         time.sleep(0.08)
@@ -118,25 +105,25 @@ print()
 # Test 7: Nested Exception with Context
 print("7. Testing nested exception with full context...")
 try:
-    set_context("database", {
-        "operation": "INSERT",
-        "table": "companies",
-        "connection": "postgresql://localhost:5432/kr_leads"
-    })
-    
+    set_context(
+        "database",
+        {
+            "operation": "INSERT",
+            "table": "companies",
+            "connection": "postgresql://localhost:5432/kr_leads",
+        },
+    )
+
     add_breadcrumb("Starting database operation", category="db", level="info")
     add_breadcrumb("Validating data", category="db", level="info")
     add_breadcrumb("Executing query", category="db", level="warning")
-    
+
     # Simulate database error
     raise Exception("Database connection timeout after 30 seconds")
-    
+
 except Exception as e:
     capture_exception(
-        e,
-        query="INSERT INTO companies VALUES (...)",
-        retry_count=3,
-        timeout_seconds=30
+        e, query="INSERT INTO companies VALUES (...)", retry_count=3, timeout_seconds=30
     )
     print("   ✅ Nested exception captured with context")
 print()
