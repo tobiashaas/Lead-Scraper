@@ -20,22 +20,18 @@ engine = create_engine(
     echo=settings.db_echo,
     pool_pre_ping=True,  # Verify connections before using
     pool_size=10,
-    max_overflow=20
+    max_overflow=20,
 )
 
 # Session Factory
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def get_db() -> Generator[Session, None, None]:
     """
     Dependency für FastAPI
     Erstellt DB Session und schließt sie nach Request
-    
+
     Usage:
         @app.get("/companies")
         def get_companies(db: Session = Depends(get_db)):
@@ -69,7 +65,7 @@ def drop_db() -> None:
     """
     if settings.environment == "production":
         raise RuntimeError("Cannot drop database in production!")
-    
+
     logger.warning("⚠️  Lösche alle Datenbank-Tabellen...")
     Base.metadata.drop_all(bind=engine)
     logger.info("✅ Alle Tabellen gelöscht")
@@ -78,12 +74,13 @@ def drop_db() -> None:
 async def check_db_connection() -> bool:
     """
     Prüft Datenbankverbindung
-    
+
     Returns:
         True wenn Verbindung OK, sonst False
     """
     try:
         from sqlalchemy import text
+
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
         logger.info("✅ Datenbankverbindung OK")

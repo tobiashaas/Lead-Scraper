@@ -29,14 +29,14 @@ def test_db_engine():
     """
     # Erstelle Test-Database URL
     test_db_url = settings.database_url_psycopg3.replace("/kr_leads", "/kr_leads_test")
-    
+
     engine = create_engine(test_db_url, echo=False)
-    
+
     # Erstelle alle Tabellen
     Base.metadata.create_all(bind=engine)
-    
+
     yield engine
-    
+
     # Cleanup: Lösche alle Tabellen nach Tests
     Base.metadata.drop_all(bind=engine)
     engine.dispose()
@@ -49,12 +49,12 @@ def db_session(test_db_engine) -> Generator[Session, None, None]:
     Rollback nach jedem Test
     """
     connection = test_db_engine.connect()
-    
+
     SessionLocal = sessionmaker(bind=connection)
     session = SessionLocal()
-    
+
     yield session
-    
+
     session.close()
     connection.close()
 
@@ -104,7 +104,7 @@ def sample_html_unternehmensverzeichnis():
 def mock_scraper_result():
     """Mock ScraperResult für Testing"""
     from app.scrapers.base import ScraperResult
-    
+
     result = ScraperResult(
         company_name="Test Company GmbH",
         website="https://www.test-company.de",
@@ -114,11 +114,11 @@ def mock_scraper_result():
         city="Stuttgart",
         postal_code="70173",
         description="Test Beschreibung",
-        source_url="https://example.com/test"
+        source_url="https://example.com/test",
     )
-    
+
     result.add_source("test_source", "https://example.com/test", ["company_name", "phone", "email"])
-    
+
     return result
 
 
@@ -130,13 +130,13 @@ def client(db_session):
     from fastapi.testclient import TestClient
     from app.main import app
     from app.database.database import get_db
-    
+
     # Override to return the same session instance
     app.dependency_overrides[get_db] = lambda: db_session
-    
+
     with TestClient(app) as test_client:
         yield test_client
-    
+
     app.dependency_overrides.clear()
 
 
@@ -148,44 +148,49 @@ def reset_database(db_session):
     """
     # Cleanup before test
     from app.database.models import (
-        Company, Source, ScrapingJob, 
-        CompanyNote, DuplicateCandidate, User, company_sources
+        Company,
+        Source,
+        ScrapingJob,
+        CompanyNote,
+        DuplicateCandidate,
+        User,
+        company_sources,
     )
     from sqlalchemy import delete
-    
+
     try:
         # Delete in correct order (respecting foreign keys)
         for model in [CompanyNote, DuplicateCandidate, ScrapingJob]:
             db_session.query(model).delete()
-        
+
         # Delete from association table
         db_session.execute(delete(company_sources))
-        
+
         # Delete main tables
         for model in [Company, Source, User]:
             db_session.query(model).delete()
-        
+
         db_session.commit()
     except Exception:
         db_session.rollback()
-    
+
     yield
-    
+
     # Cleanup after test
     try:
         db_session.rollback()
-        
+
         # Delete in correct order (respecting foreign keys)
         for model in [CompanyNote, DuplicateCandidate, ScrapingJob]:
             db_session.query(model).delete()
-        
+
         # Delete from association table
         db_session.execute(delete(company_sources))
-        
+
         # Delete main tables
         for model in [Company, Source, User]:
             db_session.query(model).delete()
-        
+
         db_session.commit()
     except Exception:
         db_session.rollback()
@@ -200,7 +205,7 @@ def auth_user(db_session):
         full_name="Test User",
         hashed_password=get_password_hash("testpass123"),
         role=UserRole.USER,
-        is_active=True
+        is_active=True,
     )
     db_session.add(user)
     db_session.commit()
@@ -211,10 +216,9 @@ def auth_user(db_session):
 @pytest.fixture
 def auth_token(client, auth_user):
     """Get authentication token for test user"""
-    response = client.post("/api/v1/auth/login", json={
-        "username": "testuser",
-        "password": "testpass123"
-    })
+    response = client.post(
+        "/api/v1/auth/login", json={"username": "testuser", "password": "testpass123"}
+    )
     assert response.status_code == 200
     return response.json()["access_token"]
 

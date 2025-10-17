@@ -9,13 +9,13 @@ from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.database.models import User, UserRole
-from app.api.auth_schemas import (
-    Token, UserCreate, UserResponse, LoginRequest,
-    PasswordChange
-)
+from app.api.auth_schemas import Token, UserCreate, UserResponse, LoginRequest, PasswordChange
 from app.core.security import (
-    verify_password, get_password_hash,
-    create_access_token, create_refresh_token, decode_token
+    verify_password,
+    get_password_hash,
+    create_access_token,
+    create_refresh_token,
+    decode_token,
 )
 from app.core.dependencies import get_current_user, get_current_admin_user
 
@@ -23,10 +23,7 @@ router = APIRouter()
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-async def register(
-    user_data: UserCreate,
-    db: Session = Depends(get_db)
-):
+async def register(user_data: UserCreate, db: Session = Depends(get_db)):
     """
     Register a new user
     """
@@ -34,18 +31,16 @@ async def register(
     existing_user = db.query(User).filter(User.username == user_data.username).first()
     if existing_user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already registered"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Username already registered"
         )
-    
+
     # Check if email already exists
     existing_email = db.query(User).filter(User.email == user_data.email).first()
     if existing_email:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
         )
-    
+
     # Create new user
     hashed_password = get_password_hash(user_data.password)
     db_user = User(
@@ -53,69 +48,56 @@ async def register(
         email=user_data.email,
         full_name=user_data.full_name,
         hashed_password=hashed_password,
-        role=UserRole.USER  # Default role
+        role=UserRole.USER,  # Default role
     )
-    
+
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    
+
     return db_user
 
 
 @router.post("/login", response_model=Token)
-async def login(
-    login_data: LoginRequest,
-    db: Session = Depends(get_db)
-):
+async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     """
     Login and get access token
     """
     # Find user
     user = db.query(User).filter(User.username == login_data.username).first()
-    
+
     if not user or not verify_password(login_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     # Check if user is active
     if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Inactive user"
-        )
-    
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")
+
     # Check if user is locked
     if user.locked_until and user.locked_until > datetime.utcnow():
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Account locked until {user.locked_until}"
+            detail=f"Account locked until {user.locked_until}",
         )
-    
+
     # Update last login
     user.last_login = datetime.utcnow()
     user.failed_login_attempts = 0
     db.commit()
-    
+
     # Create tokens
     access_token = create_access_token(data={"sub": user.username, "user_id": user.id})
     refresh_token = create_refresh_token(data={"sub": user.username, "user_id": user.id})
-    
-    return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer"
-    }
+
+    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 
 @router.post("/refresh", response_model=Token)
-async def refresh_token(
-    refresh_token: str,
-    db: Session = Depends(get_db)
-):
+async def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
     """
     Refresh access token using refresh token
     """
@@ -127,33 +109,31 @@ async def refresh_token(
             detail="Invalid refresh token",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     # Get user
     username = payload.get("sub")
     user = db.query(User).filter(User.username == username).first()
-    
+
     if not user or not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found or inactive",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     # Create new tokens
     new_access_token = create_access_token(data={"sub": user.username, "user_id": user.id})
     new_refresh_token = create_refresh_token(data={"sub": user.username, "user_id": user.id})
-    
+
     return {
         "access_token": new_access_token,
         "refresh_token": new_refresh_token,
-        "token_type": "bearer"
+        "token_type": "bearer",
     }
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user_info(
-    current_user: User = Depends(get_current_user)
-):
+async def get_current_user_info(current_user: User = Depends(get_current_user)):
     """
     Get current user information
     """
@@ -164,22 +144,19 @@ async def get_current_user_info(
 async def change_password(
     password_data: PasswordChange,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Change user password
     """
     # Verify old password
     if not verify_password(password_data.old_password, current_user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect password"
-        )
-    
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect password")
+
     # Update password
     current_user.hashed_password = get_password_hash(password_data.new_password)
     db.commit()
-    
+
     return {"message": "Password changed successfully"}
 
 
@@ -188,7 +165,7 @@ async def list_users(
     skip: int = 0,
     limit: int = 100,
     current_user: User = Depends(get_current_admin_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     List all users (admin only)

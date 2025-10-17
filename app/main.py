@@ -33,18 +33,18 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 Starting KR Lead Scraper API...")
     logger.info(f"Environment: {settings.environment}")
     logger.info(f"Debug Mode: {settings.debug}")
-    
+
     # Check database connection
     db_ok = await check_db_connection()
     if not db_ok:
         logger.error("❌ Database connection failed!")
     else:
         logger.info("✅ Database connection OK")
-    
+
     logger.info("✅ API started successfully")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("🛑 Shutting down API...")
 
@@ -57,7 +57,7 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan,
-    debug=settings.debug
+    debug=settings.debug,
 )
 
 # Logging Middleware
@@ -83,33 +83,36 @@ async def global_exception_handler(request, exc):
     """Global exception handler"""
     from app.utils.structured_logger import get_structured_logger
     from app.core.sentry import capture_exception, set_context
-    
+
     error_logger = get_structured_logger(__name__)
-    
+
     # Log to structured logger
     error_logger.error(
         "Unhandled exception",
         error=str(exc),
         error_type=type(exc).__name__,
         path=request.url.path,
-        method=request.method
+        method=request.method,
     )
-    
+
     # Capture in Sentry with context
-    set_context("request", {
-        "method": request.method,
-        "path": str(request.url.path),
-        "query_params": str(request.query_params),
-        "client_host": request.client.host if request.client else None
-    })
+    set_context(
+        "request",
+        {
+            "method": request.method,
+            "path": str(request.url.path),
+            "query_params": str(request.query_params),
+            "client_host": request.client.host if request.client else None,
+        },
+    )
     capture_exception(exc)
-    
+
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
             "error": "Internal Server Error",
-            "detail": str(exc) if settings.debug else "An error occurred"
-        }
+            "detail": str(exc) if settings.debug else "An error occurred",
+        },
     )
 
 
@@ -131,17 +134,17 @@ async def root():
         "version": "0.1.0",
         "status": "running",
         "docs": "/docs",
-        "health": "/health"
+        "health": "/health",
     }
 
 
 if __name__ == "__main__":
     import uvicorn
-    
+
     uvicorn.run(
         "app.main:app",
         host=settings.api_host,
         port=settings.api_port,
         reload=settings.api_reload,
-        log_level=settings.log_level.lower()
+        log_level=settings.log_level.lower(),
     )
