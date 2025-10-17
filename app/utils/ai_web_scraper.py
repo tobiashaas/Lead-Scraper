@@ -1,20 +1,24 @@
 """
-AI-Powered Web Scraper using Scrapegraph-AI + Ollama
+AI-Powered Web Scraper using Trafilatura + Ollama
 
 This module provides intelligent web scraping capabilities using AI to extract
 structured data from company websites, including employee information, contact
 details, services, and more.
+
+Uses Trafilatura for content extraction and Ollama for AI-powered structuring.
+Compatible with Python 3.13!
 """
 
 import json
 from typing import Dict, Any, List, Optional
-from scrapegraphai.graphs import SmartScraperGraph
+import trafilatura
+import ollama
 from app.utils.logger import logger
 
 
 class AIWebScraper:
     """
-    AI-powered web scraper using Scrapegraph-AI with Ollama.
+    AI-powered web scraper using Trafilatura + Ollama.
     
     Extracts structured data from websites using natural language prompts.
     Ideal for extracting employee information, contact details, services, etc.
@@ -28,9 +32,9 @@ class AIWebScraper:
     
     def __init__(
         self,
-        model: str = "ollama/llama3.2",
+        model: str = "llama3.2",
         temperature: float = 0,
-        base_url: str = "http://localhost:11434"
+        max_content_length: int = 10000
     ):
         """
         Initialize AI Web Scraper.
@@ -38,19 +42,73 @@ class AIWebScraper:
         Args:
             model: Ollama model to use (default: llama3.2)
             temperature: LLM temperature (0 = deterministic)
-            base_url: Ollama API base URL
+            max_content_length: Max characters to send to LLM
         """
         self.model = model
-        self.config = {
-            "llm": {
-                "model": model,
-                "temperature": temperature,
-                "base_url": base_url,
-            },
-            "verbose": False,
-            "headless": True,
-        }
+        self.temperature = temperature
+        self.max_content_length = max_content_length
         logger.info(f"AIWebScraper initialized with model: {model}")
+    
+    def _fetch_content(self, url: str) -> Optional[str]:
+        """Fetch and extract content from URL using Trafilatura"""
+        try:
+            downloaded = trafilatura.fetch_url(url)
+            if not downloaded:
+                logger.warning(f"Could not fetch URL: {url}")
+                return None
+            
+            text = trafilatura.extract(downloaded)
+            if not text:
+                logger.warning(f"Could not extract content from: {url}")
+                return None
+            
+            return text
+        except Exception as e:
+            logger.error(f"Error fetching content from {url}: {e}")
+            return None
+    
+    def _query_ollama(self, prompt: str, content: str) -> Dict[str, Any]:
+        """Query Ollama with prompt and content"""
+        try:
+            # Limit content length
+            limited_content = content[:self.max_content_length]
+            
+            response = ollama.chat(
+                model=self.model,
+                messages=[{
+                    'role': 'user',
+                    'content': f'{prompt}\n\nWebsite Content:\n{limited_content}'
+                }],
+                options={'temperature': self.temperature}
+            )
+            
+            result_text = response['message']['content']
+            
+            # Try to extract JSON from response
+            try:
+                # Find JSON in response
+                start = result_text.find('{')
+                end = result_text.rfind('}') + 1
+                if start >= 0 and end > start:
+                    json_str = result_text[start:end]
+                    return json.loads(json_str)
+                
+                # Try to find JSON array
+                start = result_text.find('[')
+                end = result_text.rfind(']') + 1
+                if start >= 0 and end > start:
+                    json_str = result_text[start:end]
+                    return json.loads(json_str)
+                
+                # Try to parse entire response
+                return json.loads(result_text)
+            except:
+                # If parsing fails, return raw text
+                return {"raw_response": result_text}
+                
+        except Exception as e:
+            logger.error(f"Error querying Ollama: {e}")
+            return {"error": str(e)}
     
     def extract_company_data(self, url: str) -> Dict[str, Any]:
         """
@@ -60,14 +118,7 @@ class AIWebScraper:
             url: Company website URL
             
         Returns:
-            Dictionary with extracted company data:
-            {
-                "company_name": str,
-                "employees": List[Dict],
-                "contact": Dict,
-                "services": List[str],
-                "about": str
-            }
+            Dictionary with extracted company data
         """
         prompt = """
         Extract the following information from this company website:
@@ -97,27 +148,17 @@ class AIWebScraper:
         try:
             logger.info(f"Extracting company data from: {url}")
             
-            smart_scraper = SmartScraperGraph(
-                prompt=prompt,
-                source=url,
-                config=self.config
-            )
+            content = self._fetch_content(url)
+            if not content:
+                return {"error": "Could not fetch content", "url": url}
             
-            result = smart_scraper.run()
-            
-            # Parse result if it's a string
-            if isinstance(result, str):
-                result = json.loads(result)
-            
+            result = self._query_ollama(prompt, content)
             logger.info(f"Successfully extracted data from {url}")
             return result
             
         except Exception as e:
             logger.error(f"Error extracting company data from {url}: {e}")
-            return {
-                "error": str(e),
-                "url": url
-            }
+            return {"error": str(e), "url": url}
     
     def extract_employees(self, url: str) -> List[Dict[str, str]]:
         """
@@ -127,7 +168,7 @@ class AIWebScraper:
             url: Company website URL (usually /team or /about page)
             
         Returns:
-            List of employee dictionaries with name, position, email, phone
+            List of employee dictionaries
         """
         prompt = """
         Extract all employee/team member information from this page.
@@ -149,23 +190,22 @@ class AIWebScraper:
         try:
             logger.info(f"Extracting employees from: {url}")
             
-            smart_scraper = SmartScraperGraph(
-                prompt=prompt,
-                source=url,
-                config=self.config
-            )
+            content = self._fetch_content(url)
+            if not content:
+                return []
             
-            result = smart_scraper.run()
-            
-            # Parse result if it's a string
-            if isinstance(result, str):
-                result = json.loads(result)
+            result = self._query_ollama(prompt, content)
             
             # Ensure it's a list
-            if isinstance(result, dict) and "employees" in result:
-                result = result["employees"]
+            if isinstance(result, dict):
+                if "employees" in result:
+                    result = result["employees"]
+                elif "error" in result:
+                    return []
+                else:
+                    result = [result]
             elif not isinstance(result, list):
-                result = [result]
+                result = []
             
             logger.info(f"Found {len(result)} employees from {url}")
             return result
@@ -182,7 +222,7 @@ class AIWebScraper:
             url: Company website URL
             
         Returns:
-            Dictionary with email, phone, address, social media
+            Dictionary with contact information
         """
         prompt = """
         Extract all contact information from this website:
@@ -204,18 +244,11 @@ class AIWebScraper:
         try:
             logger.info(f"Extracting contact info from: {url}")
             
-            smart_scraper = SmartScraperGraph(
-                prompt=prompt,
-                source=url,
-                config=self.config
-            )
+            content = self._fetch_content(url)
+            if not content:
+                return {"error": "Could not fetch content"}
             
-            result = smart_scraper.run()
-            
-            # Parse result if it's a string
-            if isinstance(result, str):
-                result = json.loads(result)
-            
+            result = self._query_ollama(prompt, content)
             logger.info(f"Successfully extracted contact info from {url}")
             return result
             
@@ -245,23 +278,22 @@ class AIWebScraper:
         try:
             logger.info(f"Extracting services from: {url}")
             
-            smart_scraper = SmartScraperGraph(
-                prompt=prompt,
-                source=url,
-                config=self.config
-            )
+            content = self._fetch_content(url)
+            if not content:
+                return []
             
-            result = smart_scraper.run()
-            
-            # Parse result if it's a string
-            if isinstance(result, str):
-                result = json.loads(result)
+            result = self._query_ollama(prompt, content)
             
             # Ensure it's a list
-            if isinstance(result, dict) and "services" in result:
-                result = result["services"]
+            if isinstance(result, dict):
+                if "services" in result:
+                    result = result["services"]
+                elif "error" in result:
+                    return []
+                else:
+                    result = list(result.values())
             elif not isinstance(result, list):
-                result = [result]
+                result = []
             
             logger.info(f"Found {len(result)} services from {url}")
             return result
@@ -284,21 +316,11 @@ class AIWebScraper:
         try:
             logger.info(f"Extracting custom data from: {url}")
             
-            smart_scraper = SmartScraperGraph(
-                prompt=prompt,
-                source=url,
-                config=self.config
-            )
+            content = self._fetch_content(url)
+            if not content:
+                return {"error": "Could not fetch content"}
             
-            result = smart_scraper.run()
-            
-            # Try to parse as JSON
-            if isinstance(result, str):
-                try:
-                    result = json.loads(result)
-                except:
-                    pass  # Keep as string if not valid JSON
-            
+            result = self._query_ollama(prompt, content)
             logger.info(f"Successfully extracted custom data from {url}")
             return result
             
@@ -308,7 +330,7 @@ class AIWebScraper:
 
 
 # Convenience function for quick usage
-def scrape_company(url: str, model: str = "ollama/llama3.2") -> Dict[str, Any]:
+def scrape_company(url: str, model: str = "llama3.2") -> Dict[str, Any]:
     """
     Quick function to scrape company data.
     

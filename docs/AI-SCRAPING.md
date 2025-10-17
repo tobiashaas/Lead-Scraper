@@ -1,6 +1,6 @@
 # 🤖 AI-Powered Web Scraping
 
-Intelligente Datenextraktion von Websites mit Scrapegraph-AI + Ollama.
+Intelligente Datenextraktion von Websites mit Trafilatura + Ollama.
 
 ## 📋 Übersicht
 
@@ -423,11 +423,10 @@ def enrich_all_companies():
         except Exception as e:
             logger.error(f"Error processing {company.company_name}: {e}")
             continue
-```
 
-## 🎓 Weitere Ressourcen
+## 📚 Weitere Ressourcen
 
-- [Scrapegraph-AI Docs](https://scrapegraph-ai.readthedocs.io/)
+- [Trafilatura Docs](https://trafilatura.readthedocs.io/)
 - [Ollama Docs](https://ollama.ai/docs)
 - [Llama 3.2 Model Card](https://ollama.ai/library/llama3.2)
 
