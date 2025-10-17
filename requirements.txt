@@ -1,6 +1,6 @@
 # Core Framework
-fastapi==0.115.0
-uvicorn[standard]==0.32.0
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
 pydantic==2.5.0
 pydantic-settings==2.1.0
 python-dotenv==1.0.0
@@ -16,14 +16,14 @@ redis==5.0.1
 hiredis==2.2.3
 
 # Web Scraping
-httpx==0.27.0
+httpx==0.25.2
 beautifulsoup4==4.12.2
-lxml==5.3.0
-playwright==1.49.0
+lxml==4.9.3
+playwright==1.40.0
 playwright-stealth==1.0.6
 
 # AI-Powered Scraping
-crawl4ai==0.7.4
+# crawl4ai==0.7.4  # Temporarily disabled due to dependency conflicts
 ollama==0.1.8
 trafilatura==1.6.2
 readability-lxml==0.8.1
