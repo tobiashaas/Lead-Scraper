@@ -23,7 +23,7 @@ playwright==1.40.0
 playwright-stealth==1.0.6
 
 # AI-Powered Scraping
-crawl4ai==0.2.77
+crawl4ai==0.7.4
 ollama==0.1.8
 trafilatura==1.6.2
 readability-lxml==0.8.1
