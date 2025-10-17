@@ -11,27 +11,21 @@ from passlib.context import CryptContext
 from app.core.config import settings
 
 # Password Hashing
-# Configure bcrypt to truncate passwords at 72 bytes automatically
+# Use bcrypt_sha256 to avoid 72-byte password limit
+# This hashes passwords with SHA256 first, then bcrypt
 pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto",
-    bcrypt__truncate_error=False  # Don't raise error, just truncate
+    schemes=["bcrypt_sha256"],
+    deprecated="auto"
 )
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against a hash"""
-    # Bcrypt has a max password length of 72 bytes
-    if len(plain_password.encode('utf-8')) > 72:
-        plain_password = plain_password[:72]
     return pwd_context.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password: str) -> str:
     """Hash a password"""
-    # Bcrypt has a max password length of 72 bytes
-    if len(password.encode('utf-8')) > 72:
-        password = password[:72]
     return pwd_context.hash(password)
 
 
