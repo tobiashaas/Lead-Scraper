@@ -5,8 +5,8 @@ Scraped Unternehmensdaten von 11880.com (Deutsches Branchenbuch)
 
 import logging
 import re
-from typing import List
 from urllib.parse import quote_plus
+
 from bs4 import BeautifulSoup
 
 from app.scrapers.base import BaseScraper, ScraperResult
@@ -34,7 +34,7 @@ class ElevenEightyScaper(BaseScraper):
             use_playwright=True,  # Playwright nötig für JavaScript-Rendering
         )
 
-    async def get_search_urls(self, city: str, industry: str, max_pages: int = 5) -> List[str]:
+    async def get_search_urls(self, city: str, industry: str, max_pages: int = 5) -> list[str]:
         """
         Generiert Such-URLs für 11880.com
 
@@ -66,7 +66,7 @@ class ElevenEightyScaper(BaseScraper):
 
         return urls
 
-    async def parse_search_results(self, html: str, url: str) -> List[ScraperResult]:
+    async def parse_search_results(self, html: str, url: str) -> list[ScraperResult]:
         """
         Parsed Suchergebnisse von 11880.com
 
@@ -238,7 +238,7 @@ class ElevenEightyScaper(BaseScraper):
 # Convenience Function
 async def scrape_11880(
     city: str, industry: str, max_pages: int = 5, use_tor: bool = True
-) -> List[ScraperResult]:
+) -> list[ScraperResult]:
     """
     Scraped 11880.com
 

@@ -7,9 +7,9 @@ import asyncio
 import json
 from pathlib import Path
 
-from app.utils.logger import setup_logging
 from app.scrapers.eleven_eighty import scrape_11880
 from app.scrapers.eleven_eighty_detail import enrich_with_details
+from app.utils.logger import setup_logging
 from app.utils.website_scraper import enrich_with_website_data
 
 
@@ -32,12 +32,12 @@ async def main():
     # Phase 2: 11880 Details
     print("Phase 2: 11880 Detail-Scraping (alle)...")
     results = await enrich_with_details(results=results, use_tor=False, max_details=None)
-    print(f"✅ Detail-Anreicherung abgeschlossen\n")
+    print("✅ Detail-Anreicherung abgeschlossen\n")
 
     # Phase 3: Website-Scraping
     print("Phase 3: Website-Scraping (erste 10)...")
     results = await enrich_with_website_data(results=results, max_scrapes=10)
-    print(f"✅ Website-Scraping abgeschlossen\n")
+    print("✅ Website-Scraping abgeschlossen\n")
 
     # Speichern
     output_file = Path("data/exports/villingen_schwenningen_complete.json")

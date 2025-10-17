@@ -4,10 +4,11 @@ Request/Response models
 """
 
 from datetime import datetime
-from typing import Optional, List, Dict, Any
-from pydantic import BaseModel, EmailStr, HttpUrl, Field
+from typing import Any
 
-from app.database.models import LeadStatus, LeadQuality
+from pydantic import BaseModel, EmailStr, Field
+
+from app.database.models import LeadQuality, LeadStatus
 
 
 # Base Schemas
@@ -15,72 +16,72 @@ class CompanyBase(BaseModel):
     """Base company schema"""
 
     company_name: str = Field(..., min_length=1, max_length=255)
-    legal_form: Optional[str] = Field(None, max_length=50)
-    industry: Optional[str] = Field(None, max_length=100)
-    description: Optional[str] = None
-    website: Optional[str] = Field(None, max_length=500)
-    email: Optional[EmailStr] = None
-    phone: Optional[str] = Field(None, max_length=50)
-    address: Optional[str] = Field(None, max_length=500)
-    street: Optional[str] = Field(None, max_length=255)
-    postal_code: Optional[str] = Field(None, max_length=20)
-    city: Optional[str] = Field(None, max_length=100)
-    state: Optional[str] = Field(None, max_length=100)
+    legal_form: str | None = Field(None, max_length=50)
+    industry: str | None = Field(None, max_length=100)
+    description: str | None = None
+    website: str | None = Field(None, max_length=500)
+    email: EmailStr | None = None
+    phone: str | None = Field(None, max_length=50)
+    address: str | None = Field(None, max_length=500)
+    street: str | None = Field(None, max_length=255)
+    postal_code: str | None = Field(None, max_length=20)
+    city: str | None = Field(None, max_length=100)
+    state: str | None = Field(None, max_length=100)
     country: str = Field(default="Deutschland", max_length=100)
 
 
 class CompanyCreate(CompanyBase):
     """Schema for creating company"""
 
-    directors: Optional[List[str]] = None
-    team_size: Optional[int] = None
-    services: Optional[List[str]] = None
-    technologies: Optional[List[str]] = None
-    extra_data: Optional[Dict[str, Any]] = None
+    directors: list[str] | None = None
+    team_size: int | None = None
+    services: list[str] | None = None
+    technologies: list[str] | None = None
+    extra_data: dict[str, Any] | None = None
 
 
 class CompanyUpdate(BaseModel):
     """Schema for updating company"""
 
-    company_name: Optional[str] = Field(None, min_length=1, max_length=255)
-    legal_form: Optional[str] = None
-    industry: Optional[str] = None
-    description: Optional[str] = None
-    website: Optional[str] = None
-    email: Optional[EmailStr] = None
-    phone: Optional[str] = None
-    address: Optional[str] = None
-    city: Optional[str] = None
-    postal_code: Optional[str] = None
-    lead_status: Optional[LeadStatus] = None
-    lead_quality: Optional[LeadQuality] = None
-    lead_score: Optional[float] = Field(None, ge=0, le=100)
-    directors: Optional[List[str]] = None
-    services: Optional[List[str]] = None
-    technologies: Optional[List[str]] = None
+    company_name: str | None = Field(None, min_length=1, max_length=255)
+    legal_form: str | None = None
+    industry: str | None = None
+    description: str | None = None
+    website: str | None = None
+    email: EmailStr | None = None
+    phone: str | None = None
+    address: str | None = None
+    city: str | None = None
+    postal_code: str | None = None
+    lead_status: LeadStatus | None = None
+    lead_quality: LeadQuality | None = None
+    lead_score: float | None = Field(None, ge=0, le=100)
+    directors: list[str] | None = None
+    services: list[str] | None = None
+    technologies: list[str] | None = None
 
 
 class CompanyResponse(CompanyBase):
     """Schema for company response"""
 
     id: int
-    directors: Optional[List[str]] = None
-    team_size: Optional[int] = None
-    team_members: Optional[List[Dict[str, Any]]] = None
-    services: Optional[List[str]] = None
-    technologies: Optional[List[str]] = None
-    google_place_id: Optional[str] = None
-    google_rating: Optional[float] = None
-    google_reviews_count: Optional[int] = None
-    register_number: Optional[str] = None
-    register_court: Optional[str] = None
+    directors: list[str] | None = None
+    team_size: int | None = None
+    team_members: list[dict[str, Any]] | None = None
+    services: list[str] | None = None
+    technologies: list[str] | None = None
+    google_place_id: str | None = None
+    google_rating: float | None = None
+    google_reviews_count: int | None = None
+    register_number: str | None = None
+    register_court: str | None = None
     lead_status: LeadStatus
     lead_quality: LeadQuality
     lead_score: float
     first_scraped_at: datetime
     last_updated_at: datetime
     is_active: bool
-    extra_data: Optional[Dict[str, Any]] = None
+    extra_data: dict[str, Any] | None = None
 
     class Config:
         from_attributes = True
@@ -92,14 +93,14 @@ class CompanyList(BaseModel):
     total: int
     skip: int
     limit: int
-    items: List[CompanyResponse]
+    items: list[CompanyResponse]
 
 
 # Scraping Job Schemas
 class ScrapingJobCreate(BaseModel):
     """Schema for creating scraping job"""
 
-    job_name: Optional[str] = None
+    job_name: str | None = None
     source_name: str = Field(..., description="Source name (e.g., '11880', 'gelbe_seiten')")
     city: str = Field(..., min_length=1)
     industry: str = Field(..., min_length=1)
@@ -112,7 +113,7 @@ class ScrapingJobResponse(BaseModel):
     """Schema for scraping job response"""
 
     id: int
-    job_name: Optional[str]
+    job_name: str | None
     city: str
     industry: str
     status: str
@@ -121,10 +122,10 @@ class ScrapingJobResponse(BaseModel):
     new_companies: int
     updated_companies: int
     errors_count: int
-    started_at: Optional[datetime]
-    completed_at: Optional[datetime]
-    duration_seconds: Optional[float]
-    error_message: Optional[str]
+    started_at: datetime | None
+    completed_at: datetime | None
+    duration_seconds: float | None
+    error_message: str | None
     created_at: datetime
 
     class Config:
@@ -137,16 +138,16 @@ class ScrapingJobList(BaseModel):
     total: int
     skip: int
     limit: int
-    items: List[ScrapingJobResponse]
+    items: list[ScrapingJobResponse]
 
 
 # Note Schemas
 class NoteCreate(BaseModel):
     """Schema for creating note"""
 
-    title: Optional[str] = Field(None, max_length=255)
+    title: str | None = Field(None, max_length=255)
     content: str = Field(..., min_length=1)
-    note_type: Optional[str] = Field(None, max_length=50)
+    note_type: str | None = Field(None, max_length=50)
 
 
 class NoteResponse(BaseModel):
@@ -154,11 +155,11 @@ class NoteResponse(BaseModel):
 
     id: int
     company_id: int
-    title: Optional[str]
+    title: str | None
     content: str
-    note_type: Optional[str]
+    note_type: str | None
     created_at: datetime
-    created_by: Optional[str]
+    created_by: str | None
 
     class Config:
         from_attributes = True

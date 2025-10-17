@@ -3,15 +3,14 @@ Companies API Endpoints
 CRUD operations for companies/leads
 """
 
-from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, func
 
-from app.database.database import get_db
-from app.database.models import Company, LeadStatus, LeadQuality, User
-from app.api.schemas import CompanyResponse, CompanyCreate, CompanyUpdate, CompanyList
+from app.api.schemas import CompanyCreate, CompanyList, CompanyResponse, CompanyUpdate
 from app.core.dependencies import get_current_active_user
+from app.database.database import get_db
+from app.database.models import Company, LeadQuality, LeadStatus, User
 
 router = APIRouter()
 
@@ -20,11 +19,11 @@ router = APIRouter()
 async def list_companies(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    city: Optional[str] = None,
-    industry: Optional[str] = None,
-    lead_status: Optional[LeadStatus] = None,
-    lead_quality: Optional[LeadQuality] = None,
-    search: Optional[str] = None,
+    city: str | None = None,
+    industry: str | None = None,
+    lead_status: LeadStatus | None = None,
+    lead_quality: LeadQuality | None = None,
+    search: str | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):

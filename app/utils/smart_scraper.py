@@ -4,12 +4,12 @@ Kombiniert mehrere Scraping-Methoden mit intelligenten Fallbacks
 """
 
 import logging
-from typing import Dict, Any, Optional, List
 from enum import Enum
+from typing import Any
 
 from app.core.config import settings
-from app.utils.crawl4ai_scraper import Crawl4AIOllamaScraper
 from app.scrapers.base import ScraperResult
+from app.utils.crawl4ai_scraper import Crawl4AIOllamaScraper
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +70,7 @@ class SmartWebScraper:
 
         logger.info(f"Smart Scraper initialisiert (Preferred: {preferred_method.value})")
 
-    async def scrape(self, url: str, fallback: bool = True) -> Optional[Dict[str, Any]]:
+    async def scrape(self, url: str, fallback: bool = True) -> dict[str, Any] | None:
         """
         Scraped Website mit intelligenten Fallbacks
 
@@ -108,7 +108,7 @@ class SmartWebScraper:
         logger.error(f"❌ Alle Methoden fehlgeschlagen für: {url}")
         return None
 
-    def _get_fallback_chain(self, use_fallback: bool) -> List[ScrapingMethod]:
+    def _get_fallback_chain(self, use_fallback: bool) -> list[ScrapingMethod]:
         """
         Erstellt Fallback-Kette basierend auf Präferenz
 
@@ -138,7 +138,7 @@ class SmartWebScraper:
 
     async def _scrape_with_method(
         self, url: str, method: ScrapingMethod
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """
         Scraped mit spezifischer Methode
 
@@ -163,17 +163,18 @@ class SmartWebScraper:
 
         return None
 
-    async def _scrape_crawl4ai_ollama(self, url: str) -> Optional[Dict[str, Any]]:
+    async def _scrape_crawl4ai_ollama(self, url: str) -> dict[str, Any] | None:
         """Scrape mit Crawl4AI + Ollama"""
         return await self.crawl4ai_scraper.extract_company_info(url=url, use_llm=self.use_ai)
 
-    async def _scrape_trafilatura_ollama(self, url: str) -> Optional[Dict[str, Any]]:
+    async def _scrape_trafilatura_ollama(self, url: str) -> dict[str, Any] | None:
         """Scrape mit Trafilatura + Ollama"""
         try:
-            import trafilatura
+            import json
+
             import httpx
             import ollama
-            import json
+            import trafilatura
 
             # 1. Trafilatura: Content extrahieren
             async with httpx.AsyncClient(timeout=30) as client:
@@ -206,11 +207,11 @@ Return JSON with: company_name, directors, legal_form, services, contact_email, 
             logger.error(f"Trafilatura+Ollama Fehler: {e}")
             return None
 
-    async def _scrape_playwright_bs4(self, url: str) -> Optional[Dict[str, Any]]:
+    async def _scrape_playwright_bs4(self, url: str) -> dict[str, Any] | None:
         """Scrape mit Playwright + BeautifulSoup (Fallback)"""
         try:
-            from playwright.async_api import async_playwright
             from bs4 import BeautifulSoup
+            from playwright.async_api import async_playwright
 
             async with async_playwright() as p:
                 browser = await p.chromium.launch(headless=True)
@@ -232,7 +233,7 @@ Return JSON with: company_name, directors, legal_form, services, contact_email, 
             logger.error(f"Playwright+BS4 Fehler: {e}")
             return None
 
-    async def _scrape_httpx_bs4(self, url: str) -> Optional[Dict[str, Any]]:
+    async def _scrape_httpx_bs4(self, url: str) -> dict[str, Any] | None:
         """Scrape mit httpx + BeautifulSoup (schnellster Fallback)"""
         try:
             import httpx
@@ -255,14 +256,14 @@ Return JSON with: company_name, directors, legal_form, services, contact_email, 
             logger.error(f"httpx+BS4 Fehler: {e}")
             return None
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Gibt Statistiken zurück"""
         return {**self.stats, "crawl4ai_stats": self.crawl4ai_scraper.get_stats()}
 
 
 async def enrich_results_with_smart_scraper(
-    results: List[ScraperResult], max_scrapes: int = 10, use_ai: bool = True
-) -> List[ScraperResult]:
+    results: list[ScraperResult], max_scrapes: int = 10, use_ai: bool = True
+) -> list[ScraperResult]:
     """
     Reichert ScraperResults mit Smart Scraper an
 

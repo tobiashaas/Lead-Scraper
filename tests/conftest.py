@@ -3,14 +3,16 @@ Pytest Configuration and Fixtures
 Shared fixtures für alle Tests
 """
 
-import pytest
 import asyncio
-from typing import Generator
+from collections.abc import Generator
+
+import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from app.database.models import Base, User, UserRole
+from sqlalchemy.orm import Session, sessionmaker
+
 from app.core.config import settings
 from app.core.security import get_password_hash
+from app.database.models import Base, User, UserRole
 
 
 @pytest.fixture(scope="session")
@@ -128,8 +130,9 @@ def client(db_session):
     FastAPI Test Client with database session override
     """
     from fastapi.testclient import TestClient
-    from app.main import app
+
     from app.database.database import get_db
+    from app.main import app
 
     # Override to return the same session instance
     app.dependency_overrides[get_db] = lambda: db_session
@@ -147,16 +150,17 @@ def reset_database(db_session):
     Automatically applied to all tests
     """
     # Cleanup before test
+    from sqlalchemy import delete
+
     from app.database.models import (
         Company,
-        Source,
-        ScrapingJob,
         CompanyNote,
         DuplicateCandidate,
+        ScrapingJob,
+        Source,
         User,
         company_sources,
     )
-    from sqlalchemy import delete
 
     try:
         # Delete in correct order (respecting foreign keys)

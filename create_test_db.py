@@ -3,9 +3,11 @@ Create Test Database
 Erstellt die Test-Datenbank für Integration Tests
 """
 
-import psycopg
-from app.core.config import settings
 from urllib.parse import urlparse
+
+import psycopg
+
+from app.core.config import settings
 
 
 def create_test_database():

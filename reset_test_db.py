@@ -3,9 +3,11 @@ Reset Test Database
 Löscht alle Daten aus der Test-Datenbank
 """
 
-import psycopg
-from app.core.config import settings
 from urllib.parse import urlparse
+
+import psycopg
+
+from app.core.config import settings
 
 
 def reset_test_database():

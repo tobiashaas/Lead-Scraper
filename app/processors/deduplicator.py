@@ -4,7 +4,7 @@ Finds and merges duplicate companies using fuzzy matching
 """
 
 import logging
-from typing import List, Tuple, Optional
+
 from fuzzywuzzy import fuzz
 from sqlalchemy.orm import Session
 
@@ -44,7 +44,7 @@ class Deduplicator:
 
     def calculate_similarity(
         self, company_a: Company, company_b: Company
-    ) -> Tuple[float, float, float, float, float]:
+    ) -> tuple[float, float, float, float, float]:
         """
         Calculate similarity scores between two companies
 
@@ -125,7 +125,7 @@ class Deduplicator:
 
     def find_duplicates(
         self, db: Session, company: Company, limit: int = 10
-    ) -> List[Tuple[Company, float]]:
+    ) -> list[tuple[Company, float]]:
         """
         Find potential duplicates for a company
 
@@ -276,7 +276,7 @@ class Deduplicator:
         db.commit()
         db.refresh(primary)
 
-        logger.info(f"✅ Merge completed")
+        logger.info("✅ Merge completed")
 
         return primary
 
@@ -320,7 +320,7 @@ class Deduplicator:
 
 
 # Convenience functions
-def find_duplicates(db: Session, company: Company) -> List[Tuple[Company, float]]:
+def find_duplicates(db: Session, company: Company) -> list[tuple[Company, float]]:
     """Find duplicates for a company"""
     dedup = Deduplicator()
     return dedup.find_duplicates(db, company)

@@ -3,10 +3,10 @@ Crawl4AI + Ollama Integration
 Intelligentes Website-Scraping mit lokalen LLMs
 """
 
-import logging
 import json
-from typing import Dict, Any, Optional, List
+import logging
 from datetime import datetime
+from typing import Any
 
 try:
     from crawl4ai import WebCrawler
@@ -18,6 +18,7 @@ except ImportError:
     logging.warning("Crawl4AI not installed. Install with: pip install crawl4ai")
 
 import ollama
+
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -65,7 +66,7 @@ class Crawl4AIOllamaScraper:
 
     async def extract_company_info(
         self, url: str, use_llm: bool = True
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """
         Extrahiert strukturierte Unternehmensinformationen
 
@@ -108,7 +109,7 @@ class Crawl4AIOllamaScraper:
             logger.error(f"Fehler beim Scrapen von {url}: {e}")
             return None
 
-    async def _crawl_with_crawl4ai(self, url: str) -> Optional[str]:
+    async def _crawl_with_crawl4ai(self, url: str) -> str | None:
         """Crawlt Website mit Crawl4AI"""
         try:
             result = await self.crawler.arun(
@@ -133,11 +134,11 @@ class Crawl4AIOllamaScraper:
             logger.error(f"Crawl4AI Fehler: {e}")
             return None
 
-    async def _crawl_with_trafilatura(self, url: str) -> Optional[str]:
+    async def _crawl_with_trafilatura(self, url: str) -> str | None:
         """Fallback: Crawlt mit Trafilatura"""
         try:
-            import trafilatura
             import httpx
+            import trafilatura
 
             async with httpx.AsyncClient(timeout=30) as client:
                 response = await client.get(url)
@@ -156,7 +157,7 @@ class Crawl4AIOllamaScraper:
             logger.error(f"Trafilatura Fehler: {e}")
             return None
 
-    async def _extract_with_ollama(self, content: str, url: str) -> Dict[str, Any]:
+    async def _extract_with_ollama(self, content: str, url: str) -> dict[str, Any]:
         """
         Extrahiert strukturierte Daten mit Ollama
 
@@ -250,13 +251,13 @@ Return ONLY valid JSON, no additional text:
 """
         return prompt
 
-    def get_stats(self) -> Dict[str, int]:
+    def get_stats(self) -> dict[str, int]:
         """Gibt Statistiken zurück"""
         return self.stats.copy()
 
 
 # Convenience Function
-async def scrape_website_with_ai(url: str, model: str = None) -> Optional[Dict[str, Any]]:
+async def scrape_website_with_ai(url: str, model: str = None) -> dict[str, Any] | None:
     """
     Convenience Function für schnelles Scraping
 

@@ -3,9 +3,11 @@ Reset Alembic Version Table
 Löscht die alembic_version Tabelle für einen Neustart
 """
 
-import psycopg
-from app.core.config import settings
 from urllib.parse import urlparse
+
+import psycopg
+
+from app.core.config import settings
 
 
 def reset_alembic():
@@ -16,7 +18,7 @@ def reset_alembic():
     # Erstelle psycopg3 Connection String
     db_url = f"host={parsed.hostname} port={parsed.port or 5432} dbname={parsed.path[1:]} user={parsed.username} password={parsed.password}"
 
-    print(f"Verbinde mit Datenbank...")
+    print("Verbinde mit Datenbank...")
     print(f"URL: {db_url.replace(settings.database_url.split('@')[0].split('//')[1], '***')}")
 
     try:

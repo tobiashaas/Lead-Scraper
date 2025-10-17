@@ -5,8 +5,9 @@ Zentrales Logging-Setup für die Anwendung
 
 import logging
 import sys
-from pathlib import Path
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
+
 from app.core.config import settings
 
 

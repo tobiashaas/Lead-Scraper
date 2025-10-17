@@ -4,16 +4,16 @@ Abstract Base Class für alle Scraper-Implementierungen
 """
 
 import asyncio
-import random
 import logging
+import random
 from abc import ABC, abstractmethod
-from typing import List, Dict, Optional, Any
 from datetime import datetime
+from typing import Any
 
 from app.core.config import settings
+from app.utils.browser_manager import PlaywrightBrowserManager
 from app.utils.proxy_manager import tor_proxy_manager
 from app.utils.rate_limiter import rate_limiter
-from app.utils.browser_manager import PlaywrightBrowserManager
 
 logger = logging.getLogger(__name__)
 
@@ -24,15 +24,15 @@ class ScraperResult:
     def __init__(
         self,
         company_name: str,
-        website: Optional[str] = None,
-        phone: Optional[str] = None,
-        email: Optional[str] = None,
-        address: Optional[str] = None,
-        city: Optional[str] = None,
-        postal_code: Optional[str] = None,
-        description: Optional[str] = None,
-        source_url: Optional[str] = None,
-        scraped_at: Optional[datetime] = None,
+        website: str | None = None,
+        phone: str | None = None,
+        email: str | None = None,
+        address: str | None = None,
+        city: str | None = None,
+        postal_code: str | None = None,
+        description: str | None = None,
+        source_url: str | None = None,
+        scraped_at: datetime | None = None,
         **extra_data,
     ):
         self.company_name = company_name
@@ -51,7 +51,7 @@ class ScraperResult:
         if "sources" not in self.extra_data:
             self.extra_data["sources"] = []
 
-    def add_source(self, source_name: str, url: str, data_fields: List[str] = None):
+    def add_source(self, source_name: str, url: str, data_fields: list[str] = None):
         """
         Fügt eine Datenquelle hinzu
 
@@ -85,7 +85,7 @@ class ScraperResult:
 
         self.extra_data["sources"] = sources
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Konvertiert zu Dictionary"""
         # Entferne deprecated Felder
         extra_data_clean = {
@@ -152,7 +152,7 @@ class BaseScraper(ABC):
             f"Playwright: {self.use_playwright})"
         )
 
-    async def scrape(self, city: str, industry: str, max_pages: int = 5) -> List[ScraperResult]:
+    async def scrape(self, city: str, industry: str, max_pages: int = 5) -> list[ScraperResult]:
         """
         Hauptmethode zum Scrapen
 
@@ -215,7 +215,7 @@ class BaseScraper(ABC):
         finally:
             await rate_limiter.close()
 
-    async def _scrape_with_retry(self, url: str) -> List[ScraperResult]:
+    async def _scrape_with_retry(self, url: str) -> list[ScraperResult]:
         """
         Scraped URL mit Retry-Logic
 
@@ -251,7 +251,7 @@ class BaseScraper(ABC):
 
         return []
 
-    async def _scrape_with_httpx(self, url: str) -> List[ScraperResult]:
+    async def _scrape_with_httpx(self, url: str) -> list[ScraperResult]:
         """Scraped mit httpx (für statische HTML-Seiten)"""
         import httpx
 
@@ -265,7 +265,7 @@ class BaseScraper(ABC):
 
             return await self.parse_search_results(response.text, url)
 
-    async def _scrape_with_playwright(self, url: str) -> List[ScraperResult]:
+    async def _scrape_with_playwright(self, url: str) -> list[ScraperResult]:
         """Scraped mit Playwright (für JavaScript-heavy Sites)"""
         browser_manager = PlaywrightBrowserManager(use_tor=self.use_tor, headless=True)
 
@@ -290,7 +290,7 @@ class BaseScraper(ABC):
     # Abstract Methods - müssen von Subclasses implementiert werden
 
     @abstractmethod
-    async def get_search_urls(self, city: str, industry: str, max_pages: int = 5) -> List[str]:
+    async def get_search_urls(self, city: str, industry: str, max_pages: int = 5) -> list[str]:
         """
         Generiert Such-URLs
 
@@ -305,7 +305,7 @@ class BaseScraper(ABC):
         pass
 
     @abstractmethod
-    async def parse_search_results(self, html: str, url: str) -> List[ScraperResult]:
+    async def parse_search_results(self, html: str, url: str) -> list[ScraperResult]:
         """
         Parsed Suchergebnisse
 
@@ -318,6 +318,6 @@ class BaseScraper(ABC):
         """
         pass
 
-    def get_stats(self) -> Dict[str, int]:
+    def get_stats(self) -> dict[str, int]:
         """Gibt Statistiken zurück"""
         return self.stats.copy()

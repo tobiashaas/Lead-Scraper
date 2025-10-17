@@ -3,15 +3,13 @@ Scraping API Endpoints
 Start and manage scraping jobs
 """
 
-import asyncio
-from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
+from app.api.schemas import ScrapingJobCreate, ScrapingJobList, ScrapingJobResponse
+from app.core.dependencies import get_current_active_user
 from app.database.database import get_db
 from app.database.models import ScrapingJob, Source, User
-from app.api.schemas import ScrapingJobCreate, ScrapingJobResponse, ScrapingJobList
-from app.core.dependencies import get_current_active_user
 
 router = APIRouter()
 
@@ -59,7 +57,7 @@ async def create_scraping_job(
 async def list_scraping_jobs(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    status: Optional[str] = None,
+    status: str | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -133,6 +131,7 @@ async def run_scraping_job(job_id: int, config: dict):
         config: Job configuration
     """
     from datetime import datetime
+
     from app.database.database import SessionLocal
 
     db = SessionLocal()

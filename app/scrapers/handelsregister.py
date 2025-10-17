@@ -3,10 +3,10 @@ Handelsregister Scraper
 Scraped offizielle Unternehmensdaten vom Handelsregister
 """
 
+import asyncio
 import logging
 import re
-import asyncio
-from typing import List, Optional, Dict
+
 from bs4 import BeautifulSoup
 
 from app.scrapers.base import ScraperResult
@@ -38,7 +38,7 @@ class HandelsregisterScraper:
         self.use_tor = use_tor
         self.browser_manager = PlaywrightBrowserManager(use_tor=use_tor, headless=True)
 
-    async def search_company(self, company_name: str, city: str = None) -> Optional[Dict]:
+    async def search_company(self, company_name: str, city: str = None) -> dict | None:
         """
         Sucht Unternehmen im Handelsregister
 
@@ -150,7 +150,7 @@ class HandelsregisterScraper:
         except Exception as e:
             logger.error(f"Fehler beim Ausfüllen des Formulars: {e}")
 
-    def _extract_company_data(self, soup: BeautifulSoup, company_name: str) -> Optional[Dict]:
+    def _extract_company_data(self, soup: BeautifulSoup, company_name: str) -> dict | None:
         """Extrahiert Unternehmensdaten aus Suchergebnissen"""
         data = {
             "company_name": company_name,
@@ -215,11 +215,11 @@ class HandelsregisterScraper:
 
 
 async def enrich_with_handelsregister(
-    results: List[ScraperResult],
+    results: list[ScraperResult],
     use_tor: bool = True,
     max_lookups: int = None,
     delay_between_requests: int = 10,
-) -> List[ScraperResult]:
+) -> list[ScraperResult]:
     """
     Reichert Ergebnisse mit Handelsregister-Daten an
 

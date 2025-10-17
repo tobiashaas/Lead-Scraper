@@ -2,8 +2,9 @@
 Test Authentication Endpoints
 """
 
-import httpx
 import asyncio
+
+import httpx
 
 BASE_URL = "http://localhost:8000"
 

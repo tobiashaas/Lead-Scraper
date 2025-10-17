@@ -5,7 +5,7 @@ Scraped zusätzliche Informationen von den Detail-Seiten der Unternehmen
 
 import logging
 import re
-from typing import Optional, Dict, List
+
 from bs4 import BeautifulSoup
 
 from app.scrapers.base import ScraperResult
@@ -31,7 +31,7 @@ class ElevenEightyDetailScraper:
         self.use_tor = use_tor
         self.browser_manager = PlaywrightBrowserManager(use_tor=use_tor, headless=True)
 
-    async def scrape_detail(self, detail_url: str) -> Dict:
+    async def scrape_detail(self, detail_url: str) -> dict:
         """
         Scraped Detail-Seite eines Unternehmens
 
@@ -81,7 +81,7 @@ class ElevenEightyDetailScraper:
         finally:
             await self.browser_manager.close(browser, playwright)
 
-    def _extract_website(self, soup: BeautifulSoup) -> Optional[str]:
+    def _extract_website(self, soup: BeautifulSoup) -> str | None:
         """Extrahiert Website-URL"""
         # Liste von zu filternden Domains
         excluded_domains = [
@@ -136,7 +136,7 @@ class ElevenEightyDetailScraper:
 
         return None
 
-    def _extract_opening_hours(self, soup: BeautifulSoup) -> Optional[Dict[str, str]]:
+    def _extract_opening_hours(self, soup: BeautifulSoup) -> dict[str, str] | None:
         """Extrahiert Öffnungszeiten"""
         opening_hours = {}
 
@@ -155,7 +155,7 @@ class ElevenEightyDetailScraper:
 
         return opening_hours if opening_hours else None
 
-    def _extract_description(self, soup: BeautifulSoup) -> Optional[str]:
+    def _extract_description(self, soup: BeautifulSoup) -> str | None:
         """Extrahiert detaillierte Beschreibung"""
         desc_selectors = [
             ("div", {"class": lambda x: x and "description" in str(x).lower()}),
@@ -186,7 +186,7 @@ class ElevenEightyDetailScraper:
 
         return None
 
-    def _extract_services(self, soup: BeautifulSoup) -> Optional[List[str]]:
+    def _extract_services(self, soup: BeautifulSoup) -> list[str] | None:
         """Extrahiert Leistungen/Services"""
         services = []
 
@@ -202,7 +202,7 @@ class ElevenEightyDetailScraper:
 
         return services if services else None
 
-    def _extract_contact_persons(self, soup: BeautifulSoup) -> Optional[List[Dict]]:
+    def _extract_contact_persons(self, soup: BeautifulSoup) -> list[dict] | None:
         """Extrahiert Ansprechpartner/Personen"""
         persons = []
 
@@ -245,7 +245,7 @@ class ElevenEightyDetailScraper:
 
         return persons if persons else None
 
-    def _extract_social_media(self, soup: BeautifulSoup) -> Optional[Dict[str, str]]:
+    def _extract_social_media(self, soup: BeautifulSoup) -> dict[str, str] | None:
         """Extrahiert Social Media Links"""
         social = {}
 
@@ -282,7 +282,7 @@ class ElevenEightyDetailScraper:
 
         return social if social else None
 
-    def _extract_additional_phones(self, soup: BeautifulSoup) -> Optional[List[str]]:
+    def _extract_additional_phones(self, soup: BeautifulSoup) -> list[str] | None:
         """Extrahiert zusätzliche Telefonnummern"""
         phones = set()
 
@@ -294,7 +294,7 @@ class ElevenEightyDetailScraper:
 
         return list(phones) if phones else None
 
-    def _extract_additional_emails(self, soup: BeautifulSoup) -> Optional[List[str]]:
+    def _extract_additional_emails(self, soup: BeautifulSoup) -> list[str] | None:
         """Extrahiert zusätzliche E-Mail-Adressen"""
         emails = set()
 
@@ -308,7 +308,7 @@ class ElevenEightyDetailScraper:
 
         return list(emails) if emails else None
 
-    def _extract_company_info(self, soup: BeautifulSoup) -> Optional[Dict]:
+    def _extract_company_info(self, soup: BeautifulSoup) -> dict | None:
         """Extrahiert Firmeninformationen (Gründungsjahr, Mitarbeiter, etc.)"""
         info = {}
 
@@ -332,7 +332,7 @@ class ElevenEightyDetailScraper:
 
         return info if info else None
 
-    def _extract_industry(self, soup: BeautifulSoup) -> Optional[str]:
+    def _extract_industry(self, soup: BeautifulSoup) -> str | None:
         """Extrahiert Branche"""
         # Aus Meta-Tags
         meta_desc = soup.find("meta", {"name": "description"})
@@ -351,7 +351,7 @@ class ElevenEightyDetailScraper:
 
         return None
 
-    def _extract_full_address(self, soup: BeautifulSoup) -> Optional[Dict]:
+    def _extract_full_address(self, soup: BeautifulSoup) -> dict | None:
         """Extrahiert vollständige Adresse mit Straße und Hausnummer"""
         address = {}
 
@@ -372,7 +372,7 @@ class ElevenEightyDetailScraper:
 
         return address if address else None
 
-    def _extract_verification_status(self, soup: BeautifulSoup) -> Optional[Dict]:
+    def _extract_verification_status(self, soup: BeautifulSoup) -> dict | None:
         """Extrahiert Verifizierungsstatus"""
         verification = {}
 
@@ -394,7 +394,7 @@ class ElevenEightyDetailScraper:
 
         return verification if verification else None
 
-    def _extract_metadata(self, soup: BeautifulSoup) -> Optional[Dict]:
+    def _extract_metadata(self, soup: BeautifulSoup) -> dict | None:
         """Extrahiert Metadaten (Aktualisierung, Erstellung)"""
         metadata = {}
 
@@ -414,7 +414,7 @@ class ElevenEightyDetailScraper:
 
         return metadata if metadata else None
 
-    def _extract_multiple_locations(self, soup: BeautifulSoup) -> Optional[List[Dict]]:
+    def _extract_multiple_locations(self, soup: BeautifulSoup) -> list[dict] | None:
         """
         Extrahiert mehrere Standorte falls vorhanden
 
@@ -491,8 +491,8 @@ class ElevenEightyDetailScraper:
 
 
 async def enrich_with_details(
-    results: List[ScraperResult], use_tor: bool = False, max_details: int = None
-) -> List[ScraperResult]:
+    results: list[ScraperResult], use_tor: bool = False, max_details: int = None
+) -> list[ScraperResult]:
     """
     Reichert Scraping-Ergebnisse mit Detail-Informationen an
 

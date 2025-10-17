@@ -3,8 +3,9 @@ Debug alle Branchenbuch-Quellen
 """
 
 import asyncio
-from playwright.async_api import async_playwright
+
 from bs4 import BeautifulSoup
+from playwright.async_api import async_playwright
 
 
 async def debug_source(name, url):
@@ -41,7 +42,7 @@ async def debug_source(name, url):
 
                 if len(elements) > 0:
                     first = elements[0]
-                    print(f"\nErster Eintrag:")
+                    print("\nErster Eintrag:")
                     print(f"Classes: {first.get('class', [])}")
 
                     # Firmenname
@@ -61,7 +62,7 @@ async def debug_source(name, url):
                     if email:
                         print(f"Email: {email.get('href', '')}")
 
-                    print(f"\nHTML-Snippet:")
+                    print("\nHTML-Snippet:")
                     print(str(first)[:300])
                     print()
                     break

@@ -7,8 +7,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from app.utils.logger import setup_logging
 from app.scrapers.eleven_eighty import scrape_11880
+from app.utils.logger import setup_logging
 
 
 async def main():
@@ -48,7 +48,7 @@ async def main():
     results = await scrape_11880(city=city, industry=industry, max_pages=max_pages, use_tor=use_tor)
 
     print("-" * 60)
-    print(f"\n✅ Scraping abgeschlossen!")
+    print("\n✅ Scraping abgeschlossen!")
     print(f"📊 Ergebnisse: {len(results)} Unternehmen gefunden")
     print()
 
@@ -79,7 +79,7 @@ async def main():
             json.dump([result.to_dict() for result in results], f, ensure_ascii=False, indent=2)
 
         print(f"💾 Ergebnisse gespeichert: {output_file}")
-        print(f"\n✨ Fertig! Du kannst die Daten jetzt weiterverarbeiten.")
+        print("\n✨ Fertig! Du kannst die Daten jetzt weiterverarbeiten.")
     else:
         print("❌ Keine Ergebnisse gefunden.")
         print("\n🔍 Mögliche Gründe:")

@@ -4,9 +4,8 @@ Findet Websites von Unternehmen über Google Search
 """
 
 import logging
-import re
-from typing import Optional
 from urllib.parse import quote_plus
+
 from bs4 import BeautifulSoup
 
 from app.utils.browser_manager import PlaywrightBrowserManager
@@ -31,7 +30,7 @@ class GoogleSearcher:
 
     async def find_website(
         self, company_name: str, city: str = None, additional_keywords: str = None
-    ) -> Optional[str]:
+    ) -> str | None:
         """
         Findet Website eines Unternehmens über Google Search
 
@@ -88,7 +87,7 @@ class GoogleSearcher:
 
     def _extract_website_from_duckduckgo_lite(
         self, soup: BeautifulSoup, company_name: str
-    ) -> Optional[str]:
+    ) -> str | None:
         """
         Extrahiert Website aus DuckDuckGo Lite Suchergebnissen
 
@@ -118,7 +117,7 @@ class GoogleSearcher:
 
     def _extract_website_from_duckduckgo(
         self, soup: BeautifulSoup, company_name: str
-    ) -> Optional[str]:
+    ) -> str | None:
         """
         Extrahiert Website aus DuckDuckGo Suchergebnissen
 

@@ -5,9 +5,10 @@ Verwaltet Tor-Verbindungen und IP-Rotation für anonymes Scraping
 
 import asyncio
 import logging
-from typing import Optional, Dict
+
 from stem import Signal
 from stem.control import Controller
+
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ class TorProxyManager:
         else:
             logger.warning("Tor ist deaktiviert - Scraping ohne Proxy")
 
-    def get_proxy_config(self) -> Optional[Dict[str, str]]:
+    def get_proxy_config(self) -> dict[str, str] | None:
         """
         Gibt Proxy-Konfiguration für httpx/playwright zurück
 
@@ -48,7 +49,7 @@ class TorProxyManager:
 
         return {"http://": self.proxy_url, "https://": self.proxy_url}
 
-    def get_proxy_dict(self) -> Optional[Dict[str, str]]:
+    def get_proxy_dict(self) -> dict[str, str] | None:
         """
         Gibt Proxy-Dict für Playwright zurück
 
@@ -126,7 +127,7 @@ class TorProxyManager:
             logger.error(f"Tor Connection Check fehlgeschlagen: {e}")
             return False
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """
         Gibt Statistiken zurück
 

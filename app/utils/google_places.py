@@ -4,9 +4,8 @@ Findet Unternehmensdaten über Google My Business
 """
 
 import logging
-from typing import Optional, Dict, List
+
 import googlemaps
-from datetime import datetime
 
 from app.core.config import settings
 
@@ -43,7 +42,7 @@ class GooglePlacesClient:
 
     def search_company(
         self, company_name: str, city: str = None, region: str = "de"
-    ) -> Optional[Dict]:
+    ) -> dict | None:
         """
         Sucht Unternehmen über Google Places
 
@@ -133,7 +132,7 @@ class GooglePlacesClient:
             logger.error(f"Fehler bei Google Places API: {e}")
             return None
 
-    def _parse_opening_hours(self, opening_hours: Dict) -> Optional[Dict]:
+    def _parse_opening_hours(self, opening_hours: dict) -> dict | None:
         """Parsed Öffnungszeiten"""
         if not opening_hours:
             return None
@@ -144,7 +143,7 @@ class GooglePlacesClient:
             "periods": opening_hours.get("periods", []),
         }
 
-    def _parse_reviews(self, reviews: List[Dict]) -> List[Dict]:
+    def _parse_reviews(self, reviews: list[dict]) -> list[dict]:
         """Parsed Bewertungen (Top 5)"""
         parsed = []
 
@@ -162,8 +161,8 @@ class GooglePlacesClient:
 
 
 async def enrich_with_google_places(
-    results: List, api_key: str = None, max_lookups: int = None
-) -> List:
+    results: list, api_key: str = None, max_lookups: int = None
+) -> list:
     """
     Reichert Ergebnisse mit Google Places Daten an
 

@@ -3,9 +3,9 @@ Data Normalizer
 Normalizes and standardizes scraped data
 """
 
-import re
 import logging
-from typing import Optional, List, Dict, Any
+import re
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +102,7 @@ class DataNormalizer:
         return " ".join(normalized)
 
     @classmethod
-    def normalize_legal_form(cls, legal_form: Optional[str]) -> Optional[str]:
+    def normalize_legal_form(cls, legal_form: str | None) -> str | None:
         """
         Normalize legal form
 
@@ -130,7 +130,7 @@ class DataNormalizer:
         return legal_form.upper()
 
     @classmethod
-    def normalize_state(cls, state: Optional[str]) -> Optional[str]:
+    def normalize_state(cls, state: str | None) -> str | None:
         """
         Normalize state/Bundesland
 
@@ -150,7 +150,7 @@ class DataNormalizer:
         return cls.STATES.get(state, state.title())
 
     @staticmethod
-    def normalize_city(city: Optional[str]) -> Optional[str]:
+    def normalize_city(city: str | None) -> str | None:
         """
         Normalize city name
 
@@ -170,7 +170,7 @@ class DataNormalizer:
         return city.title()
 
     @staticmethod
-    def normalize_list_field(items: Optional[List[str]]) -> Optional[List[str]]:
+    def normalize_list_field(items: list[str] | None) -> list[str] | None:
         """
         Normalize list field (directors, services, etc.)
 
@@ -203,7 +203,7 @@ class DataNormalizer:
         return normalized if normalized else None
 
     @staticmethod
-    def extract_legal_form_from_name(name: str) -> tuple[str, Optional[str]]:
+    def extract_legal_form_from_name(name: str) -> tuple[str, str | None]:
         """
         Extract legal form from company name
 
@@ -232,7 +232,7 @@ class DataNormalizer:
         return name, None
 
     @classmethod
-    def normalize_company_data(cls, data: Dict[str, Any]) -> Dict[str, Any]:
+    def normalize_company_data(cls, data: dict[str, Any]) -> dict[str, Any]:
         """
         Normalize all company data fields
 
@@ -285,7 +285,7 @@ class DataNormalizer:
 
 
 # Convenience function
-def normalize_company(data: Dict[str, Any]) -> Dict[str, Any]:
+def normalize_company(data: dict[str, Any]) -> dict[str, Any]:
     """
     Normalize company data
 

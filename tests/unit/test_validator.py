@@ -2,7 +2,6 @@
 Unit Tests für Data Validator
 """
 
-import pytest
 from app.processors.validator import DataValidator
 
 

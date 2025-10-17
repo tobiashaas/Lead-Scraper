@@ -7,10 +7,10 @@ import asyncio
 import json
 from pathlib import Path
 
-from app.utils.logger import setup_logging
 from app.scrapers.eleven_eighty import scrape_11880
 from app.scrapers.eleven_eighty_detail import enrich_with_details
 from app.utils.google_search import find_missing_websites
+from app.utils.logger import setup_logging
 
 
 async def main():
@@ -65,7 +65,7 @@ async def main():
     # Nur die ersten 5 für Demo anreichern (Detail-Scraping dauert länger)
     max_details = 5
     print(f"ℹ️  Reichere die ersten {max_details} Ergebnisse mit Details an...")
-    print(f"   (Detail-Scraping dauert ca. 5-10 Sekunden pro Unternehmen)")
+    print("   (Detail-Scraping dauert ca. 5-10 Sekunden pro Unternehmen)")
     print()
 
     enriched_results = await enrich_with_details(
@@ -73,7 +73,7 @@ async def main():
     )
 
     print()
-    print(f"✅ Detail-Anreicherung abgeschlossen!")
+    print("✅ Detail-Anreicherung abgeschlossen!")
     print()
 
     # === SCHRITT 3: GOOGLE SEARCH FÜR FEHLENDE WEBSITES ===
@@ -87,7 +87,7 @@ async def main():
         1 for r in enriched_results if not r.website or "google.com" in r.website
     )
     print(f"ℹ️  {missing_websites} Unternehmen ohne Website gefunden")
-    print(f"   Suche Websites für die ersten 3 Unternehmen via Google...")
+    print("   Suche Websites für die ersten 3 Unternehmen via Google...")
     print()
 
     enriched_results = await find_missing_websites(
@@ -95,7 +95,7 @@ async def main():
     )
 
     print()
-    print(f"✅ Google Search abgeschlossen!")
+    print("✅ Google Search abgeschlossen!")
     print()
 
     # === ERGEBNISSE ANZEIGEN ===

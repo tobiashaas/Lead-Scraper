@@ -5,14 +5,14 @@ Kombiniert Daten aus mehreren Branchenbüchern
 
 import asyncio
 import json
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
-from app.utils.logger import setup_logging
+from app.scrapers.das_oertliche import scrape_das_oertliche
 from app.scrapers.eleven_eighty import scrape_11880
 from app.scrapers.gelbe_seiten import scrape_gelbe_seiten
-from app.scrapers.das_oertliche import scrape_das_oertliche
 from app.scrapers.goyellow import scrape_goyellow
+from app.utils.logger import setup_logging
 
 
 async def main():

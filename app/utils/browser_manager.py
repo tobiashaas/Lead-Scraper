@@ -3,10 +3,11 @@ Playwright Browser Manager
 Verwaltet Browser-Instanzen mit Anti-Detection und Tor-Integration
 """
 
-import random
 import logging
-from typing import Optional, Tuple
-from playwright.async_api import async_playwright, Browser, BrowserContext, Playwright
+import random
+
+from playwright.async_api import Browser, BrowserContext, Playwright, async_playwright
+
 from app.core.config import settings
 from app.utils.proxy_manager import tor_proxy_manager
 
@@ -50,7 +51,7 @@ class PlaywrightBrowserManager:
             f"Browser={self.browser_type}, Headless={self.headless}, Tor={self.use_tor}"
         )
 
-    async def create_browser_context(self) -> Tuple[BrowserContext, Browser, Playwright]:
+    async def create_browser_context(self) -> tuple[BrowserContext, Browser, Playwright]:
         """
         Erstellt neuen Browser-Context mit Anti-Detection Settings
 
@@ -151,7 +152,7 @@ class PlaywrightBrowserManager:
         except Exception as e:
             logger.error(f"Fehler beim Schließen des Browsers: {e}")
 
-    async def create_page(self) -> Tuple:
+    async def create_page(self) -> tuple:
         """
         Erstellt neue Page (Convenience-Methode)
 

@@ -2,9 +2,9 @@
 Health Check Endpoints
 """
 
-from fastapi import APIRouter, status
 from datetime import datetime
-import asyncio
+
+from fastapi import APIRouter, status
 
 from app.core.config import settings
 from app.database.database import check_db_connection

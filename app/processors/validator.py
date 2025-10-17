@@ -3,12 +3,13 @@ Data Validator
 Validates and cleans scraped data
 """
 
-import re
 import logging
-from typing import Optional, Dict, Any
-from email_validator import validate_email, EmailNotValidError
-import phonenumbers
+import re
+from typing import Any
 from urllib.parse import urlparse
+
+import phonenumbers
+from email_validator import EmailNotValidError, validate_email
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,7 @@ class DataValidator:
     """
 
     @staticmethod
-    def validate_email(email: Optional[str]) -> Optional[str]:
+    def validate_email(email: str | None) -> str | None:
         """
         Validates and normalizes email address
 
@@ -47,7 +48,7 @@ class DataValidator:
             return None
 
     @staticmethod
-    def validate_phone(phone: Optional[str], country: str = "DE") -> Optional[str]:
+    def validate_phone(phone: str | None, country: str = "DE") -> str | None:
         """
         Validates and normalizes phone number
 
@@ -86,7 +87,7 @@ class DataValidator:
             return None
 
     @staticmethod
-    def validate_website(website: Optional[str]) -> Optional[str]:
+    def validate_website(website: str | None) -> str | None:
         """
         Validates and normalizes website URL
 
@@ -128,7 +129,7 @@ class DataValidator:
             return None
 
     @staticmethod
-    def validate_postal_code(postal_code: Optional[str], country: str = "DE") -> Optional[str]:
+    def validate_postal_code(postal_code: str | None, country: str = "DE") -> str | None:
         """
         Validates postal code
 
@@ -156,7 +157,7 @@ class DataValidator:
         return postal_code if postal_code else None
 
     @staticmethod
-    def validate_company_name(name: Optional[str]) -> Optional[str]:
+    def validate_company_name(name: str | None) -> str | None:
         """
         Validates and cleans company name
 
@@ -182,7 +183,7 @@ class DataValidator:
         return name
 
     @classmethod
-    def validate_company_data(cls, data: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_company_data(cls, data: dict[str, Any]) -> dict[str, Any]:
         """
         Validates all company data fields
 
@@ -225,7 +226,7 @@ class DataValidator:
 
 
 # Convenience function
-def validate_company(data: Dict[str, Any]) -> Dict[str, Any]:
+def validate_company(data: dict[str, Any]) -> dict[str, Any]:
     """
     Validates company data
 

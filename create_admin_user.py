@@ -3,9 +3,9 @@ Create Admin User
 Erstellt einen Admin-User für die Anwendung
 """
 
+from app.core.security import get_password_hash
 from app.database.database import SessionLocal
 from app.database.models import User, UserRole
-from app.core.security import get_password_hash
 
 
 def create_admin():
@@ -37,7 +37,7 @@ def create_admin():
         print("✅ Admin user created successfully!")
         print(f"   Username: {admin.username}")
         print(f"   Email: {admin.email}")
-        print(f"   Password: admin123 (CHANGE THIS!)")
+        print("   Password: admin123 (CHANGE THIS!)")
         print(f"   Role: {admin.role.value}")
 
     except Exception as e:

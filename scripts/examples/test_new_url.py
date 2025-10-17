@@ -3,8 +3,9 @@ Test mit der richtigen 11880 URL-Struktur
 """
 
 import asyncio
-from playwright.async_api import async_playwright
+
 from bs4 import BeautifulSoup
+from playwright.async_api import async_playwright
 
 
 async def main():
@@ -54,7 +55,7 @@ async def main():
 
         if found_entries:
             print(f"\n{'='*60}")
-            print(f"Erste 3 Einträge analysieren:")
+            print("Erste 3 Einträge analysieren:")
             print(f"{'='*60}")
 
             for i, entry in enumerate(found_entries[:3], 1):
@@ -84,12 +85,12 @@ async def main():
 
         # Screenshot
         await page.screenshot(path="data/screenshot_correct_url.png", full_page=True)
-        print(f"\n✓ Screenshot: data/screenshot_correct_url.png")
+        print("\n✓ Screenshot: data/screenshot_correct_url.png")
 
         # HTML speichern
         with open("data/correct_url_output.html", "w", encoding="utf-8") as f:
             f.write(html)
-        print(f"✓ HTML: data/correct_url_output.html")
+        print("✓ HTML: data/correct_url_output.html")
 
         await browser.close()
 

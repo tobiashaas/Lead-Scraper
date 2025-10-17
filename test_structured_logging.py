@@ -4,10 +4,9 @@ Demonstriert JSON-basiertes Logging mit Correlation IDs
 """
 
 from app.utils.structured_logger import (
+    clear_correlation_id,
     get_structured_logger,
     set_correlation_id,
-    get_correlation_id,
-    clear_correlation_id,
 )
 
 # Get logger
@@ -58,7 +57,7 @@ def test_exception_logging():
     try:
         # Simulate error
         result = 1 / 0
-    except Exception as e:
+    except Exception:
         logger.exception("Division by zero error", operation="divide", numerator=1, denominator=0)
 
     print()

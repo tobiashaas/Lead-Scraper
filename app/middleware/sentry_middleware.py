@@ -3,13 +3,14 @@ Sentry Middleware
 Adds additional context to Sentry events
 """
 
-from typing import Callable
+from collections.abc import Callable
+
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
-from app.core.sentry import set_context, add_breadcrumb, set_user_context
 from app.core.config import settings
+from app.core.sentry import add_breadcrumb, set_context, set_user_context
 
 
 class SentryContextMiddleware(BaseHTTPMiddleware):

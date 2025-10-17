@@ -3,24 +3,25 @@ SQLAlchemy Database Models
 Definiert die Datenbankstruktur für Lead-Scraping
 """
 
+import enum
 from datetime import datetime
-from typing import List, Optional
+
 from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Text,
-    DateTime,
+    JSON,
     Boolean,
+    Column,
+    DateTime,
     Float,
     ForeignKey,
+    Integer,
+    String,
     Table,
-    JSON,
+    Text,
+)
+from sqlalchemy import (
     Enum as SQLEnum,
 )
-from sqlalchemy.orm import relationship, DeclarativeBase
-from sqlalchemy.sql import func
-import enum
+from sqlalchemy.orm import DeclarativeBase, relationship
 
 
 class Base(DeclarativeBase):

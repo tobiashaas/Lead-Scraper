@@ -7,12 +7,12 @@ import asyncio
 import json
 from pathlib import Path
 
-from app.utils.logger import setup_logging
 from app.scrapers.eleven_eighty import scrape_11880
 from app.scrapers.eleven_eighty_detail import enrich_with_details
-from app.utils.google_places import enrich_with_google_places
-from app.utils.website_scraper import enrich_with_website_data
 from app.scrapers.handelsregister import enrich_with_handelsregister
+from app.utils.google_places import enrich_with_google_places
+from app.utils.logger import setup_logging
+from app.utils.website_scraper import enrich_with_website_data
 
 
 async def main():
@@ -73,7 +73,7 @@ async def main():
 
     results = await enrich_with_details(results=results, use_tor=use_tor, max_details=max_details)
 
-    print(f"✅ Detail-Anreicherung abgeschlossen")
+    print("✅ Detail-Anreicherung abgeschlossen")
     print()
 
     # === PHASE 3: GOOGLE PLACES API ===
@@ -89,7 +89,7 @@ async def main():
 
     try:
         results = await enrich_with_google_places(results=results, max_lookups=max_google_places)
-        print(f"✅ Google Places Anreicherung abgeschlossen")
+        print("✅ Google Places Anreicherung abgeschlossen")
     except Exception as e:
         print(f"⚠️  Google Places übersprungen: {e}")
 
@@ -103,7 +103,7 @@ async def main():
 
     results = await enrich_with_website_data(results=results, max_scrapes=max_website_scrapes)
 
-    print(f"✅ Website-Scraping abgeschlossen")
+    print("✅ Website-Scraping abgeschlossen")
     print()
 
     # === PHASE 5: HANDELSREGISTER ===
@@ -119,7 +119,7 @@ async def main():
         results=results, use_tor=True, max_lookups=max_handelsregister, delay_between_requests=10
     )
 
-    print(f"✅ Handelsregister-Anreicherung abgeschlossen")
+    print("✅ Handelsregister-Anreicherung abgeschlossen")
     print()
 
     # === ERGEBNISSE ===

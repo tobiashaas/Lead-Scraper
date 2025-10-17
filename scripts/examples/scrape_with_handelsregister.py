@@ -7,9 +7,9 @@ import asyncio
 import json
 from pathlib import Path
 
-from app.utils.logger import setup_logging
 from app.scrapers.eleven_eighty import scrape_11880
 from app.scrapers.handelsregister import enrich_with_handelsregister
+from app.utils.logger import setup_logging
 
 
 async def main():
@@ -70,7 +70,7 @@ async def main():
     )
 
     print()
-    print(f"✅ Handelsregister-Anreicherung abgeschlossen!")
+    print("✅ Handelsregister-Anreicherung abgeschlossen!")
     print()
 
     # === ERGEBNISSE ANZEIGEN ===
@@ -92,7 +92,7 @@ async def main():
         # Handelsregister-Daten
         hr_data = result.extra_data.get("handelsregister")
         if hr_data:
-            print(f"   🏛️  Handelsregister:")
+            print("   🏛️  Handelsregister:")
             if hr_data.get("register_number"):
                 print(f"      - Nummer: {hr_data['register_number']}")
             if hr_data.get("legal_form"):

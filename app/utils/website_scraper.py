@@ -5,10 +5,10 @@ Extrahiert Informationen von Unternehmens-Websites
 
 import logging
 import re
-from typing import Optional, Dict, List
-from urllib.parse import urljoin, urlparse
-from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
 import httpx
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class WebsiteScraper:
         self.use_tor = use_tor
         self.timeout = 15.0
 
-    async def scrape_website(self, url: str) -> Dict:
+    async def scrape_website(self, url: str) -> dict:
         """
         Scraped eine Website
 
@@ -67,7 +67,7 @@ class WebsiteScraper:
             logger.error(f"Fehler beim Website-Scraping: {e}")
             return data
 
-    async def _find_relevant_pages(self, base_url: str) -> Dict[str, str]:
+    async def _find_relevant_pages(self, base_url: str) -> dict[str, str]:
         """Findet Impressum, Team, Kontakt-Seiten"""
         pages = {}
 
@@ -108,7 +108,7 @@ class WebsiteScraper:
             logger.error(f"Fehler beim Finden von Seiten: {e}")
             return pages
 
-    async def _scrape_impressum(self, url: str) -> Optional[Dict]:
+    async def _scrape_impressum(self, url: str) -> dict | None:
         """Scraped Impressum-Seite"""
         logger.info(f"Scrape Impressum: {url}")
 
@@ -161,7 +161,7 @@ class WebsiteScraper:
             logger.error(f"Fehler beim Impressum-Scraping: {e}")
             return None
 
-    async def _scrape_team_page(self, url: str) -> List[Dict]:
+    async def _scrape_team_page(self, url: str) -> list[dict]:
         """Scraped Team-Seite"""
         logger.info(f"Scrape Team: {url}")
 
@@ -223,7 +223,7 @@ class WebsiteScraper:
             logger.error(f"Fehler beim Team-Scraping: {e}")
             return team_members
 
-    async def _scrape_contact_page(self, url: str) -> Dict:
+    async def _scrape_contact_page(self, url: str) -> dict:
         """Scraped Kontakt-Seite"""
         logger.info(f"Scrape Kontakt: {url}")
 
@@ -257,7 +257,7 @@ class WebsiteScraper:
             return contact_data
 
 
-async def enrich_with_website_data(results: List, max_scrapes: int = None) -> List:
+async def enrich_with_website_data(results: list, max_scrapes: int = None) -> list:
     """
     Reichert Ergebnisse mit Website-Daten an
 

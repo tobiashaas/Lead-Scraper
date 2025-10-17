@@ -5,15 +5,16 @@ Request/Response Logging mit Correlation IDs
 
 import time
 import uuid
-from typing import Callable
+from collections.abc import Callable
+
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
 from app.utils.structured_logger import (
+    clear_correlation_id,
     get_structured_logger,
     set_correlation_id,
-    clear_correlation_id,
 )
 
 logger = get_structured_logger(__name__)

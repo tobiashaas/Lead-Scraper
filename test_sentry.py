@@ -3,16 +3,15 @@ Test Sentry Integration
 Demonstriert Sentry Error Tracking und Performance Monitoring
 """
 
-import os
+from app.core.config import settings
 from app.core.sentry import (
+    add_breadcrumb,
     capture_exception,
     capture_message,
-    set_user_context,
     set_context,
-    add_breadcrumb,
+    set_user_context,
     start_transaction,
 )
-from app.core.config import settings
 
 print("=" * 60)
 print("Sentry Integration Test")
@@ -31,7 +30,7 @@ if not settings.sentry_enabled:
     print("You can use a mock DSN or create a free account at https://sentry.io")
     print()
 else:
-    print(f"✅ Sentry is ENABLED")
+    print("✅ Sentry is ENABLED")
     print(f"   Environment: {settings.sentry_environment}")
     print(f"   DSN: {settings.sentry_dsn[:50]}...")
     print()

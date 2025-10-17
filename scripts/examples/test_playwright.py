@@ -3,8 +3,10 @@ Test Playwright mit 11880
 """
 
 import asyncio
-from app.utils.browser_manager import create_stealth_browser
+
 from bs4 import BeautifulSoup
+
+from app.utils.browser_manager import create_stealth_browser
 
 
 async def main():
@@ -50,7 +52,7 @@ async def main():
             print(f"{tag} {attrs}: {len(elements)} gefunden")
 
             if len(elements) > 0 and len(elements) < 100:
-                print(f"  Erste 3 Elemente:")
+                print("  Erste 3 Elemente:")
                 for i, elem in enumerate(elements[:3], 1):
                     classes = elem.get("class", [])
                     print(f"    {i}. Classes: {classes}")

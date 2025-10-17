@@ -7,8 +7,8 @@ import asyncio
 import json
 from pathlib import Path
 
-from app.utils.logger import setup_logging
 from app.scrapers.gelbe_seiten import scrape_gelbe_seiten
+from app.utils.logger import setup_logging
 
 
 async def main():
@@ -42,7 +42,7 @@ async def main():
     )
 
     print("-" * 60)
-    print(f"\n✅ Scraping abgeschlossen!")
+    print("\n✅ Scraping abgeschlossen!")
     print(f"📊 Ergebnisse: {len(results)} Unternehmen gefunden")
     print()
 
@@ -78,7 +78,7 @@ async def main():
             json.dump([result.to_dict() for result in results], f, ensure_ascii=False, indent=2)
 
         print(f"💾 Ergebnisse gespeichert: {output_file}")
-        print(f"\n✨ Fertig!")
+        print("\n✨ Fertig!")
     else:
         print("❌ Keine Ergebnisse gefunden.")
         print("\n🔍 Mögliche Gründe:")

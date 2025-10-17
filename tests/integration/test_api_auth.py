@@ -3,12 +3,9 @@ Integration Tests für Authentication API Endpoints
 """
 
 import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
 
-from app.main import app
-from app.database.models import User, UserRole
 from app.core.security import get_password_hash
+from app.database.models import User, UserRole
 
 
 @pytest.fixture

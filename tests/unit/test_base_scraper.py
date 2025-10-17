@@ -2,9 +2,11 @@
 Unit Tests für Base Scraper
 """
 
-import pytest
 from datetime import datetime
-from app.scrapers.base import ScraperResult, BaseScraper
+
+import pytest
+
+from app.scrapers.base import BaseScraper, ScraperResult
 
 
 class TestScraperResult:

@@ -3,8 +3,9 @@ Debug Gelbe Seiten HTML-Struktur
 """
 
 import asyncio
-from playwright.async_api import async_playwright
+
 from bs4 import BeautifulSoup
+from playwright.async_api import async_playwright
 
 
 async def main():
@@ -39,7 +40,7 @@ async def main():
             print(f"{tag} {attrs}: {len(elements)} gefunden")
 
             if len(elements) > 0 and len(elements) < 100:
-                print(f"  Erste 2 Elemente:")
+                print("  Erste 2 Elemente:")
                 for i, elem in enumerate(elements[:2], 1):
                     print(f"    {i}. Classes: {elem.get('class', [])}")
                     # Firmenname

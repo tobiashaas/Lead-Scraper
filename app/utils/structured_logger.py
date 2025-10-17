@@ -3,20 +3,19 @@ Structured Logging
 JSON-basiertes Logging mit Correlation IDs und strukturierten Daten
 """
 
-import logging
 import json
+import logging
 import sys
 import traceback
-from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, Optional
-from logging.handlers import RotatingFileHandler
 from contextvars import ContextVar
+from datetime import datetime
+from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
 from app.core.config import settings
 
 # Context variable for correlation ID
-correlation_id_var: ContextVar[Optional[str]] = ContextVar("correlation_id", default=None)
+correlation_id_var: ContextVar[str | None] = ContextVar("correlation_id", default=None)
 
 
 class JSONFormatter(logging.Formatter):
@@ -156,7 +155,7 @@ def set_correlation_id(correlation_id: str):
     correlation_id_var.set(correlation_id)
 
 
-def get_correlation_id() -> Optional[str]:
+def get_correlation_id() -> str | None:
     """
     Get current correlation ID
 

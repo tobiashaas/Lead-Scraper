@@ -3,6 +3,7 @@ Unit Tests für Unternehmensverzeichnis.org Scraper
 """
 
 import pytest
+
 from app.scrapers.unternehmensverzeichnis import UnternehmensverzeichnisScraper
 
 

@@ -4,17 +4,19 @@ Database Initialization Script
 Erstellt Datenbank-Tabellen und fügt initiale Daten ein
 """
 
-import sys
 import asyncio
+import sys
 from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.database.database import init_db, check_db_connection, engine
-from app.database.models import Source
-from sqlalchemy.orm import Session
 import logging
+
+from sqlalchemy.orm import Session
+
+from app.database.database import check_db_connection, engine, init_db
+from app.database.models import Source
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

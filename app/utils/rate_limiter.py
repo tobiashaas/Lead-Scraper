@@ -6,8 +6,9 @@ Verhindert zu viele Requests und schützt vor IP-Blocking
 import asyncio
 import logging
 import time
-from typing import Optional
+
 import redis.asyncio as redis
+
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -24,7 +25,7 @@ class RateLimiter:
     """
 
     def __init__(self):
-        self.redis_client: Optional[redis.Redis] = None
+        self.redis_client: redis.Redis | None = None
         self.max_requests = settings.rate_limit_requests
         self.window_seconds = settings.rate_limit_window
 

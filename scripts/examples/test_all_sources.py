@@ -7,11 +7,11 @@ import asyncio
 import json
 from pathlib import Path
 
-from app.utils.logger import setup_logging
+from app.scrapers.das_oertliche import scrape_das_oertliche
 from app.scrapers.eleven_eighty import scrape_11880
 from app.scrapers.gelbe_seiten import scrape_gelbe_seiten
-from app.scrapers.das_oertliche import scrape_das_oertliche
 from app.scrapers.goyellow import scrape_goyellow
+from app.utils.logger import setup_logging
 
 
 async def test_source(name: str, scrape_func, city: str, industry: str):
@@ -27,7 +27,7 @@ async def test_source(name: str, scrape_func, city: str, industry: str):
 
         if results:
             # Zeige erste 3 Ergebnisse
-            print(f"\n📋 Erste 3 Ergebnisse:")
+            print("\n📋 Erste 3 Ergebnisse:")
             for i, result in enumerate(results[:3], 1):
                 print(f"\n{i}. {result.company_name}")
                 if result.phone:
@@ -45,7 +45,7 @@ async def test_source(name: str, scrape_func, city: str, industry: str):
             has_website = sum(1 for r in results if r.website)
             has_address = sum(1 for r in results if r.address)
 
-            print(f"\n📊 Datenqualität:")
+            print("\n📊 Datenqualität:")
             print(f"   Telefon: {has_phone}/{len(results)} ({has_phone/len(results)*100:.0f}%)")
             print(f"   E-Mail: {has_email}/{len(results)} ({has_email/len(results)*100:.0f}%)")
             print(f"   Website: {has_website}/{len(results)} ({has_website/len(results)*100:.0f}%)")
@@ -82,7 +82,7 @@ async def main():
 
     print(f"\n📍 Stadt: {city}")
     print(f"🏢 Branche: {industry}")
-    print(f"📄 Max Seiten: 1 pro Quelle")
+    print("📄 Max Seiten: 1 pro Quelle")
 
     # Teste alle Quellen
     sources = [

@@ -4,9 +4,9 @@ Convenience functions for common logging patterns
 """
 
 import time
-from typing import Any, Callable, Dict, Optional
-from functools import wraps
+from collections.abc import Callable
 from contextlib import contextmanager
+from functools import wraps
 
 from app.utils.structured_logger import get_structured_logger
 
@@ -148,7 +148,7 @@ def log_api_request(method: str, path: str, status_code: int, duration_ms: float
 
 
 def log_database_query(
-    operation: str, table: str, duration_ms: float, rows_affected: Optional[int] = None, **extra
+    operation: str, table: str, duration_ms: float, rows_affected: int | None = None, **extra
 ):
     """
     Log database query

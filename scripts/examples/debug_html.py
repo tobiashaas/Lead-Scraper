@@ -3,6 +3,7 @@ Debug Script - Zeigt HTML-Struktur von 11880
 """
 
 import asyncio
+
 import httpx
 from bs4 import BeautifulSoup
 

@@ -5,15 +5,16 @@ KR Lead Scraper REST API
 
 import logging
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from app.api import companies, health, scraping
 from app.core.config import settings
+from app.core.sentry import init_sentry
 from app.database.database import check_db_connection
 from app.utils.logger import setup_logging
-from app.core.sentry import init_sentry
-from app.api import companies, scraping, health
 
 # Setup logging
 setup_logging()
@@ -81,8 +82,8 @@ app.add_middleware(
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
     """Global exception handler"""
-    from app.utils.structured_logger import get_structured_logger
     from app.core.sentry import capture_exception, set_context
+    from app.utils.structured_logger import get_structured_logger
 
     error_logger = get_structured_logger(__name__)
 
