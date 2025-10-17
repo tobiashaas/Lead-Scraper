@@ -9,8 +9,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
 
 from app.database.database import get_db
-from app.database.models import Company, LeadStatus, LeadQuality
+from app.database.models import Company, LeadStatus, LeadQuality, User
 from app.api.schemas import CompanyResponse, CompanyCreate, CompanyUpdate, CompanyList
+from app.core.dependencies import get_current_active_user
 
 router = APIRouter()
 
@@ -24,7 +25,8 @@ async def list_companies(
     lead_status: Optional[LeadStatus] = None,
     lead_quality: Optional[LeadQuality] = None,
     search: Optional[str] = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     List companies with filters and pagination
@@ -70,7 +72,8 @@ async def list_companies(
 @router.get("/{company_id}", response_model=CompanyResponse)
 async def get_company(
     company_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Get company by ID
@@ -89,7 +92,8 @@ async def get_company(
 @router.post("/", response_model=CompanyResponse, status_code=status.HTTP_201_CREATED)
 async def create_company(
     company: CompanyCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Create new company
@@ -119,7 +123,8 @@ async def create_company(
 async def update_company(
     company_id: int,
     company_update: CompanyUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Update company
@@ -146,7 +151,8 @@ async def update_company(
 @router.delete("/{company_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_company(
     company_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Delete company (soft delete)

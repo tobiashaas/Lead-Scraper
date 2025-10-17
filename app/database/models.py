@@ -47,6 +47,13 @@ class LeadQuality(enum.Enum):
     UNKNOWN = "unknown"
 
 
+class UserRole(enum.Enum):
+    """User Rollen"""
+    ADMIN = "admin"
+    USER = "user"
+    VIEWER = "viewer"
+
+
 class Company(Base):
     """
     Unternehmen (Lead)
@@ -269,3 +276,36 @@ class DuplicateCandidate(Base):
     
     def __repr__(self):
         return f"<DuplicateCandidate(id={self.id}, similarity={self.overall_similarity:.2f})>"
+
+
+class User(Base):
+    """
+    User Model für Authentication
+    """
+    __tablename__ = 'users'
+    
+    # Primary Key
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # User Info
+    username = Column(String(100), unique=True, nullable=False, index=True)
+    email = Column(String(255), unique=True, nullable=False, index=True)
+    full_name = Column(String(255))
+    
+    # Authentication
+    hashed_password = Column(String(255), nullable=False)
+    is_active = Column(Boolean, default=True)
+    is_superuser = Column(Boolean, default=False)
+    role = Column(SQLEnum(UserRole), default=UserRole.USER, nullable=False)
+    
+    # Security
+    last_login = Column(DateTime)
+    failed_login_attempts = Column(Integer, default=0)
+    locked_until = Column(DateTime)
+    
+    # Metadaten
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f"<User(id={self.id}, username='{self.username}', role={self.role.value})>"

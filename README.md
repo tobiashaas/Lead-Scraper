@@ -1,5 +1,12 @@
 # 🚀 KR-Lead-Scraper
 
+[![Tests](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/tests.yml/badge.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/tests.yml)
+[![Code Quality](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/code-quality.yml/badge.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/code-quality.yml)
+[![Security](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/security.yml/badge.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/security.yml)
+[![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.118.0-009688.svg)](https://fastapi.tiangolo.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Automatisiertes Lead-Scraping-System zur Extraktion von Unternehmensdaten aus Baden-Württemberg für IT/Bürotechnik/Dokumentenmanagement-Leads.
 
 ## 📋 Übersicht

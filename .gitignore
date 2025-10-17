@@ -57,8 +57,10 @@ data/*.sqlite
 # Testing
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/
 .tox/
+bandit-report.json
 
 # Playwright
 .playwright/

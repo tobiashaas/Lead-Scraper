@@ -12,11 +12,15 @@ from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.database.database import check_db_connection
 from app.utils.logger import setup_logging
+from app.core.sentry import init_sentry
 from app.api import companies, scraping, health
 
 # Setup logging
 setup_logging()
 logger = logging.getLogger(__name__)
+
+# Initialize Sentry
+init_sentry()
 
 
 @asynccontextmanager
@@ -56,6 +60,13 @@ app = FastAPI(
     debug=settings.debug
 )
 
+# Logging Middleware
+from app.middleware import LoggingMiddleware, RequestIDMiddleware, SentryContextMiddleware
+
+app.add_middleware(SentryContextMiddleware)
+app.add_middleware(LoggingMiddleware)
+app.add_middleware(RequestIDMiddleware)
+
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
@@ -70,7 +81,29 @@ app.add_middleware(
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
     """Global exception handler"""
-    logger.error(f"Unhandled exception: {exc}", exc_info=True)
+    from app.utils.structured_logger import get_structured_logger
+    from app.core.sentry import capture_exception, set_context
+    
+    error_logger = get_structured_logger(__name__)
+    
+    # Log to structured logger
+    error_logger.error(
+        "Unhandled exception",
+        error=str(exc),
+        error_type=type(exc).__name__,
+        path=request.url.path,
+        method=request.method
+    )
+    
+    # Capture in Sentry with context
+    set_context("request", {
+        "method": request.method,
+        "path": str(request.url.path),
+        "query_params": str(request.query_params),
+        "client_host": request.client.host if request.client else None
+    })
+    capture_exception(exc)
+    
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
@@ -81,7 +114,10 @@ async def global_exception_handler(request, exc):
 
 
 # Include routers
+from app.api import auth
+
 app.include_router(health.router, tags=["Health"])
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(companies.router, prefix="/api/v1/companies", tags=["Companies"])
 app.include_router(scraping.router, prefix="/api/v1/scraping", tags=["Scraping"])
 

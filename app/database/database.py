@@ -14,9 +14,9 @@ from app.database.models import Base
 logger = logging.getLogger(__name__)
 
 
-# Database Engine
+# Database Engine (using psycopg3 dialect)
 engine = create_engine(
-    settings.database_url,
+    settings.database_url_psycopg3,
     echo=settings.db_echo,
     pool_pre_ping=True,  # Verify connections before using
     pool_size=10,
@@ -83,8 +83,9 @@ async def check_db_connection() -> bool:
         True wenn Verbindung OK, sonst False
     """
     try:
+        from sqlalchemy import text
         with engine.connect() as conn:
-            conn.execute("SELECT 1")
+            conn.execute(text("SELECT 1"))
         logger.info("✅ Datenbankverbindung OK")
         return True
     except Exception as e:

@@ -9,8 +9,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks, s
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
-from app.database.models import ScrapingJob, Source
+from app.database.models import ScrapingJob, Source, User
 from app.api.schemas import ScrapingJobCreate, ScrapingJobResponse, ScrapingJobList
+from app.core.dependencies import get_current_active_user
 
 router = APIRouter()
 
@@ -19,7 +20,8 @@ router = APIRouter()
 async def create_scraping_job(
     job: ScrapingJobCreate,
     background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Create and start a new scraping job
@@ -62,7 +64,8 @@ async def list_scraping_jobs(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     status: Optional[str] = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     List scraping jobs with pagination
@@ -86,7 +89,8 @@ async def list_scraping_jobs(
 @router.get("/jobs/{job_id}", response_model=ScrapingJobResponse)
 async def get_scraping_job(
     job_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Get scraping job by ID
@@ -105,7 +109,8 @@ async def get_scraping_job(
 @router.delete("/jobs/{job_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def cancel_scraping_job(
     job_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Cancel a running scraping job

@@ -106,6 +106,8 @@ class ScrapingJobResponse(BaseModel):
     """Schema for scraping job response"""
     id: int
     job_name: Optional[str]
+    city: str
+    industry: str
     status: str
     progress: float
     results_count: int

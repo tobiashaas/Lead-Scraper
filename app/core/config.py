@@ -16,6 +16,21 @@ class Settings(BaseSettings):
         case_sensitive=False
     )
     
+    # Application
+    app_name: str = Field(default="KR Lead Scraper API", description="Application Name")
+    app_version: str = Field(default="1.0.0", description="Application Version")
+    environment: str = Field(default="development", description="Environment (development, staging, production)")
+    debug: bool = Field(default=True, description="Debug Mode")
+    
+    # Security & JWT
+    secret_key: str = Field(
+        default="your-secret-key-change-in-production-min-32-chars",
+        description="Secret key for JWT token generation"
+    )
+    algorithm: str = Field(default="HS256", description="JWT Algorithm")
+    access_token_expire_minutes: int = Field(default=30, description="Access token expiration (minutes)")
+    refresh_token_expire_days: int = Field(default=7, description="Refresh token expiration (days)")
+    
     # Database
     database_url: str = Field(
         default="postgresql://kr_user:kr_password_change_in_production@localhost:5432/kr_leads",
@@ -65,6 +80,13 @@ class Settings(BaseSettings):
     log_max_bytes: int = Field(default=10485760, description="Max log file size (10MB)")
     log_backup_count: int = Field(default=5, description="Number of log backups")
     
+    # Sentry Error Tracking
+    sentry_dsn: str = Field(default="", description="Sentry DSN for error tracking")
+    sentry_environment: str = Field(default="development", description="Sentry environment")
+    sentry_traces_sample_rate: float = Field(default=1.0, description="Sentry traces sample rate (0.0-1.0)")
+    sentry_profiles_sample_rate: float = Field(default=1.0, description="Sentry profiles sample rate (0.0-1.0)")
+    sentry_enabled: bool = Field(default=False, description="Enable Sentry error tracking")
+    
     # Environment
     debug: bool = Field(default=True, description="Debug mode")
     environment: str = Field(default="development", description="Environment")
@@ -78,6 +100,16 @@ class Settings(BaseSettings):
     crawl4ai_enabled: bool = Field(default=True, description="Enable Crawl4AI scraping")
     crawl4ai_word_count_threshold: int = Field(default=10, description="Minimum word count")
     crawl4ai_max_retries: int = Field(default=3, description="Max retries for Crawl4AI")
+    
+    @property
+    def database_url_psycopg3(self) -> str:
+        """
+        Konvertiert DATABASE_URL für psycopg3 (SQLAlchemy 2.0+)
+        postgresql:// -> postgresql+psycopg://
+        """
+        if self.database_url.startswith("postgresql://"):
+            return self.database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+        return self.database_url
 
 
 # Global Settings Instance

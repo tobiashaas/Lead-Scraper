@@ -35,6 +35,14 @@ googlemaps==4.10.0
 stem==1.8.2
 pysocks==1.7.1
 
+# Security & Authentication
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.6
+
+# Error Tracking & Monitoring
+sentry-sdk[fastapi]==1.40.0
+
 # Data Processing & Validation
 fuzzywuzzy==0.18.0
 python-Levenshtein==0.23.0
