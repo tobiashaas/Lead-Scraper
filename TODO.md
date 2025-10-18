@@ -50,9 +50,9 @@
 ### API Features
 - [ ] Pagination für alle List-Endpoints testen
 - [ ] Filtering & Sorting verbessern
-- [ ] Bulk Operations (Bulk Update, Bulk Delete)
-- [ ] Export Endpoints (CSV, Excel)
-- [ ] Webhook Support für Job Completion
+- [x] Bulk Operations (Bulk Update, Bulk Delete) ✅
+- [x] Export Endpoints (CSV, JSON) ✅
+- [x] Webhook Support für Job Completion ✅
 - [ ] API Versioning Strategy
 - [ ] API Documentation verbessern
 
@@ -66,7 +66,7 @@
 - [ ] CAPTCHA Handling verbessern
 
 ### Data Quality
-- [ ] Lead Scoring Algorithmus implementieren
+- [x] Lead Scoring Algorithmus implementieren ✅
 - [ ] Duplicate Detection automatisieren
 - [ ] Data Enrichment Pipeline
 - [ ] Email Verification Service
