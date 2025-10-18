@@ -76,6 +76,14 @@ class Settings(BaseSettings):
     api_port: int = Field(default=8000, description="API Port")
     api_reload: bool = Field(default=True, description="Enable auto-reload")
 
+    # CORS Configuration
+    cors_origins: str = Field(
+        default="http://localhost:3000,http://localhost:8080",
+        description="Comma-separated list of allowed CORS origins",
+    )
+    cors_allow_credentials: bool = Field(default=True, description="Allow credentials in CORS")
+    cors_max_age: int = Field(default=600, description="CORS preflight cache duration (seconds)")
+
     # Logging
     log_level: str = Field(default="INFO", description="Logging level")
     log_file: str = Field(default="logs/scraper.log", description="Log file path")
@@ -116,6 +124,15 @@ class Settings(BaseSettings):
         if self.database_url.startswith("postgresql://"):
             return self.database_url.replace("postgresql://", "postgresql+psycopg://", 1)
         return self.database_url
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        """
+        Konvertiert CORS origins string zu Liste
+        """
+        if self.cors_origins == "*":
+            return ["*"]
+        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
 
 # Global Settings Instance
