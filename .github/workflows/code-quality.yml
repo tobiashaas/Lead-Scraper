@@ -27,7 +27,7 @@ jobs:
     
     - name: Run Black (Code Formatter Check)
       run: |
-        black --check app/ tests/ || true
+        black --check . || echo "⚠️ Black would reformat some files (non-blocking)"
         echo "✅ Black formatting check completed"
     
     - name: Run isort (Import Sorting Check)
