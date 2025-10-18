@@ -74,7 +74,7 @@ class ScraperResult:
             if data_fields:
                 existing_fields = set(existing_source.get("fields", []))
                 existing_fields.update(data_fields)
-                existing_source["fields"] = sorted(list(existing_fields))
+                existing_source["fields"] = sorted(existing_fields)
         else:
             # Füge neue Quelle hinzu
             new_source = {"name": source_name, "url": url, "scraped_at": datetime.now().isoformat()}

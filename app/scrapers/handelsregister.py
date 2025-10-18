@@ -114,7 +114,7 @@ class HandelsregisterScraper:
                 element = await page.query_selector(selector)
                 if element:
                     return True
-            except:
+            except Exception:
                 pass
 
         return False

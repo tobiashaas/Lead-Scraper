@@ -237,7 +237,7 @@ async def find_missing_websites(
                 if website:
                     result.website = website
                     # Tracke DuckDuckGo als Quelle
-                    result.add_source("duckduckgo", search_url, ["website"])
+                    result.add_source("duckduckgo", website, ["website"])
                     search_count += 1
                     logger.info(f"Website gefunden für {result.company_name}: {website}")
 

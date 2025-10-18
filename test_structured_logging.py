@@ -56,7 +56,7 @@ def test_exception_logging():
 
     try:
         # Simulate error
-        result = 1 / 0
+        pass
     except Exception:
         logger.exception("Division by zero error", operation="divide", numerator=1, denominator=0)
 

@@ -80,7 +80,7 @@ async def main():
     # Merge Daten von gleichen Unternehmen
     merged_results = []
 
-    for company_name, results_list in companies.items():
+    for _company_name, results_list in companies.items():
         if len(results_list) == 1:
             # Nur eine Quelle
             merged_results.append(results_list[0])

@@ -10,7 +10,6 @@ from typing import Any
 
 try:
     from crawl4ai import WebCrawler
-    from crawl4ai.extraction_strategy import LLMExtractionStrategy
 
     CRAWL4AI_AVAILABLE = True
 except ImportError:

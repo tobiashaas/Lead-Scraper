@@ -35,8 +35,8 @@ def reset_alembic():
                 # Zeige alle Tabellen
                 cur.execute(
                     """
-                    SELECT tablename 
-                    FROM pg_tables 
+                    SELECT tablename
+                    FROM pg_tables
                     WHERE schemaname = 'public'
                     ORDER BY tablename;
                 """

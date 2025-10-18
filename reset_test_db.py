@@ -26,7 +26,7 @@ def reset_test_database():
                 # Prüfe welche Tabellen existieren
                 cur.execute(
                     """
-                    SELECT tablename FROM pg_tables 
+                    SELECT tablename FROM pg_tables
                     WHERE schemaname = 'public'
                 """
                 )

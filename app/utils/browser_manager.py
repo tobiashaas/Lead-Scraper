@@ -107,12 +107,12 @@ class PlaywrightBrowserManager:
             Object.defineProperty(navigator, 'webdriver', {
                 get: () => undefined
             });
-            
+
             // Chrome Runtime verstecken
             window.navigator.chrome = {
                 runtime: {}
             };
-            
+
             // Permissions API überschreiben
             const originalQuery = window.navigator.permissions.query;
             window.navigator.permissions.query = (parameters) => (
@@ -120,12 +120,12 @@ class PlaywrightBrowserManager:
                     Promise.resolve({ state: Notification.permission }) :
                     originalQuery(parameters)
             );
-            
+
             // Plugin Array erweitern (sieht natürlicher aus)
             Object.defineProperty(navigator, 'plugins', {
                 get: () => [1, 2, 3, 4, 5]
             });
-            
+
             // Languages
             Object.defineProperty(navigator, 'languages', {
                 get: () => ['de-DE', 'de', 'en-US', 'en']

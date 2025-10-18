@@ -308,7 +308,7 @@ class Deduplicator:
             duplicates = self.find_duplicates(db, company, limit=5)
 
             # Create candidates
-            for duplicate, similarity in duplicates:
+            for duplicate, _similarity in duplicates:
                 self.create_duplicate_candidate(db, company, duplicate)
                 candidates_created += 1
 
