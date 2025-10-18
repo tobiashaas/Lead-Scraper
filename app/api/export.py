@@ -111,8 +111,8 @@ async def export_companies_csv(
         )
 
     except Exception as e:
-        logger.error(f"CSV Export failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
+        logger.error(f"CSV export failed: {e}")
+        raise HTTPException(status_code=500, detail=f"CSV export failed: {str(e)}") from e
 
 
 @router.get("/companies/json")
@@ -181,8 +181,8 @@ async def export_companies_json(
         }
 
     except Exception as e:
-        logger.error(f"JSON Export failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
+        logger.error(f"JSON export failed: {e}")
+        raise HTTPException(status_code=500, detail=f"JSON export failed: {str(e)}") from e
 
 
 @router.get("/companies/stats")
@@ -260,5 +260,5 @@ async def export_companies_stats(
         }
 
     except Exception as e:
-        logger.error(f"Stats Export failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
+        logger.error(f"Stats export failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Stats export failed: {str(e)}") from e

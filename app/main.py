@@ -10,7 +10,7 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import bulk, companies, export, health, scraping, scoring, webhooks
+from app.api import bulk, companies, export, health, scoring, scraping, webhooks
 from app.core.config import settings
 from app.core.sentry import init_sentry
 from app.database.database import check_db_connection

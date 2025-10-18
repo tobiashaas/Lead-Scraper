@@ -6,9 +6,9 @@ Massenoperationen für Companies (Update, Delete, Status Change)
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import select, update, delete
+from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_active_user, get_db
@@ -117,7 +117,7 @@ async def bulk_update_companies(
     except Exception as e:
         logger.error(f"Bulk update failed: {e}")
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Bulk update failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Bulk update failed: {str(e)}") from e
 
 
 @router.post("/companies/delete")
@@ -191,7 +191,7 @@ async def bulk_delete_companies(
     except Exception as e:
         logger.error(f"Bulk delete failed: {e}")
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Bulk delete failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Bulk delete failed: {str(e)}") from e
 
 
 @router.post("/companies/status")
@@ -261,7 +261,7 @@ async def bulk_change_status(
     except Exception as e:
         logger.error(f"Bulk status change failed: {e}")
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Bulk status change failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Bulk status change failed: {str(e)}") from e
 
 
 @router.post("/companies/restore")
@@ -286,7 +286,7 @@ async def bulk_restore_companies(
         stmt = (
             update(Company)
             .where(Company.id.in_(company_ids))
-            .where(Company.is_active == False)
+            .where(Company.is_active.is_(False))
             .values(is_active=True)
         )
         result = await db.execute(stmt)
@@ -304,4 +304,4 @@ async def bulk_restore_companies(
     except Exception as e:
         logger.error(f"Bulk restore failed: {e}")
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Bulk restore failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Bulk restore failed: {str(e)}") from e

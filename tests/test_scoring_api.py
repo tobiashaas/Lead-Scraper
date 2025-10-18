@@ -8,9 +8,7 @@ from httpx import AsyncClient
 
 
 @pytest.mark.asyncio
-async def test_score_single_company(
-    client: AsyncClient, auth_headers: dict, test_company_id: int
-):
+async def test_score_single_company(client: AsyncClient, auth_headers: dict, test_company_id: int):
     """Test einzelne Company bewerten"""
     response = await client.post(
         f"/api/v1/scoring/companies/{test_company_id}", headers=auth_headers
@@ -36,9 +34,7 @@ async def test_score_single_company(
 @pytest.mark.asyncio
 async def test_score_nonexistent_company(client: AsyncClient, auth_headers: dict):
     """Test Scoring für nicht existierende Company"""
-    response = await client.post(
-        "/api/v1/scoring/companies/999999", headers=auth_headers
-    )
+    response = await client.post("/api/v1/scoring/companies/999999", headers=auth_headers)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -90,7 +86,7 @@ async def test_scoring_stats(client: AsyncClient, auth_headers: dict):
     assert "top_companies" in data
     assert "bottom_companies" in data
 
-    assert isinstance(data["average_score"], (int, float))
+    assert isinstance(data["average_score"], int | float)
     assert isinstance(data["top_companies"], list)
     assert isinstance(data["bottom_companies"], list)
 

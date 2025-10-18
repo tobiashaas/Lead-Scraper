@@ -10,9 +10,7 @@ from httpx import AsyncClient
 @pytest.mark.asyncio
 async def test_export_companies_csv(client: AsyncClient, auth_headers: dict):
     """Test CSV Export"""
-    response = await client.get(
-        "/api/v1/export/companies/csv?limit=10", headers=auth_headers
-    )
+    response = await client.get("/api/v1/export/companies/csv?limit=10", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     assert response.headers["content-type"] == "text/csv; charset=utf-8"
@@ -29,9 +27,7 @@ async def test_export_companies_csv(client: AsyncClient, auth_headers: dict):
 @pytest.mark.asyncio
 async def test_export_companies_json(client: AsyncClient, auth_headers: dict):
     """Test JSON Export"""
-    response = await client.get(
-        "/api/v1/export/companies/json?limit=10", headers=auth_headers
-    )
+    response = await client.get("/api/v1/export/companies/json?limit=10", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -45,9 +41,7 @@ async def test_export_companies_json(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_export_companies_json_with_filters(
-    client: AsyncClient, auth_headers: dict
-):
+async def test_export_companies_json_with_filters(client: AsyncClient, auth_headers: dict):
     """Test JSON Export mit Filtern"""
     response = await client.get(
         "/api/v1/export/companies/json?lead_status=new&limit=5", headers=auth_headers
@@ -89,9 +83,7 @@ async def test_export_csv_unauthorized(client: AsyncClient):
 @pytest.mark.asyncio
 async def test_export_json_limit_validation(client: AsyncClient, auth_headers: dict):
     """Test JSON Export mit ungültigem Limit"""
-    response = await client.get(
-        "/api/v1/export/companies/json?limit=20000", headers=auth_headers
-    )
+    response = await client.get("/api/v1/export/companies/json?limit=20000", headers=auth_headers)
 
     # Should be rejected or capped at max
     assert response.status_code in [

@@ -144,7 +144,6 @@ class LeadScorer:
 
         # Statistiken updaten
         self.stats["total_scored"] += 1
-        quality_key = quality.replace("_", "_")  # low_quality bleibt low_quality
         if f"{quality}_leads" in self.stats:
             self.stats[f"{quality}_leads"] += 1
         else:

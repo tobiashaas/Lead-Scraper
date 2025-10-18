@@ -8,9 +8,8 @@ from datetime import datetime
 from typing import Any
 
 import httpx
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from pydantic import BaseModel, HttpUrl
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_active_user, get_db
@@ -101,7 +100,7 @@ async def create_webhook(
 
     except Exception as e:
         logger.error(f"Webhook creation failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Webhook creation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Webhook creation failed: {str(e)}") from e
 
 
 @router.get("/", response_model=list[WebhookResponse])

@@ -85,7 +85,7 @@ async def score_single_company(
         raise
     except Exception as e:
         logger.error(f"Scoring failed for company {company_id}: {e}")
-        raise HTTPException(status_code=500, detail=f"Scoring failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Scoring failed: {str(e)}") from e
 
 
 @router.post("/companies/bulk")
@@ -182,7 +182,7 @@ async def score_multiple_companies(
 
     except Exception as e:
         logger.error(f"Bulk scoring failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Bulk scoring failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Bulk scoring failed: {str(e)}") from e
 
 
 @router.get("/stats")
@@ -256,4 +256,4 @@ async def get_scoring_stats(
 
     except Exception as e:
         logger.error(f"Stats retrieval failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Stats failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Stats failed: {str(e)}") from e

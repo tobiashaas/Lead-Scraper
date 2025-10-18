@@ -149,9 +149,7 @@ async def test_bulk_update_empty_ids(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_bulk_update_nonexistent_companies(
-    client: AsyncClient, auth_headers: dict
-):
+async def test_bulk_update_nonexistent_companies(client: AsyncClient, auth_headers: dict):
     """Test Bulk Update mit nicht existierenden Companies"""
     request_data = {
         "company_ids": [999998, 999999],
