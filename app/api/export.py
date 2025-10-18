@@ -32,9 +32,9 @@ async def export_companies_csv(
 ) -> StreamingResponse:
     """
     Exportiert Companies als CSV
-    
+
     **Permissions:** Authenticated users only
-    
+
     **Features:**
     - Filter by lead_status, lead_quality
     - Max 10,000 companies per export
@@ -43,69 +43,73 @@ async def export_companies_csv(
     try:
         # Query mit Filtern
         query = select(Company).limit(limit)
-        
+
         if lead_status:
             query = query.where(Company.lead_status == lead_status)
         if lead_quality:
             query = query.where(Company.lead_quality == lead_quality)
-        
+
         result = await db.execute(query)
         companies = result.scalars().all()
-        
+
         logger.info(f"Exporting {len(companies)} companies to CSV (user: {current_user.username})")
-        
+
         # CSV in Memory erstellen
         output = io.StringIO()
         writer = csv.writer(output)
-        
+
         # Header
-        writer.writerow([
-            "ID",
-            "Name",
-            "City",
-            "Street",
-            "Postal Code",
-            "Phone",
-            "Email",
-            "Website",
-            "Industry",
-            "Lead Status",
-            "Lead Quality",
-            "Lead Score",
-            "Created At",
-            "Updated At",
-        ])
-        
+        writer.writerow(
+            [
+                "ID",
+                "Name",
+                "City",
+                "Street",
+                "Postal Code",
+                "Phone",
+                "Email",
+                "Website",
+                "Industry",
+                "Lead Status",
+                "Lead Quality",
+                "Lead Score",
+                "Created At",
+                "Updated At",
+            ]
+        )
+
         # Daten
         for company in companies:
-            writer.writerow([
-                company.id,
-                company.name,
-                company.city,
-                company.street,
-                company.postal_code,
-                company.phone,
-                company.email,
-                company.website,
-                company.industry,
-                company.lead_status,
-                company.lead_quality,
-                company.lead_score,
-                company.created_at.isoformat() if company.created_at else "",
-                company.updated_at.isoformat() if company.updated_at else "",
-            ])
-        
+            writer.writerow(
+                [
+                    company.id,
+                    company.name,
+                    company.city,
+                    company.street,
+                    company.postal_code,
+                    company.phone,
+                    company.email,
+                    company.website,
+                    company.industry,
+                    company.lead_status,
+                    company.lead_quality,
+                    company.lead_score,
+                    company.created_at.isoformat() if company.created_at else "",
+                    company.updated_at.isoformat() if company.updated_at else "",
+                ]
+            )
+
         # Stream Response
         output.seek(0)
-        
+
         filename = f"companies_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
-        
+
         return StreamingResponse(
             iter([output.getvalue()]),
             media_type="text/csv",
             headers={"Content-Disposition": f"attachment; filename={filename}"},
         )
-        
+
     except Exception as e:
         logger.error(f"CSV Export failed: {e}")
         raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
@@ -121,9 +125,9 @@ async def export_companies_json(
 ) -> dict[str, Any]:
     """
     Exportiert Companies als JSON
-    
+
     **Permissions:** Authenticated users only
-    
+
     **Features:**
     - Filter by lead_status, lead_quality
     - Max 10,000 companies per export
@@ -132,37 +136,39 @@ async def export_companies_json(
     try:
         # Query mit Filtern
         query = select(Company).limit(limit)
-        
+
         if lead_status:
             query = query.where(Company.lead_status == lead_status)
         if lead_quality:
             query = query.where(Company.lead_quality == lead_quality)
-        
+
         result = await db.execute(query)
         companies = result.scalars().all()
-        
+
         logger.info(f"Exporting {len(companies)} companies to JSON (user: {current_user.username})")
-        
+
         # Konvertiere zu Dict
         companies_data = []
         for company in companies:
-            companies_data.append({
-                "id": company.id,
-                "name": company.name,
-                "city": company.city,
-                "street": company.street,
-                "postal_code": company.postal_code,
-                "phone": company.phone,
-                "email": company.email,
-                "website": company.website,
-                "industry": company.industry,
-                "lead_status": company.lead_status,
-                "lead_quality": company.lead_quality,
-                "lead_score": company.lead_score,
-                "created_at": company.created_at.isoformat() if company.created_at else None,
-                "updated_at": company.updated_at.isoformat() if company.updated_at else None,
-            })
-        
+            companies_data.append(
+                {
+                    "id": company.id,
+                    "name": company.name,
+                    "city": company.city,
+                    "street": company.street,
+                    "postal_code": company.postal_code,
+                    "phone": company.phone,
+                    "email": company.email,
+                    "website": company.website,
+                    "industry": company.industry,
+                    "lead_status": company.lead_status,
+                    "lead_quality": company.lead_quality,
+                    "lead_score": company.lead_score,
+                    "created_at": company.created_at.isoformat() if company.created_at else None,
+                    "updated_at": company.updated_at.isoformat() if company.updated_at else None,
+                }
+            )
+
         return {
             "total": len(companies_data),
             "exported_at": datetime.now().isoformat(),
@@ -173,7 +179,7 @@ async def export_companies_json(
             },
             "companies": companies_data,
         }
-        
+
     except Exception as e:
         logger.error(f"JSON Export failed: {e}")
         raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
@@ -186,9 +192,9 @@ async def export_companies_stats(
 ) -> dict[str, Any]:
     """
     Exportiert Company Statistiken
-    
+
     **Permissions:** Authenticated users only
-    
+
     **Returns:**
     - Total companies
     - Breakdown by lead_status
@@ -198,26 +204,26 @@ async def export_companies_stats(
     """
     try:
         from sqlalchemy import func
-        
+
         # Total Count
         total_query = select(func.count(Company.id))
         total_result = await db.execute(total_query)
         total = total_result.scalar()
-        
+
         # By Lead Status
-        status_query = select(
-            Company.lead_status, func.count(Company.id)
-        ).group_by(Company.lead_status)
+        status_query = select(Company.lead_status, func.count(Company.id)).group_by(
+            Company.lead_status
+        )
         status_result = await db.execute(status_query)
         by_status = {status: count for status, count in status_result.all()}
-        
+
         # By Lead Quality
-        quality_query = select(
-            Company.lead_quality, func.count(Company.id)
-        ).group_by(Company.lead_quality)
+        quality_query = select(Company.lead_quality, func.count(Company.id)).group_by(
+            Company.lead_quality
+        )
         quality_result = await db.execute(quality_query)
         by_quality = {quality: count for quality, count in quality_result.all()}
-        
+
         # Top Industries
         industry_query = (
             select(Company.industry, func.count(Company.id))
@@ -228,10 +234,9 @@ async def export_companies_stats(
         )
         industry_result = await db.execute(industry_query)
         top_industries = [
-            {"industry": industry, "count": count}
-            for industry, count in industry_result.all()
+            {"industry": industry, "count": count} for industry, count in industry_result.all()
         ]
-        
+
         # Top Cities
         city_query = (
             select(Company.city, func.count(Company.id))
@@ -241,12 +246,10 @@ async def export_companies_stats(
             .limit(10)
         )
         city_result = await db.execute(city_query)
-        top_cities = [
-            {"city": city, "count": count} for city, count in city_result.all()
-        ]
-        
+        top_cities = [{"city": city, "count": count} for city, count in city_result.all()]
+
         logger.info(f"Exported company stats (user: {current_user.username})")
-        
+
         return {
             "total_companies": total,
             "by_lead_status": by_status,
@@ -255,7 +258,7 @@ async def export_companies_stats(
             "top_cities": top_cities,
             "exported_at": datetime.now().isoformat(),
         }
-        
+
     except Exception as e:
         logger.error(f"Stats Export failed: {e}")
         raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")

@@ -27,9 +27,9 @@ async def score_single_company(
 ) -> dict[str, Any]:
     """
     Bewertet eine einzelne Company und updated den Score
-    
+
     **Permissions:** Authenticated users only
-    
+
     **Returns:**
     - score: Lead Score (0-100)
     - quality: Qualitätskategorie (hot/warm/cold/low_quality)
@@ -40,45 +40,47 @@ async def score_single_company(
         # Company laden
         result = await db.execute(select(Company).where(Company.id == company_id))
         company = result.scalar_one_or_none()
-        
+
         if not company:
             raise HTTPException(status_code=404, detail="Company not found")
-        
+
         # Company Daten für Scoring vorbereiten
         company_data = {
             "name": company.name,
             "email": company.email,
             "phone": company.phone,
             "website": company.website,
-            "address": f"{company.street}, {company.postal_code} {company.city}" if company.street else None,
+            "address": f"{company.street}, {company.postal_code} {company.city}"
+            if company.street
+            else None,
             "city": company.city,
             "industry": company.industry,
             "team_size": None,  # TODO: Add to model
             "technologies": [],  # TODO: Add to model
             "directors": [],  # TODO: Add to model
         }
-        
+
         # Lead Scoring durchführen
         scoring_result = score_company(company_data)
-        
+
         # Score in DB speichern
         company.lead_score = scoring_result["score"]
         company.lead_quality = scoring_result["quality"]
-        
+
         await db.commit()
         await db.refresh(company)
-        
+
         logger.info(
             f"Company scored: {company.name} (ID: {company_id}) - "
             f"Score: {scoring_result['score']} ({scoring_result['quality']})"
         )
-        
+
         return {
             "company_id": company_id,
             "company_name": company.name,
             **scoring_result,
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -97,14 +99,14 @@ async def score_multiple_companies(
 ) -> dict[str, Any]:
     """
     Bewertet mehrere Companies auf einmal
-    
+
     **Permissions:** Authenticated users only
-    
+
     **Options:**
     - Specific company_ids: Score nur diese Companies
     - Filters: Score alle Companies die Filter matchen
     - Limit: Max Anzahl zu bewertender Companies
-    
+
     **Returns:**
     - total_scored: Anzahl bewerteter Companies
     - results: Liste mit Scoring-Ergebnissen
@@ -113,7 +115,7 @@ async def score_multiple_companies(
     try:
         scorer = LeadScorer()
         results = []
-        
+
         # Query aufbauen
         if company_ids:
             # Spezifische Companies
@@ -121,17 +123,17 @@ async def score_multiple_companies(
         else:
             # Mit Filtern
             query = select(Company).limit(limit)
-            
+
             if lead_status:
                 query = query.where(Company.lead_status == lead_status)
             if lead_quality:
                 query = query.where(Company.lead_quality == lead_quality)
-        
+
         result = await db.execute(query)
         companies = result.scalars().all()
-        
+
         logger.info(f"Bulk scoring {len(companies)} companies...")
-        
+
         # Alle Companies bewerten
         for company in companies:
             company_data = {
@@ -139,41 +141,45 @@ async def score_multiple_companies(
                 "email": company.email,
                 "phone": company.phone,
                 "website": company.website,
-                "address": f"{company.street}, {company.postal_code} {company.city}" if company.street else None,
+                "address": f"{company.street}, {company.postal_code} {company.city}"
+                if company.street
+                else None,
                 "city": company.city,
                 "industry": company.industry,
                 "team_size": None,
                 "technologies": [],
                 "directors": [],
             }
-            
+
             scoring_result = scorer.score_lead(company_data)
-            
+
             # Score in DB speichern
             company.lead_score = scoring_result["score"]
             company.lead_quality = scoring_result["quality"]
-            
-            results.append({
-                "company_id": company.id,
-                "company_name": company.name,
-                "score": scoring_result["score"],
-                "quality": scoring_result["quality"],
-            })
-        
+
+            results.append(
+                {
+                    "company_id": company.id,
+                    "company_name": company.name,
+                    "score": scoring_result["score"],
+                    "quality": scoring_result["quality"],
+                }
+            )
+
         # Commit alle Änderungen
         await db.commit()
-        
+
         # Statistiken
         stats = scorer.get_stats()
-        
+
         logger.info(f"Bulk scoring completed: {len(results)} companies scored")
-        
+
         return {
             "total_scored": len(results),
             "results": results,
             "stats": stats,
         }
-        
+
     except Exception as e:
         logger.error(f"Bulk scoring failed: {e}")
         raise HTTPException(status_code=500, detail=f"Bulk scoring failed: {str(e)}")
@@ -186,9 +192,9 @@ async def get_scoring_stats(
 ) -> dict[str, Any]:
     """
     Gibt Lead Scoring Statistiken zurück
-    
+
     **Permissions:** Authenticated users only
-    
+
     **Returns:**
     - Distribution nach Quality
     - Durchschnittlicher Score
@@ -196,24 +202,24 @@ async def get_scoring_stats(
     """
     try:
         from sqlalchemy import func
-        
+
         # Total Companies
         total_query = select(func.count(Company.id))
         total_result = await db.execute(total_query)
         total = total_result.scalar()
-        
+
         # Average Score
         avg_query = select(func.avg(Company.lead_score))
         avg_result = await db.execute(avg_query)
         avg_score = avg_result.scalar() or 0
-        
+
         # Distribution by Quality
-        quality_query = select(
-            Company.lead_quality, func.count(Company.id)
-        ).group_by(Company.lead_quality)
+        quality_query = select(Company.lead_quality, func.count(Company.id)).group_by(
+            Company.lead_quality
+        )
         quality_result = await db.execute(quality_query)
         by_quality = {quality: count for quality, count in quality_result.all()}
-        
+
         # Top 10 Companies
         top_query = (
             select(Company)
@@ -226,7 +232,7 @@ async def get_scoring_stats(
             {"id": c.id, "name": c.name, "score": c.lead_score, "quality": c.lead_quality}
             for c in top_result.scalars().all()
         ]
-        
+
         # Bottom 10 Companies
         bottom_query = (
             select(Company)
@@ -239,7 +245,7 @@ async def get_scoring_stats(
             {"id": c.id, "name": c.name, "score": c.lead_score, "quality": c.lead_quality}
             for c in bottom_result.scalars().all()
         ]
-        
+
         return {
             "total_companies": total,
             "average_score": round(avg_score, 2),
@@ -247,7 +253,7 @@ async def get_scoring_stats(
             "top_companies": top_companies,
             "bottom_companies": bottom_companies,
         }
-        
+
     except Exception as e:
         logger.error(f"Stats retrieval failed: {e}")
         raise HTTPException(status_code=500, detail=f"Stats failed: {str(e)}")

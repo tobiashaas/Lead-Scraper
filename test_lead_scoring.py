@@ -43,22 +43,22 @@ test_companies = [
 for i, company in enumerate(test_companies, 1):
     print(f"Test {i}: {company.get('name', 'Unknown')}")
     print("-" * 80)
-    
+
     result = scorer.score_lead(company)
-    
+
     print(f"✅ Score: {result['score']}/100")
     print(f"   Quality: {result['quality'].upper()}")
     print()
     print("   Breakdown:")
-    for category, details in result['breakdown'].items():
+    for category, details in result["breakdown"].items():
         print(f"     - {category}: {details}")
-    
-    if result['recommendations']:
+
+    if result["recommendations"]:
         print()
         print("   Recommendations:")
-        for rec in result['recommendations']:
+        for rec in result["recommendations"]:
             print(f"     • {rec}")
-    
+
     print()
     print()
 
