@@ -16,14 +16,14 @@
 - [x] Rate Limiting für API Endpoints ✅
 - [x] Input Validation für alle Endpoints ✅
 - [x] SQL Injection Prevention überprüfen (SQLAlchemy ORM) ✅
-- [ ] CORS Konfiguration für Production
+- [x] CORS Konfiguration für Production ✅
 - [ ] Secrets Management (z.B. AWS Secrets Manager)
 - [x] Security Audit durchführen (Bandit, alle Workflows grün) ✅
 
 ### Database
 - [x] Erste Alembic Migration erstellen (`make db-migrate`)
 - [x] psycopg3 Integration (SQLAlchemy 2.0+)
-- [ ] Indizes für häufige Queries optimieren
+- [x] Indizes für häufige Queries optimieren ✅
 - [ ] Database Backup Strategy implementieren
 - [ ] Connection Pooling testen
 - [ ] Query Performance optimieren
