@@ -209,7 +209,7 @@ class AIWebScraper:
 
             logger.info(f"Found {len(result)} employees from {url}")
             return result
-            
+
         except Exception as e:
             logger.error(f"Error extracting employees from {url}: {e}")
             return []
@@ -281,9 +281,9 @@ class AIWebScraper:
             content = self._fetch_content(url)
             if not content:
                 return []
-            
+
             result = self._query_ollama(prompt, content)
-            
+
             # Ensure it's a list
             if isinstance(result, dict):
                 if "services" in result:
@@ -297,7 +297,7 @@ class AIWebScraper:
 
             logger.info(f"Found {len(result)} services from {url}")
             return result
-            
+
         except Exception as e:
             logger.error(f"Error extracting services from {url}: {e}")
             return []
@@ -319,7 +319,7 @@ class AIWebScraper:
             content = self._fetch_content(url)
             if not content:
                 return {"error": "Could not fetch content"}
-            
+
             result = self._query_ollama(prompt, content)
             logger.info(f"Successfully extracted custom data from {url}")
             return result
