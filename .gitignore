@@ -92,3 +92,4 @@ docker-compose.override.yml
 *.pem
 *.key
 secrets/
+torcc  # Tor config (should be in C:\Tor\)
