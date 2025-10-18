@@ -174,7 +174,11 @@ class Crawl4AIOllamaScraper:
                 model=self.model,
                 prompt=prompt,
                 format="json",
-                options={"temperature": 0.1, "num_predict": 1000},  # Deterministisch  # Max Tokens
+                options={
+                    "temperature": 0.1,  # Deterministisch
+                    "num_predict": 1000,  # Max Tokens
+                    "num_ctx": 2048,  # Context Window
+                },
             )
 
             # Parse JSON Response
@@ -210,9 +214,9 @@ class Crawl4AIOllamaScraper:
         Returns:
             Prompt String
         """
-        # Kürze Content wenn zu lang (max 4000 chars)
-        if len(content) > 4000:
-            content = content[:4000] + "..."
+        # Kürze Content wenn zu lang (max 2000 chars für llama3.2)
+        if len(content) > 2000:
+            content = content[:2000] + "..."
 
         prompt = f"""
 Extract company information from this website content and return valid JSON.
