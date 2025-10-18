@@ -31,10 +31,7 @@ class AIWebScraper:
     """
 
     def __init__(
-        self,
-        model: str = "llama3.2",
-        temperature: float = 0,
-        max_content_length: int = 10000
+        self, model: str = "llama3.2", temperature: float = 0, max_content_length: int = 10000
     ):
         """
         Initialize AI Web Scraper.
@@ -71,31 +68,30 @@ class AIWebScraper:
         """Query Ollama with prompt and content"""
         try:
             # Limit content length
-            limited_content = content[:self.max_content_length]
+            limited_content = content[: self.max_content_length]
 
             response = ollama.chat(
                 model=self.model,
-                messages=[{
-                    'role': 'user',
-                    'content': f'{prompt}\n\nWebsite Content:\n{limited_content}'
-                }],
-                options={'temperature': self.temperature}
+                messages=[
+                    {"role": "user", "content": f"{prompt}\n\nWebsite Content:\n{limited_content}"}
+                ],
+                options={"temperature": self.temperature},
             )
 
-            result_text = response['message']['content']
+            result_text = response["message"]["content"]
 
             # Try to extract JSON from response
             try:
                 # Find JSON in response
-                start = result_text.find('{')
-                end = result_text.rfind('}') + 1
+                start = result_text.find("{")
+                end = result_text.rfind("}") + 1
                 if start >= 0 and end > start:
                     json_str = result_text[start:end]
                     return json.loads(json_str)
 
                 # Try to find JSON array
-                start = result_text.find('[')
-                end = result_text.rfind(']') + 1
+                start = result_text.find("[")
+                end = result_text.rfind("]") + 1
                 if start >= 0 and end > start:
                     json_str = result_text[start:end]
                     return json.loads(json_str)
@@ -193,9 +189,9 @@ class AIWebScraper:
             content = self._fetch_content(url)
             if not content:
                 return []
-            
+
             result = self._query_ollama(prompt, content)
-            
+
             # Ensure it's a list
             if isinstance(result, dict):
                 if "employees" in result:
@@ -247,7 +243,7 @@ class AIWebScraper:
             content = self._fetch_content(url)
             if not content:
                 return {"error": "Could not fetch content"}
-            
+
             result = self._query_ollama(prompt, content)
             logger.info(f"Successfully extracted contact info from {url}")
             return result

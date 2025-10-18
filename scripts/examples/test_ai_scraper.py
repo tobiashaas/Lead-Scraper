@@ -53,7 +53,7 @@ def test_employee_extraction():
     print(f"\n👥 Found {len(employees)} employees:")
     for emp in employees:
         print(f"  - {emp.get('name', 'N/A')} ({emp.get('position', 'N/A')})")
-        if emp.get('email'):
+        if emp.get("email"):
             print(f"    Email: {emp['email']}")
 
     return employees
@@ -153,6 +153,7 @@ def main():
     except Exception as e:
         print(f"\n❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
 
 
