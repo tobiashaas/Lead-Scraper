@@ -48,6 +48,7 @@ data/*.csv
 data/*.json
 data/*.db
 data/*.sqlite
+data/*.html  # Debug HTML files may contain API keys
 
 # Database
 *.db
