@@ -32,9 +32,12 @@ def test_db_engine():
     # Use DATABASE_URL from environment (set by GitHub Actions to SQLite)
     # or create test database URL from settings
     import os
+
     test_db_url = os.getenv("DATABASE_URL")
     if not test_db_url:
-        test_db_url = settings.database_url_psycopg3.replace("/kr_leads", "/kr_leads_test")
+        test_db_url = settings.database_url_psycopg3.replace(
+            "/kr_leads", "/kr_leads_test"
+        )
 
     engine = create_engine(test_db_url, echo=False)
 
