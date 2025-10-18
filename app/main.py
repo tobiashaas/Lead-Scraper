@@ -10,7 +10,7 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import companies, health, scraping
+from app.api import bulk, companies, export, health, scoring, scraping, webhooks
 from app.core.config import settings
 from app.core.sentry import init_sentry
 from app.database.database import check_db_connection
@@ -69,12 +69,25 @@ app.add_middleware(LoggingMiddleware)
 app.add_middleware(RequestIDMiddleware)
 
 # CORS Middleware
+# Production-ready CORS configuration
+# Configure allowed origins via CORS_ORIGINS environment variable
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if settings.debug else ["https://kunze-ritter.de"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=settings.cors_origins_list,
+    allow_credentials=settings.cors_allow_credentials,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=[
+        "Authorization",
+        "Content-Type",
+        "Accept",
+        "Origin",
+        "User-Agent",
+        "DNT",
+        "Cache-Control",
+        "X-Requested-With",
+    ],
+    expose_headers=["Content-Length", "Content-Type", "Content-Disposition"],
+    max_age=settings.cors_max_age,
 )
 
 
@@ -124,6 +137,10 @@ app.include_router(health.router, tags=["Health"])
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(companies.router, prefix="/api/v1/companies", tags=["Companies"])
 app.include_router(scraping.router, prefix="/api/v1/scraping", tags=["Scraping"])
+app.include_router(export.router, prefix="/api/v1", tags=["Export"])
+app.include_router(scoring.router, prefix="/api/v1", tags=["Lead Scoring"])
+app.include_router(bulk.router, prefix="/api/v1", tags=["Bulk Operations"])
+app.include_router(webhooks.router, prefix="/api/v1", tags=["Webhooks"])
 
 
 # Root endpoint
