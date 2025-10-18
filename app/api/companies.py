@@ -166,25 +166,25 @@ async def get_stats(db: Session = Depends(get_db)):
     """
     Get statistics overview
     """
-    total_companies = db.query(func.count(Company.id)).filter(Company.is_active == True).scalar()
+    total_companies = db.query(func.count(Company.id)).filter(Company.is_active).scalar()
 
     by_status = (
         db.query(Company.lead_status, func.count(Company.id))
-        .filter(Company.is_active == True)
+        .filter(Company.is_active)
         .group_by(Company.lead_status)
         .all()
     )
 
     by_quality = (
         db.query(Company.lead_quality, func.count(Company.id))
-        .filter(Company.is_active == True)
+        .filter(Company.is_active)
         .group_by(Company.lead_quality)
         .all()
     )
 
     by_city = (
         db.query(Company.city, func.count(Company.id))
-        .filter(Company.is_active == True)
+        .filter(Company.is_active)
         .group_by(Company.city)
         .order_by(func.count(Company.id).desc())
         .limit(10)

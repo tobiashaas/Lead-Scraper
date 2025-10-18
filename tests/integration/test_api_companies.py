@@ -190,7 +190,7 @@ class TestCompaniesEndpoints:
 
         # Verify company is soft-deleted
         get_response = client.get(f"/api/v1/companies/{company.id}", headers=auth_headers)
-        assert get_response.status_code == 404 or get_response.json()["is_active"] == False
+        assert get_response.status_code == 404 or not get_response.json()["is_active"]
 
     def test_delete_company_not_found(self, client, auth_headers):
         """Test: Delete non-existent company returns 404"""

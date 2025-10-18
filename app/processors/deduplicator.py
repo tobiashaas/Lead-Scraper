@@ -141,7 +141,7 @@ class Deduplicator:
         candidates = (
             db.query(Company)
             .filter(
-                Company.id != company.id, Company.is_active == True, Company.city == company.city
+                Company.id != company.id, Company.is_active, Company.city == company.city
             )
             .all()
         )
@@ -294,7 +294,7 @@ class Deduplicator:
         logger.info("Starting duplicate scan...")
 
         # Get all active companies
-        companies = db.query(Company).filter(Company.is_active == True).all()
+        companies = db.query(Company).filter(Company.is_active).all()
 
         total = len(companies)
         candidates_created = 0
