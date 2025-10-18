@@ -1,0 +1,39 @@
+name: Auto Format Code
+
+on:
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    
+    - name: Install black
+      run: pip install black==23.12.0
+    
+    - name: Format code with black
+      run: black .
+    
+    - name: Commit changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add -A
+        git diff --quiet && git diff --staged --quiet || git commit -m "style: Auto-format code with black [skip ci]"
+    
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
