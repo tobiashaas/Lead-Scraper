@@ -10,9 +10,11 @@ Compatible with Python 3.13!
 """
 
 import json
-from typing import Dict, Any, List, Optional
-import trafilatura
+from typing import Any
+
 import ollama
+import trafilatura
+
 from app.utils.logger import logger
 
 
@@ -46,7 +48,7 @@ class AIWebScraper:
         self.max_content_length = max_content_length
         logger.info(f"AIWebScraper initialized with model: {model}")
 
-    def _fetch_content(self, url: str) -> Optional[str]:
+    def _fetch_content(self, url: str) -> str | None:
         """Fetch and extract content from URL using Trafilatura"""
         try:
             downloaded = trafilatura.fetch_url(url)
@@ -64,7 +66,7 @@ class AIWebScraper:
             logger.error(f"Error fetching content from {url}: {e}")
             return None
 
-    def _query_ollama(self, prompt: str, content: str) -> Dict[str, Any]:
+    def _query_ollama(self, prompt: str, content: str) -> dict[str, Any]:
         """Query Ollama with prompt and content"""
         try:
             # Limit content length
@@ -106,7 +108,7 @@ class AIWebScraper:
             logger.error(f"Error querying Ollama: {e}")
             return {"error": str(e)}
 
-    def extract_company_data(self, url: str) -> Dict[str, Any]:
+    def extract_company_data(self, url: str) -> dict[str, Any]:
         """
         Extract comprehensive company data from website.
 
@@ -156,7 +158,7 @@ class AIWebScraper:
             logger.error(f"Error extracting company data from {url}: {e}")
             return {"error": str(e), "url": url}
 
-    def extract_employees(self, url: str) -> List[Dict[str, str]]:
+    def extract_employees(self, url: str) -> list[dict[str, str]]:
         """
         Extract only employee information from website.
 
@@ -210,7 +212,7 @@ class AIWebScraper:
             logger.error(f"Error extracting employees from {url}: {e}")
             return []
 
-    def extract_contact_info(self, url: str) -> Dict[str, str]:
+    def extract_contact_info(self, url: str) -> dict[str, str]:
         """
         Extract contact information from website.
 
@@ -252,7 +254,7 @@ class AIWebScraper:
             logger.error(f"Error extracting contact info from {url}: {e}")
             return {"error": str(e)}
 
-    def extract_services(self, url: str) -> List[str]:
+    def extract_services(self, url: str) -> list[str]:
         """
         Extract services/products offered by company.
 
@@ -326,7 +328,7 @@ class AIWebScraper:
 
 
 # Convenience function for quick usage
-def scrape_company(url: str, model: str = "llama3.2") -> Dict[str, Any]:
+def scrape_company(url: str, model: str = "llama3.2") -> dict[str, Any]:
     """
     Quick function to scrape company data.
 

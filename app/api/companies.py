@@ -30,7 +30,7 @@ async def list_companies(
     """
     List companies with filters and pagination
     """
-    query = db.query(Company).filter(Company.is_active == True)
+    query = db.query(Company).filter(Company.is_active)
 
     # Filters
     if city:
