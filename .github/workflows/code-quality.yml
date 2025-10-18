@@ -36,14 +36,13 @@ jobs:
         echo "✅ isort check completed"
     
     - name: Run Ruff (Linting)
+      shell: bash {0}  # Run without -e flag
       run: |
-        set +e  # Disable exit on error for this step
         pip install ruff
         # Run Ruff with auto-fix and show issues but don't fail
-        ruff check --fix .
-        ruff check .
+        ruff check --fix . || true
+        ruff check . || true
         echo "✅ Ruff linting completed (warnings are non-blocking)"
-        exit 0  # Always exit successfully
     
     - name: Run mypy (Type Checking)
       run: |
