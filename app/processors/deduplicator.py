@@ -140,9 +140,7 @@ class Deduplicator:
         # Query similar companies (same city, similar name)
         candidates = (
             db.query(Company)
-            .filter(
-                Company.id != company.id, Company.is_active, Company.city == company.city
-            )
+            .filter(Company.id != company.id, Company.is_active, Company.city == company.city)
             .all()
         )
 
