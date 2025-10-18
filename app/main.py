@@ -10,7 +10,7 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import companies, export, health, scraping
+from app.api import companies, export, health, scraping, scoring
 from app.core.config import settings
 from app.core.sentry import init_sentry
 from app.database.database import check_db_connection
@@ -125,6 +125,7 @@ app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(companies.router, prefix="/api/v1/companies", tags=["Companies"])
 app.include_router(scraping.router, prefix="/api/v1/scraping", tags=["Scraping"])
 app.include_router(export.router, prefix="/api/v1", tags=["Export"])
+app.include_router(scoring.router, prefix="/api/v1", tags=["Lead Scoring"])
 
 
 # Root endpoint
