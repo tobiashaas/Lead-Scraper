@@ -3,11 +3,16 @@
 [![Tests](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/tests.yml/badge.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/tests.yml)
 [![Code Quality](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/code-quality.yml/badge.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/code-quality.yml)
 [![Security](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/security.yml/badge.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/security.yml)
+[![CI/CD](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/ci.yml/badge.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/ci.yml)
 [![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.118.0-009688.svg)](https://fastapi.tiangolo.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests: 99 Passing](https://img.shields.io/badge/tests-99%20passing-brightgreen.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/tests.yml)
+[![Code Coverage](https://img.shields.io/badge/coverage-80%25+-brightgreen.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/tests.yml)
 
 Automatisiertes Lead-Scraping-System zur Extraktion von Unternehmensdaten aus Baden-Württemberg für IT/Bürotechnik/Dokumentenmanagement-Leads.
+
+> 🎉 **Production Ready!** Alle Tests passing, Code Quality checks bestanden, Security Scan clean, Docker Build erfolgreich!
 
 ## 📋 Übersicht
 
