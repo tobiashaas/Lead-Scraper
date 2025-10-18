@@ -37,12 +37,13 @@ jobs:
     
     - name: Run Ruff (Linting)
       run: |
+        set +e  # Disable exit on error for this step
         pip install ruff
         # Run Ruff with auto-fix and show issues but don't fail
-        ruff check --fix . || echo "⚠️ Ruff found issues (non-blocking)"
-        ruff check . || echo "⚠️ Ruff found 17 issues (non-blocking)"
+        ruff check --fix .
+        ruff check .
         echo "✅ Ruff linting completed (warnings are non-blocking)"
-        exit 0
+        exit 0  # Always exit successfully
     
     - name: Run mypy (Type Checking)
       run: |
