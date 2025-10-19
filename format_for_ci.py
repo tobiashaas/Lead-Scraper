@@ -5,9 +5,7 @@ import sys
 
 # Run black with exact same settings as CI
 result = subprocess.run(
-    ["black", "--config", "pyproject.toml", "."],
-    capture_output=True,
-    text=True
+    ["black", "--config", "pyproject.toml", "."], capture_output=True, text=True
 )
 
 print(result.stdout)
