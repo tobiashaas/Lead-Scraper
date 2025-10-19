@@ -15,8 +15,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_active_user, get_db
-from app.models.company import Company
-from app.models.user import User
+from app.database.models import Company, User
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/export", tags=["Export"])
