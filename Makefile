@@ -26,8 +26,10 @@ help:
 	@echo "  make run            - Run API server"
 	@echo "  make test           - Run tests"
 	@echo "  make test-cov       - Run tests with coverage"
-	@echo "  make lint           - Run linters"
-	@echo "  make format         - Format code"
+	@echo "  make lint           - Check code quality (Black + Ruff)"
+	@echo "  make format         - Format code (Black + Ruff)"
+	@echo "  make fix            - Auto-fix all code issues"
+	@echo "  make lint-ci        - Lint for CI/CD (GitHub Actions)"
 	@echo "  make clean          - Clean temporary files"
 	@echo ""
 	@echo "Ollama:"
@@ -109,13 +111,25 @@ test-fast:
 
 # Code quality
 lint:
+	@echo "🔍 Running Black check..."
 	black --check .
+	@echo "🔍 Running Ruff check..."
 	ruff check .
-	mypy app --ignore-missing-imports
+	@echo "✅ All linting checks passed!"
 
 format:
+	@echo "🎨 Formatting code with Black..."
 	black .
+	@echo "🔧 Fixing issues with Ruff..."
 	ruff check --fix .
+	@echo "✅ Code formatted successfully!"
+
+fix: format
+	@echo "🚀 All code quality issues fixed!"
+
+lint-ci:
+	black --check --diff .
+	ruff check --output-format=github .
 
 pre-commit:
 	pre-commit run --all-files
