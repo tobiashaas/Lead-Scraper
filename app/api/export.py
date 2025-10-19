@@ -215,14 +215,14 @@ async def export_companies_stats(
             Company.lead_status
         )
         status_result = await db.execute(status_query)
-        by_status = {status: count for status, count in status_result.all()}
+        by_status = dict(status_result.all())
 
         # By Lead Quality
         quality_query = select(Company.lead_quality, func.count(Company.id)).group_by(
             Company.lead_quality
         )
         quality_result = await db.execute(quality_query)
-        by_quality = {quality: count for quality, count in quality_result.all()}
+        by_quality = dict(quality_result.all())
 
         # Top Industries
         industry_query = (

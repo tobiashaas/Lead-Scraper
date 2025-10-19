@@ -218,7 +218,7 @@ async def get_scoring_stats(
             Company.lead_quality
         )
         quality_result = await db.execute(quality_query)
-        by_quality = {quality: count for quality, count in quality_result.all()}
+        by_quality = dict(quality_result.all())
 
         # Top 10 Companies
         top_query = (
