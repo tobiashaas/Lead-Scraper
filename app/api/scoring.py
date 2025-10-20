@@ -63,9 +63,9 @@ async def score_single_company(
             ),
             "city": company.city,
             "industry": company.industry,
-            "team_size": None,  # TODO: Add to model
-            "technologies": [],  # TODO: Add to model
-            "directors": [],  # TODO: Add to model
+            "team_size": company.team_size,
+            "technologies": company.technologies or [],
+            "directors": company.directors or [],
         }
 
         # Lead Scoring durchführen
@@ -156,9 +156,9 @@ async def score_multiple_companies(
                 ),
                 "city": company.city,
                 "industry": company.industry,
-                "team_size": None,
-                "technologies": [],
-                "directors": [],
+                "team_size": company.team_size,
+                "technologies": company.technologies or [],
+                "directors": company.directors or [],
             }
 
             scoring_result = scorer.score_lead(company_data)
