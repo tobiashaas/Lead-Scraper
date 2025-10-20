@@ -1,0 +1,39 @@
+name: Lint & Format Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black ruff
+    
+    - name: Run Black
+      run: |
+        black --check --diff .
+    
+    - name: Run Ruff
+      run: |
+        ruff check --output-format=github .
+    
+    - name: Check if formatting is needed
+      if: failure()
+      run: |
+        echo "❌ Code formatting issues found!"
+        echo "Run 'make fix' locally to auto-fix all issues"
+        exit 1

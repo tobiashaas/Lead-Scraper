@@ -7,6 +7,7 @@ import asyncio
 from collections.abc import Generator
 
 import pytest
+import pytest_asyncio
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -18,7 +19,8 @@ from app.database.models import Base, User, UserRole
 @pytest.fixture(scope="session")
 def event_loop():
     """Create an instance of the default event loop for the test session."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
+    policy = asyncio.get_event_loop_policy()
+    loop = policy.new_event_loop()
     yield loop
     loop.close()
 
@@ -148,6 +150,34 @@ def client(db_session):
     app.dependency_overrides.clear()
 
 
+@pytest_asyncio.fixture(scope="function")
+async def async_client(db_session):
+    """
+    FastAPI Async Test Client with database session override
+    Uses pytest_asyncio.fixture decorator for proper async handling
+    """
+    from httpx import AsyncClient
+
+    from app.database.database import get_db
+    from app.main import app
+
+    # Override to return the same session instance
+    def override_get_db():
+        try:
+            yield db_session
+        finally:
+            pass
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    # Create client
+    async with AsyncClient(app=app, base_url="http://test", timeout=30.0) as client:
+        yield client
+
+    # Cleanup
+    app.dependency_overrides.clear()
+
+
 @pytest.fixture(autouse=True)
 def reset_database(db_session):
     """
@@ -233,6 +263,30 @@ def auth_token(client, auth_user):
 
 
 @pytest.fixture
-def auth_headers(auth_token):
-    """Get authentication headers"""
-    return {"Authorization": f"Bearer {auth_token}"}
+def auth_headers(auth_user):
+    """Get authentication headers - generates token directly"""
+    from app.core.security import create_access_token
+
+    access_token = create_access_token(data={"sub": auth_user.username})
+    return {"Authorization": f"Bearer {access_token}"}
+
+
+@pytest.fixture
+def test_company_id(db_session, auth_user):
+    """Create a test company and return its ID"""
+    from app.database.models import Company
+
+    company = Company(
+        company_name="Test Company GmbH",
+        email="test@company.de",
+        phone="+49 711 123456",
+        website="https://www.testcompany.de",
+        street="Teststraße 1",
+        postal_code="70173",
+        city="Stuttgart",
+        industry="Software Development",
+    )
+    db_session.add(company)
+    db_session.commit()
+    db_session.refresh(company)
+    return company.id
