@@ -6,7 +6,7 @@ Automatische Lead-Bewertung und Qualitätsanalyse
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -34,6 +34,8 @@ class BulkScoreRequest(BaseModel):
     """Bulk Score Request Schema"""
 
     company_ids: list[int] | None = None
+
+    model_config = {"extra": "forbid"}  # Reject unknown fields
 
 
 @router.post("/companies/{company_id}")
@@ -115,7 +117,7 @@ async def score_single_company(
 
 @router.post("/companies/bulk")
 async def score_multiple_companies(
-    body: BulkScoreRequest = BulkScoreRequest(),
+    body: BulkScoreRequest = Body(default_factory=BulkScoreRequest),
     lead_status: str | None = Query(None, description="Filter by lead status"),
     lead_quality: str | None = Query(None, description="Filter by lead quality"),
     limit: int = Query(100, ge=1, le=1000, description="Max companies to score"),
