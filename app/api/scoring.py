@@ -142,7 +142,7 @@ async def score_multiple_companies(
         results = []
 
         # Query aufbauen
-        if body.company_ids:
+        if body.company_ids and len(body.company_ids) > 0:
             # Spezifische Companies
             query = select(Company).where(Company.id.in_(body.company_ids))
         else:
