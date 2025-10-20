@@ -55,7 +55,6 @@ def test_bulk_score_with_filters(client: TestClient, auth_headers: dict):
     """Test Bulk Scoring mit Filtern"""
     response = client.post(
         "/api/v1/scoring/companies/bulk?lead_status=new&limit=5",
-        json={},
         headers=auth_headers,
     )
 
@@ -93,7 +92,7 @@ def test_score_company_unauthorized(client: TestClient):
 
 def test_bulk_score_empty_list(client: TestClient, auth_headers: dict):
     """Test Bulk Scoring mit leerer Liste"""
-    response = client.post("/api/v1/scoring/companies/bulk", json={}, headers=auth_headers)
+    response = client.post("/api/v1/scoring/companies/bulk", headers=auth_headers)
 
     # Should handle gracefully
     assert response.status_code in [status.HTTP_200_OK, status.HTTP_400_BAD_REQUEST]
