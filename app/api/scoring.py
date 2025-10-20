@@ -12,11 +12,22 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, get_db
-from app.database.models import Company, User
+from app.database.models import Company, LeadQuality, User
 from app.utils.lead_scorer import LeadScorer, score_company
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/scoring", tags=["Lead Scoring"])
+
+
+def map_quality_to_enum(quality_str: str) -> LeadQuality:
+    """Maps scoring quality string to LeadQuality enum"""
+    quality_map = {
+        "hot": LeadQuality.A,
+        "warm": LeadQuality.B,
+        "cold": LeadQuality.C,
+        "low_quality": LeadQuality.D,
+    }
+    return quality_map.get(quality_str, LeadQuality.UNKNOWN)
 
 
 class BulkScoreRequest(BaseModel):
@@ -73,7 +84,7 @@ async def score_single_company(
 
         # Score in DB speichern
         company.lead_score = scoring_result["score"]
-        company.lead_quality = scoring_result["quality"]
+        company.lead_quality = map_quality_to_enum(scoring_result["quality"])
 
         db.commit()
         db.refresh(company)
@@ -165,7 +176,7 @@ async def score_multiple_companies(
 
             # Score in DB speichern
             company.lead_score = scoring_result["score"]
-            company.lead_quality = scoring_result["quality"]
+            company.lead_quality = map_quality_to_enum(scoring_result["quality"])
 
             results.append(
                 {
