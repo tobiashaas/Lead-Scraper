@@ -48,13 +48,17 @@ async def export_companies_csv(
                 status_enum = LeadStatus(lead_status)
                 query = query.where(Company.lead_status == status_enum)
             except ValueError:
-                raise HTTPException(status_code=400, detail=f"Invalid lead_status: {lead_status}")
+                raise HTTPException(
+                    status_code=400, detail=f"Invalid lead_status: {lead_status}"
+                ) from None
         if lead_quality:
             try:
                 quality_enum = LeadQuality(lead_quality)
                 query = query.where(Company.lead_quality == quality_enum)
             except ValueError:
-                raise HTTPException(status_code=400, detail=f"Invalid lead_quality: {lead_quality}")
+                raise HTTPException(
+                    status_code=400, detail=f"Invalid lead_quality: {lead_quality}"
+                ) from None
 
         result = db.execute(query)
         companies = result.scalars().all()
@@ -149,13 +153,17 @@ async def export_companies_json(
                 status_enum = LeadStatus(lead_status)
                 query = query.where(Company.lead_status == status_enum)
             except ValueError:
-                raise HTTPException(status_code=400, detail=f"Invalid lead_status: {lead_status}")
+                raise HTTPException(
+                    status_code=400, detail=f"Invalid lead_status: {lead_status}"
+                ) from None
         if lead_quality:
             try:
                 quality_enum = LeadQuality(lead_quality)
                 query = query.where(Company.lead_quality == quality_enum)
             except ValueError:
-                raise HTTPException(status_code=400, detail=f"Invalid lead_quality: {lead_quality}")
+                raise HTTPException(
+                    status_code=400, detail=f"Invalid lead_quality: {lead_quality}"
+                ) from None
 
         result = db.execute(query)
         companies = result.scalars().all()
