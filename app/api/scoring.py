@@ -35,9 +35,7 @@ class BulkScoreRequest(BaseModel):
 
     company_ids: list[int] | None = None
 
-    class Config:
-        # Allow empty body
-        extra = "allow"
+    model_config = {"extra": "allow"}
 
 
 @router.post("/companies/{company_id}")
