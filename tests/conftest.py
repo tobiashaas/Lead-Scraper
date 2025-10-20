@@ -161,7 +161,10 @@ async def async_client(db_session):
 
     # Override to return the same session instance
     def override_get_db():
-        yield db_session
+        try:
+            yield db_session
+        finally:
+            pass
 
     app.dependency_overrides[get_db] = override_get_db
 
@@ -271,7 +274,7 @@ def test_company_id(db_session, auth_user):
     from app.database.models import Company
 
     company = Company(
-        name="Test Company GmbH",
+        company_name="Test Company GmbH",
         email="test@company.de",
         phone="+49 711 123456",
         website="https://www.testcompany.de",

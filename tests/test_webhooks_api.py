@@ -107,11 +107,9 @@ async def test_update_webhook(async_client: AsyncClient, auth_headers: dict):
     webhook_id = create_response.json()["id"]
 
     # Update it
-    update_data = {"active": False, "events": ["job.completed", "job.failed"]}
-
     response = await async_client.patch(
         f"/api/v1/webhooks/{webhook_id}",
-        params=update_data,
+        params={"active": False, "events": ["job.completed", "job.failed"]},
         headers=auth_headers,
     )
 

@@ -143,7 +143,7 @@ class TestAuthenticationEndpoints:
         """Test: Access /me without token should fail"""
         response = client.get("/api/v1/auth/me")
 
-        assert response.status_code == 403  # No credentials provided
+        assert response.status_code == 401  # No credentials provided (Unauthorized)
 
     def test_get_current_user_invalid_token(self, client):
         """Test: Access /me with invalid token should fail"""
