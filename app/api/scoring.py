@@ -117,7 +117,9 @@ async def score_single_company(
 
 @router.post("/companies/bulk")
 async def score_multiple_companies(
-    company_ids: list[int] | None = Body(None, description="List of company IDs to score"),
+    company_ids: list[int] | None = Body(
+        None, embed=True, description="List of company IDs to score"
+    ),
     lead_status: str | None = Query(None, description="Filter by lead status"),
     lead_quality: str | None = Query(None, description="Filter by lead quality"),
     limit: int = Query(100, ge=1, le=1000, description="Max companies to score"),
