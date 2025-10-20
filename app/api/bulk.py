@@ -9,7 +9,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import delete, select, update
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, get_db
 from app.database.models import Company, User
@@ -43,7 +43,7 @@ class BulkStatusChangeRequest(BaseModel):
 @router.post("/companies/update")
 async def bulk_update_companies(
     request: BulkUpdateRequest,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """
@@ -88,7 +88,7 @@ async def bulk_update_companies(
             raise HTTPException(status_code=400, detail="No company IDs provided")
 
         # Prüfe ob Companies existieren
-        result = await db.execute(select(Company.id).where(Company.id.in_(request.company_ids)))
+        result = db.execute(select(Company.id).where(Company.id.in_(request.company_ids)))
         existing_ids = {row[0] for row in result.all()}
         failed_ids = list(set(request.company_ids) - existing_ids)
 
@@ -97,8 +97,8 @@ async def bulk_update_companies(
             stmt = (
                 update(Company).where(Company.id.in_(list(existing_ids))).values(**request.updates)
             )
-            await db.execute(stmt)
-            await db.commit()
+            db.execute(stmt)
+            db.commit()
 
         updated_count = len(existing_ids)
 
@@ -115,14 +115,14 @@ async def bulk_update_companies(
         raise
     except Exception as e:
         logger.error(f"Bulk update failed: {e}")
-        await db.rollback()
+        db.rollback()
         raise HTTPException(status_code=500, detail=f"Bulk update failed: {str(e)}") from e
 
 
 @router.post("/companies/delete")
 async def bulk_delete_companies(
     request: BulkDeleteRequest,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """
@@ -151,7 +151,7 @@ async def bulk_delete_companies(
             raise HTTPException(status_code=400, detail="No company IDs provided")
 
         # Prüfe ob Companies existieren
-        result = await db.execute(select(Company.id).where(Company.id.in_(request.company_ids)))
+        result = db.execute(select(Company.id).where(Company.id.in_(request.company_ids)))
         existing_ids = {row[0] for row in result.all()}
         failed_ids = list(set(request.company_ids) - existing_ids)
 
@@ -163,13 +163,13 @@ async def bulk_delete_companies(
                     .where(Company.id.in_(list(existing_ids)))
                     .values(is_active=False)
                 )
-                await db.execute(stmt)
+                db.execute(stmt)
             else:
                 # Hard Delete: Remove from database
                 stmt = delete(Company).where(Company.id.in_(list(existing_ids)))
-                await db.execute(stmt)
+                db.execute(stmt)
 
-            await db.commit()
+            db.commit()
 
         deleted_count = len(existing_ids)
 
@@ -189,14 +189,14 @@ async def bulk_delete_companies(
         raise
     except Exception as e:
         logger.error(f"Bulk delete failed: {e}")
-        await db.rollback()
+        db.rollback()
         raise HTTPException(status_code=500, detail=f"Bulk delete failed: {str(e)}") from e
 
 
 @router.post("/companies/status")
 async def bulk_change_status(
     request: BulkStatusChangeRequest,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """
@@ -235,13 +235,13 @@ async def bulk_change_status(
             updates["lead_quality"] = request.lead_quality
 
         # Prüfe ob Companies existieren
-        result = await db.execute(select(Company.id).where(Company.id.in_(request.company_ids)))
+        result = db.execute(select(Company.id).where(Company.id.in_(request.company_ids)))
         existing_ids = {row[0] for row in result.all()}
 
         if existing_ids:
             stmt = update(Company).where(Company.id.in_(list(existing_ids))).values(**updates)
-            await db.execute(stmt)
-            await db.commit()
+            db.execute(stmt)
+            db.commit()
 
         updated_count = len(existing_ids)
 
@@ -259,14 +259,14 @@ async def bulk_change_status(
         raise
     except Exception as e:
         logger.error(f"Bulk status change failed: {e}")
-        await db.rollback()
+        db.rollback()
         raise HTTPException(status_code=500, detail=f"Bulk status change failed: {str(e)}") from e
 
 
 @router.post("/companies/restore")
 async def bulk_restore_companies(
     company_ids: list[int],
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """
@@ -288,8 +288,8 @@ async def bulk_restore_companies(
             .where(Company.is_active.is_(False))
             .values(is_active=True)
         )
-        result = await db.execute(stmt)
-        await db.commit()
+        result = db.execute(stmt)
+        db.commit()
 
         restored_count = result.rowcount
 
@@ -302,5 +302,5 @@ async def bulk_restore_companies(
 
     except Exception as e:
         logger.error(f"Bulk restore failed: {e}")
-        await db.rollback()
+        db.rollback()
         raise HTTPException(status_code=500, detail=f"Bulk restore failed: {str(e)}") from e
