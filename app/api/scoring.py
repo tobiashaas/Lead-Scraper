@@ -7,6 +7,7 @@ import logging
 from typing import Any
 
 from fastapi import APIRouter, Body, Depends, HTTPException, Query
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -16,6 +17,12 @@ from app.utils.lead_scorer import LeadScorer, score_company
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/scoring", tags=["Lead Scoring"])
+
+
+class BulkScoreRequest(BaseModel):
+    """Bulk Score Request Schema"""
+
+    company_ids: list[int] | None = None
 
 
 @router.post("/companies/{company_id}")
@@ -91,7 +98,7 @@ async def score_single_company(
 
 @router.post("/companies/bulk")
 async def score_multiple_companies(
-    company_ids: list[int] | None = Body(None, description="List of company IDs to score"),
+    request: BulkScoreRequest,
     lead_status: str | None = Query(None, description="Filter by lead status"),
     lead_quality: str | None = Query(None, description="Filter by lead quality"),
     limit: int = Query(100, ge=1, le=1000, description="Max companies to score"),
@@ -118,9 +125,9 @@ async def score_multiple_companies(
         results = []
 
         # Query aufbauen
-        if company_ids:
+        if request.company_ids:
             # Spezifische Companies
-            query = select(Company).where(Company.id.in_(company_ids))
+            query = select(Company).where(Company.id.in_(request.company_ids))
         else:
             # Mit Filtern
             query = select(Company).limit(limit)
