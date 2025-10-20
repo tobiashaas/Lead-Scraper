@@ -255,6 +255,30 @@ def auth_token(client, auth_user):
 
 
 @pytest.fixture
-def auth_headers(auth_token):
-    """Get authentication headers"""
-    return {"Authorization": f"Bearer {auth_token}"}
+def auth_headers(auth_user):
+    """Get authentication headers - generates token directly"""
+    from app.core.security import create_access_token
+
+    access_token = create_access_token(data={"sub": auth_user.username})
+    return {"Authorization": f"Bearer {access_token}"}
+
+
+@pytest.fixture
+def test_company_id(db_session, auth_user):
+    """Create a test company and return its ID"""
+    from app.database.models import Company
+
+    company = Company(
+        name="Test Company GmbH",
+        email="test@company.de",
+        phone="+49 711 123456",
+        website="https://www.testcompany.de",
+        street="Teststraße 1",
+        postal_code="70173",
+        city="Stuttgart",
+        industry="Software Development",
+    )
+    db_session.add(company)
+    db_session.commit()
+    db_session.refresh(company)
+    return company.id

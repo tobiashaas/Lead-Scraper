@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fix the 3 problematic files with LF line endings"""
-import subprocess
 import pathlib
+import subprocess
 
 files = [
     "alembic/versions/2025_10_18_1836-d5a50d72e841_add_performance_indexes.py",
@@ -18,7 +18,7 @@ for file_path in files:
     # Read file
     path = pathlib.Path(file_path)
     if not path.exists():
-        print(f"  ❌ File not found!")
+        print("  ❌ File not found!")
         continue
 
     # Read with universal newlines, then write with LF
@@ -29,7 +29,7 @@ for file_path in files:
 
     # Write back with LF
     path.write_text(content, encoding="utf-8", newline="\n")
-    print(f"  ✅ Converted to LF")
+    print("  ✅ Converted to LF")
 
 print()
 print("🎨 Running Black...")
