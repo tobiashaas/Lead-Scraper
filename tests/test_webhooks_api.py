@@ -1,14 +1,13 @@
 """
-Tests für Webhook API Endpoints
+Tests für Webhooks API Endpoints
 """
 
 import pytest
 from fastapi import status
-from httpx import AsyncClient
+from fastapi.testclient import TestClient
 
 
-@pytest.mark.asyncio
-async def test_create_webhook(async_client: AsyncClient, auth_headers: dict):
+def test_create_webhook(client: TestClient, auth_headers: dict):
     """Test Webhook erstellen"""
     webhook_data = {
         "url": "https://example.com/webhook",
@@ -16,8 +15,7 @@ async def test_create_webhook(async_client: AsyncClient, auth_headers: dict):
         "active": True,
     }
 
-    response = await async_client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
-
+    response = client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
 
@@ -27,8 +25,7 @@ async def test_create_webhook(async_client: AsyncClient, auth_headers: dict):
     assert data["active"] is True
 
 
-@pytest.mark.asyncio
-async def test_create_webhook_with_secret(async_client: AsyncClient, auth_headers: dict):
+def test_create_webhook_with_secret(client: TestClient, auth_headers: dict):
     """Test Webhook mit Secret erstellen"""
     webhook_data = {
         "url": "https://example.com/webhook",
@@ -37,8 +34,7 @@ async def test_create_webhook_with_secret(async_client: AsyncClient, auth_header
         "active": True,
     }
 
-    response = await async_client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
-
+    response = client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
 
@@ -47,10 +43,9 @@ async def test_create_webhook_with_secret(async_client: AsyncClient, auth_header
     assert "secret" not in data
 
 
-@pytest.mark.asyncio
-async def test_list_webhooks(async_client: AsyncClient, auth_headers: dict):
-    """Test Webhooks listen"""
-    response = await async_client.get("/api/v1/webhooks/", headers=auth_headers)
+def test_list_webhooks(client: TestClient, auth_headers: dict):
+    """Test Webhooks auflisten"""
+    response = client.get("/api/v1/webhooks/", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -58,23 +53,20 @@ async def test_list_webhooks(async_client: AsyncClient, auth_headers: dict):
     assert isinstance(data, list)
 
 
-@pytest.mark.asyncio
-async def test_get_webhook(async_client: AsyncClient, auth_headers: dict):
+def test_get_webhook(client: TestClient, auth_headers: dict):
     """Test einzelnen Webhook abrufen"""
-    # First create a webhook
+    # Create webhook first
     webhook_data = {
         "url": "https://example.com/test",
         "events": ["job.completed"],
         "active": True,
     }
 
-    create_response = await async_client.post(
-        "/api/v1/webhooks/", json=webhook_data, headers=auth_headers
-    )
+    create_response = client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
     webhook_id = create_response.json()["id"]
 
-    # Then get it
-    response = await async_client.get(f"/api/v1/webhooks/{webhook_id}", headers=auth_headers)
+    # Get webhook
+    response = client.get(f"/api/v1/webhooks/{webhook_id}", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -83,16 +75,14 @@ async def test_get_webhook(async_client: AsyncClient, auth_headers: dict):
     assert data["url"] == webhook_data["url"]
 
 
-@pytest.mark.asyncio
-async def test_get_nonexistent_webhook(async_client: AsyncClient, auth_headers: dict):
+def test_get_nonexistent_webhook(client: TestClient, auth_headers: dict):
     """Test nicht existierenden Webhook abrufen"""
-    response = await async_client.get("/api/v1/webhooks/999999", headers=auth_headers)
+    response = client.get("/api/v1/webhooks/999999", headers=auth_headers)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
-@pytest.mark.asyncio
-async def test_update_webhook(async_client: AsyncClient, auth_headers: dict):
+def test_update_webhook(client: TestClient, auth_headers: dict):
     """Test Webhook aktualisieren"""
     # Create webhook
     webhook_data = {
@@ -101,13 +91,11 @@ async def test_update_webhook(async_client: AsyncClient, auth_headers: dict):
         "active": True,
     }
 
-    create_response = await async_client.post(
-        "/api/v1/webhooks/", json=webhook_data, headers=auth_headers
-    )
+    create_response = client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
     webhook_id = create_response.json()["id"]
 
     # Update it
-    response = await async_client.patch(
+    response = client.patch(
         f"/api/v1/webhooks/{webhook_id}",
         params={"active": False, "events": ["job.completed", "job.failed"]},
         headers=auth_headers,
@@ -120,8 +108,7 @@ async def test_update_webhook(async_client: AsyncClient, auth_headers: dict):
     assert "job.failed" in data["events"]
 
 
-@pytest.mark.asyncio
-async def test_delete_webhook(async_client: AsyncClient, auth_headers: dict):
+def test_delete_webhook(client: TestClient, auth_headers: dict):
     """Test Webhook löschen"""
     # Create webhook
     webhook_data = {
@@ -130,26 +117,22 @@ async def test_delete_webhook(async_client: AsyncClient, auth_headers: dict):
         "active": True,
     }
 
-    create_response = await async_client.post(
-        "/api/v1/webhooks/", json=webhook_data, headers=auth_headers
-    )
+    create_response = client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
     webhook_id = create_response.json()["id"]
 
     # Delete it
-    response = await async_client.delete(f"/api/v1/webhooks/{webhook_id}", headers=auth_headers)
-
+    response = client.delete(f"/api/v1/webhooks/{webhook_id}", headers=auth_headers)
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
 
     assert "message" in data
 
     # Verify it's deleted
-    get_response = await async_client.get(f"/api/v1/webhooks/{webhook_id}", headers=auth_headers)
+    get_response = client.get(f"/api/v1/webhooks/{webhook_id}", headers=auth_headers)
     assert get_response.status_code == status.HTTP_404_NOT_FOUND
 
 
-@pytest.mark.asyncio
-async def test_test_webhook(async_client: AsyncClient, auth_headers: dict):
+def test_test_webhook(client: TestClient, auth_headers: dict):
     """Test Webhook testen"""
     # Create webhook
     webhook_data = {
@@ -158,22 +141,18 @@ async def test_test_webhook(async_client: AsyncClient, auth_headers: dict):
         "active": True,
     }
 
-    create_response = await async_client.post(
-        "/api/v1/webhooks/", json=webhook_data, headers=auth_headers
-    )
+    create_response = client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
     webhook_id = create_response.json()["id"]
 
     # Test it
-    response = await async_client.post(f"/api/v1/webhooks/{webhook_id}/test", headers=auth_headers)
-
+    response = client.post(f"/api/v1/webhooks/{webhook_id}/test", headers=auth_headers)
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
 
     assert "message" in data
 
 
-@pytest.mark.asyncio
-async def test_webhook_unauthorized(async_client: AsyncClient):
+def test_webhook_unauthorized(client: TestClient):
     """Test Webhook Operations ohne Authentication"""
     webhook_data = {
         "url": "https://example.com/test",
@@ -181,13 +160,12 @@ async def test_webhook_unauthorized(async_client: AsyncClient):
         "active": True,
     }
 
-    response = await async_client.post("/api/v1/webhooks/", json=webhook_data)
+    response = client.post("/api/v1/webhooks/", json=webhook_data)
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-@pytest.mark.asyncio
-async def test_create_webhook_invalid_url(async_client: AsyncClient, auth_headers: dict):
+def test_create_webhook_invalid_url(client: TestClient, auth_headers: dict):
     """Test Webhook mit ungültiger URL"""
     webhook_data = {
         "url": "not-a-valid-url",
@@ -195,6 +173,6 @@ async def test_create_webhook_invalid_url(async_client: AsyncClient, auth_header
         "active": True,
     }
 
-    response = await async_client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
+    response = client.post("/api/v1/webhooks/", json=webhook_data, headers=auth_headers)
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY

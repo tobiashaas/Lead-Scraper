@@ -4,13 +4,12 @@ Tests für Export API Endpoints
 
 import pytest
 from fastapi import status
-from httpx import AsyncClient
+from fastapi.testclient import TestClient
 
 
-@pytest.mark.asyncio
-async def test_export_companies_csv(async_client: AsyncClient, auth_headers: dict):
+def test_export_companies_csv(client: TestClient, auth_headers: dict):
     """Test CSV Export"""
-    response = await async_client.get("/api/v1/export/companies/csv?limit=10", headers=auth_headers)
+    response = client.get("/api/v1/export/companies/csv?limit=10", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     assert response.headers["content-type"] == "text/csv; charset=utf-8"
@@ -24,12 +23,9 @@ async def test_export_companies_csv(async_client: AsyncClient, auth_headers: dic
     assert "ID,Name,City" in lines[0]  # Header check
 
 
-@pytest.mark.asyncio
-async def test_export_companies_json(async_client: AsyncClient, auth_headers: dict):
+def test_export_companies_json(client: TestClient, auth_headers: dict):
     """Test JSON Export"""
-    response = await async_client.get(
-        "/api/v1/export/companies/json?limit=10", headers=auth_headers
-    )
+    response = client.get("/api/v1/export/companies/json?limit=10", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -42,10 +38,9 @@ async def test_export_companies_json(async_client: AsyncClient, auth_headers: di
     assert data["total"] == len(data["companies"])
 
 
-@pytest.mark.asyncio
-async def test_export_companies_json_with_filters(async_client: AsyncClient, auth_headers: dict):
+def test_export_companies_json_with_filters(client: TestClient, auth_headers: dict):
     """Test JSON Export mit Filtern"""
-    response = await async_client.get(
+    response = client.get(
         "/api/v1/export/companies/json?lead_status=new&limit=5", headers=auth_headers
     )
 
@@ -56,10 +51,9 @@ async def test_export_companies_json_with_filters(async_client: AsyncClient, aut
     assert data["filters"]["limit"] == 5
 
 
-@pytest.mark.asyncio
-async def test_export_companies_stats(async_client: AsyncClient, auth_headers: dict):
-    """Test Statistics Export"""
-    response = await async_client.get("/api/v1/export/companies/stats", headers=auth_headers)
+def test_export_companies_stats(client: TestClient, auth_headers: dict):
+    """Test Company Statistiken Export"""
+    response = client.get("/api/v1/export/companies/stats", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -74,20 +68,16 @@ async def test_export_companies_stats(async_client: AsyncClient, auth_headers: d
     assert isinstance(data["top_cities"], list)
 
 
-@pytest.mark.asyncio
-async def test_export_csv_unauthorized(async_client: AsyncClient):
+def test_export_csv_unauthorized(client: TestClient):
     """Test CSV Export ohne Authentication"""
-    response = await async_client.get("/api/v1/export/companies/csv")
+    response = client.get("/api/v1/export/companies/csv")
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-@pytest.mark.asyncio
-async def test_export_json_limit_validation(async_client: AsyncClient, auth_headers: dict):
+def test_export_json_limit_validation(client: TestClient, auth_headers: dict):
     """Test JSON Export mit ungültigem Limit"""
-    response = await async_client.get(
-        "/api/v1/export/companies/json?limit=20000", headers=auth_headers
-    )
+    response = client.get("/api/v1/export/companies/json?limit=20000", headers=auth_headers)
 
     # Should be rejected or capped at max
     assert response.status_code in [
@@ -96,10 +86,9 @@ async def test_export_json_limit_validation(async_client: AsyncClient, auth_head
     ]
 
 
-@pytest.mark.asyncio
-async def test_export_stats_empty_database(async_client: AsyncClient, auth_headers: dict):
-    """Test Statistics mit leerer Database"""
-    response = await async_client.get("/api/v1/export/companies/stats", headers=auth_headers)
+def test_export_stats_empty_database(client: TestClient, auth_headers: dict):
+    """Test Stats Export mit leerer Datenbank"""
+    response = client.get("/api/v1/export/companies/stats", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
