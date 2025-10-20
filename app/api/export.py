@@ -15,7 +15,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, get_db
-from app.database.models import Company, User
+from app.database.models import Company, LeadQuality, LeadStatus, User
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/export", tags=["Export"])
@@ -44,9 +44,17 @@ async def export_companies_csv(
         query = select(Company).limit(limit)
 
         if lead_status:
-            query = query.where(Company.lead_status == lead_status)
+            try:
+                status_enum = LeadStatus(lead_status)
+                query = query.where(Company.lead_status == status_enum)
+            except ValueError:
+                raise HTTPException(status_code=400, detail=f"Invalid lead_status: {lead_status}")
         if lead_quality:
-            query = query.where(Company.lead_quality == lead_quality)
+            try:
+                quality_enum = LeadQuality(lead_quality)
+                query = query.where(Company.lead_quality == quality_enum)
+            except ValueError:
+                raise HTTPException(status_code=400, detail=f"Invalid lead_quality: {lead_quality}")
 
         result = db.execute(query)
         companies = result.scalars().all()
@@ -137,9 +145,17 @@ async def export_companies_json(
         query = select(Company).limit(limit)
 
         if lead_status:
-            query = query.where(Company.lead_status == lead_status)
+            try:
+                status_enum = LeadStatus(lead_status)
+                query = query.where(Company.lead_status == status_enum)
+            except ValueError:
+                raise HTTPException(status_code=400, detail=f"Invalid lead_status: {lead_status}")
         if lead_quality:
-            query = query.where(Company.lead_quality == lead_quality)
+            try:
+                quality_enum = LeadQuality(lead_quality)
+                query = query.where(Company.lead_quality == quality_enum)
+            except ValueError:
+                raise HTTPException(status_code=400, detail=f"Invalid lead_quality: {lead_quality}")
 
         result = db.execute(query)
         companies = result.scalars().all()
