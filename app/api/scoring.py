@@ -66,16 +66,22 @@ async def score_single_company(
             raise HTTPException(status_code=404, detail="Company not found")
 
         # Company Daten für Scoring vorbereiten
+        # Build address string safely
+        address_parts = []
+        if company.street:
+            address_parts.append(company.street)
+        if company.postal_code or company.city:
+            city_part = f"{company.postal_code or ''} {company.city or ''}".strip()
+            if city_part:
+                address_parts.append(city_part)
+        address = ", ".join(address_parts) if address_parts else None
+
         company_data = {
             "name": company.company_name,
             "email": company.email,
             "phone": company.phone,
             "website": company.website,
-            "address": (
-                f"{company.street}, {company.postal_code} {company.city}"
-                if company.street
-                else None
-            ),
+            "address": address,
             "city": company.city,
             "industry": company.industry,
             "team_size": company.team_size,
@@ -159,16 +165,22 @@ async def score_multiple_companies(
 
         # Alle Companies bewerten
         for company in companies:
+            # Build address string safely
+            address_parts = []
+            if company.street:
+                address_parts.append(company.street)
+            if company.postal_code or company.city:
+                city_part = f"{company.postal_code or ''} {company.city or ''}".strip()
+                if city_part:
+                    address_parts.append(city_part)
+            address = ", ".join(address_parts) if address_parts else None
+
             company_data = {
                 "name": company.company_name,
                 "email": company.email,
                 "phone": company.phone,
                 "website": company.website,
-                "address": (
-                    f"{company.street}, {company.postal_code} {company.city}"
-                    if company.street
-                    else None
-                ),
+                "address": address,
                 "city": company.city,
                 "industry": company.industry,
                 "team_size": company.team_size,
