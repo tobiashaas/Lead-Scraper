@@ -214,6 +214,15 @@ async def run_scraping_job(job_id: int, config: dict):
 
         db.commit()
 
+        # Run deduplication on new companies
+        from app.utils.deduplicator import deduplicator
+
+        dedup_result = deduplicator.deduplicate_all(db, auto_merge_threshold=0.95, dry_run=False)
+        logger.info(
+            f"Deduplication completed for job {job_id}: "
+            f"auto_merged={dedup_result['auto_merged']}"
+        )
+
         # Update job
         job.status = "completed"
         job.completed_at = datetime.utcnow()

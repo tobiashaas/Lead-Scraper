@@ -142,6 +142,11 @@ app.include_router(scoring.router, prefix="/api/v1", tags=["Lead Scoring"])
 app.include_router(bulk.router, prefix="/api/v1", tags=["Bulk Operations"])
 app.include_router(webhooks.router, prefix="/api/v1", tags=["Webhooks"])
 
+# Import and include deduplication router
+from app.api import deduplication
+
+app.include_router(deduplication.router, prefix="/api/v1", tags=["Deduplication"])
+
 
 # Root endpoint
 @app.get("/")
