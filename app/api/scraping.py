@@ -133,6 +133,7 @@ async def run_scraping_job(job_id: int, config: dict):
     from datetime import datetime
 
     from app.database.database import SessionLocal
+    from app.utils.webhook_helpers import trigger_webhook_event
 
     db = SessionLocal()
 
@@ -147,6 +148,19 @@ async def run_scraping_job(job_id: int, config: dict):
         job.status = "running"
         job.started_at = datetime.utcnow()
         db.commit()
+
+        # Trigger job.started webhook
+        await trigger_webhook_event(
+            "job.started",
+            {
+                "job_id": job.id,
+                "job_name": job.job_name,
+                "source": config.get("source_name"),
+                "city": config.get("city"),
+                "industry": config.get("industry"),
+                "started_at": job.started_at.isoformat(),
+            },
+        )
 
         # Import scraper based on source
         source_name = config.get("source_name")
@@ -209,6 +223,21 @@ async def run_scraping_job(job_id: int, config: dict):
         job.updated_companies = updated_count
         db.commit()
 
+        # Trigger job.completed webhook
+        await trigger_webhook_event(
+            "job.completed",
+            {
+                "job_id": job.id,
+                "job_name": job.job_name,
+                "status": "completed",
+                "duration_seconds": job.duration_seconds,
+                "results_count": job.results_count,
+                "new_companies": new_count,
+                "updated_companies": updated_count,
+                "completed_at": job.completed_at.isoformat(),
+            },
+        )
+
     except Exception as e:
         # Update job with error
         job.status = "failed"
@@ -217,6 +246,19 @@ async def run_scraping_job(job_id: int, config: dict):
         if job.started_at:
             job.duration_seconds = (job.completed_at - job.started_at).total_seconds()
         db.commit()
+
+        # Trigger job.failed webhook
+        await trigger_webhook_event(
+            "job.failed",
+            {
+                "job_id": job.id,
+                "job_name": job.job_name,
+                "status": "failed",
+                "error": str(e),
+                "duration_seconds": job.duration_seconds if job.duration_seconds else 0,
+                "failed_at": job.completed_at.isoformat(),
+            },
+        )
 
     finally:
         db.close()
