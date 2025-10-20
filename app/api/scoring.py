@@ -35,8 +35,6 @@ class BulkScoreRequest(BaseModel):
 
     company_ids: list[int] | None = None
 
-    model_config = {"extra": "allow"}
-
 
 @router.post("/companies/{company_id}")
 async def score_single_company(
@@ -117,9 +115,7 @@ async def score_single_company(
 
 @router.post("/companies/bulk")
 async def score_multiple_companies(
-    company_ids: list[int] | None = Body(
-        None, embed=True, description="List of company IDs to score"
-    ),
+    body: BulkScoreRequest = BulkScoreRequest(),
     lead_status: str | None = Query(None, description="Filter by lead status"),
     lead_quality: str | None = Query(None, description="Filter by lead quality"),
     limit: int = Query(100, ge=1, le=1000, description="Max companies to score"),
@@ -146,9 +142,9 @@ async def score_multiple_companies(
         results = []
 
         # Query aufbauen
-        if company_ids:
+        if body.company_ids:
             # Spezifische Companies
-            query = select(Company).where(Company.id.in_(company_ids))
+            query = select(Company).where(Company.id.in_(body.company_ids))
         else:
             # Mit Filtern
             query = select(Company).limit(limit)
