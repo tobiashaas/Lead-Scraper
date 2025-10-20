@@ -8,7 +8,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, get_db
 from app.database.models import Company, User
@@ -21,7 +21,7 @@ router = APIRouter(prefix="/scoring", tags=["Lead Scoring"])
 @router.post("/companies/{company_id}")
 async def score_single_company(
     company_id: int,
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """
@@ -37,7 +37,7 @@ async def score_single_company(
     """
     try:
         # Company laden
-        result = await db.execute(select(Company).where(Company.id == company_id))
+        result = db.execute(select(Company).where(Company.id == company_id))
         company = result.scalar_one_or_none()
 
         if not company:
@@ -45,7 +45,7 @@ async def score_single_company(
 
         # Company Daten für Scoring vorbereiten
         company_data = {
-            "name": company.name,
+            "name": company.company_name,
             "email": company.email,
             "phone": company.phone,
             "website": company.website,
@@ -68,17 +68,17 @@ async def score_single_company(
         company.lead_score = scoring_result["score"]
         company.lead_quality = scoring_result["quality"]
 
-        await db.commit()
-        await db.refresh(company)
+        db.commit()
+        db.refresh(company)
 
         logger.info(
-            f"Company scored: {company.name} (ID: {company_id}) - "
+            f"Company scored: {company.company_name} (ID: {company_id}) - "
             f"Score: {scoring_result['score']} ({scoring_result['quality']})"
         )
 
         return {
             "company_id": company_id,
-            "company_name": company.name,
+            "company_name": company.company_name,
             **scoring_result,
         }
 
@@ -95,7 +95,7 @@ async def score_multiple_companies(
     lead_status: str | None = Query(None, description="Filter by lead status"),
     lead_quality: str | None = Query(None, description="Filter by lead quality"),
     limit: int = Query(100, ge=1, le=1000, description="Max companies to score"),
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """
@@ -130,7 +130,7 @@ async def score_multiple_companies(
             if lead_quality:
                 query = query.where(Company.lead_quality == lead_quality)
 
-        result = await db.execute(query)
+        result = db.execute(query)
         companies = result.scalars().all()
 
         logger.info(f"Bulk scoring {len(companies)} companies...")
@@ -138,7 +138,7 @@ async def score_multiple_companies(
         # Alle Companies bewerten
         for company in companies:
             company_data = {
-                "name": company.name,
+                "name": company.company_name,
                 "email": company.email,
                 "phone": company.phone,
                 "website": company.website,
@@ -163,14 +163,14 @@ async def score_multiple_companies(
             results.append(
                 {
                     "company_id": company.id,
-                    "company_name": company.name,
+                    "company_name": company.company_name,
                     "score": scoring_result["score"],
                     "quality": scoring_result["quality"],
                 }
             )
 
         # Commit alle Änderungen
-        await db.commit()
+        db.commit()
 
         # Statistiken
         stats = scorer.get_stats()
@@ -190,7 +190,7 @@ async def score_multiple_companies(
 
 @router.get("/stats")
 async def get_scoring_stats(
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """
@@ -208,19 +208,19 @@ async def get_scoring_stats(
 
         # Total Companies
         total_query = select(func.count(Company.id))
-        total_result = await db.execute(total_query)
+        total_result = db.execute(total_query)
         total = total_result.scalar()
 
         # Average Score
         avg_query = select(func.avg(Company.lead_score))
-        avg_result = await db.execute(avg_query)
+        avg_result = db.execute(avg_query)
         avg_score = avg_result.scalar() or 0
 
         # Distribution by Quality
         quality_query = select(Company.lead_quality, func.count(Company.id)).group_by(
             Company.lead_quality
         )
-        quality_result = await db.execute(quality_query)
+        quality_result = db.execute(quality_query)
         by_quality = dict(quality_result.all())
 
         # Top 10 Companies
@@ -230,9 +230,14 @@ async def get_scoring_stats(
             .order_by(Company.lead_score.desc())
             .limit(10)
         )
-        top_result = await db.execute(top_query)
+        top_result = db.execute(top_query)
         top_companies = [
-            {"id": c.id, "name": c.name, "score": c.lead_score, "quality": c.lead_quality}
+            {
+                "id": c.id,
+                "name": c.company_name,
+                "score": c.lead_score,
+                "quality": c.lead_quality,
+            }
             for c in top_result.scalars().all()
         ]
 
@@ -243,9 +248,14 @@ async def get_scoring_stats(
             .order_by(Company.lead_score.asc())
             .limit(10)
         )
-        bottom_result = await db.execute(bottom_query)
+        bottom_result = db.execute(bottom_query)
         bottom_companies = [
-            {"id": c.id, "name": c.name, "score": c.lead_score, "quality": c.lead_quality}
+            {
+                "id": c.id,
+                "name": c.company_name,
+                "score": c.lead_score,
+                "quality": c.lead_quality,
+            }
             for c in bottom_result.scalars().all()
         ]
 

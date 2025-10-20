@@ -12,7 +12,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, get_db
 from app.database.models import Company, User
@@ -23,7 +23,7 @@ router = APIRouter(prefix="/export", tags=["Export"])
 
 @router.get("/companies/csv")
 async def export_companies_csv(
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
     lead_status: str | None = Query(None, description="Filter by lead status"),
     lead_quality: str | None = Query(None, description="Filter by lead quality"),
@@ -48,7 +48,7 @@ async def export_companies_csv(
         if lead_quality:
             query = query.where(Company.lead_quality == lead_quality)
 
-        result = await db.execute(query)
+        result = db.execute(query)
         companies = result.scalars().all()
 
         logger.info(f"Exporting {len(companies)} companies to CSV (user: {current_user.username})")
@@ -116,7 +116,7 @@ async def export_companies_csv(
 
 @router.get("/companies/json")
 async def export_companies_json(
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
     lead_status: str | None = Query(None, description="Filter by lead status"),
     lead_quality: str | None = Query(None, description="Filter by lead quality"),
@@ -141,7 +141,7 @@ async def export_companies_json(
         if lead_quality:
             query = query.where(Company.lead_quality == lead_quality)
 
-        result = await db.execute(query)
+        result = db.execute(query)
         companies = result.scalars().all()
 
         logger.info(f"Exporting {len(companies)} companies to JSON (user: {current_user.username})")
@@ -186,7 +186,7 @@ async def export_companies_json(
 
 @router.get("/companies/stats")
 async def export_companies_stats(
-    db: AsyncSession = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """
@@ -206,21 +206,21 @@ async def export_companies_stats(
 
         # Total Count
         total_query = select(func.count(Company.id))
-        total_result = await db.execute(total_query)
+        total_result = db.execute(total_query)
         total = total_result.scalar()
 
         # By Lead Status
         status_query = select(Company.lead_status, func.count(Company.id)).group_by(
             Company.lead_status
         )
-        status_result = await db.execute(status_query)
+        status_result = db.execute(status_query)
         by_status = dict(status_result.all())
 
         # By Lead Quality
         quality_query = select(Company.lead_quality, func.count(Company.id)).group_by(
             Company.lead_quality
         )
-        quality_result = await db.execute(quality_query)
+        quality_result = db.execute(quality_query)
         by_quality = dict(quality_result.all())
 
         # Top Industries
@@ -231,7 +231,7 @@ async def export_companies_stats(
             .order_by(func.count(Company.id).desc())
             .limit(10)
         )
-        industry_result = await db.execute(industry_query)
+        industry_result = db.execute(industry_query)
         top_industries = [
             {"industry": industry, "count": count} for industry, count in industry_result.all()
         ]
@@ -244,7 +244,7 @@ async def export_companies_stats(
             .order_by(func.count(Company.id).desc())
             .limit(10)
         )
-        city_result = await db.execute(city_query)
+        city_result = db.execute(city_query)
         top_cities = [{"city": city, "count": count} for city, count in city_result.all()]
 
         logger.info(f"Exported company stats (user: {current_user.username})")
