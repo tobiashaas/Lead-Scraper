@@ -183,6 +183,44 @@ async def run_scraping_job(job_id: int, config: dict):
                 max_pages=config["max_pages"],
                 use_tor=config.get("use_tor", True),
             )
+        elif source_name == "das_oertliche":
+            from app.scrapers.das_oertliche import scrape_das_oertliche
+
+            results = await scrape_das_oertliche(
+                city=config["city"],
+                industry=config["industry"],
+                max_pages=config["max_pages"],
+                use_tor=config.get("use_tor", True),
+            )
+        elif source_name == "goyellow":
+            from app.scrapers.goyellow import scrape_goyellow
+
+            results = await scrape_goyellow(
+                city=config["city"],
+                industry=config["industry"],
+                max_pages=config["max_pages"],
+                use_tor=config.get("use_tor", True),
+            )
+        elif source_name == "unternehmensverzeichnis":
+            from app.scrapers.unternehmensverzeichnis import (
+                scrape_unternehmensverzeichnis,
+            )
+
+            results = await scrape_unternehmensverzeichnis(
+                city=config["city"],
+                industry=config["industry"],
+                max_pages=config["max_pages"],
+                use_tor=config.get("use_tor", True),
+            )
+        elif source_name == "handelsregister":
+            from app.scrapers.handelsregister import scrape_handelsregister
+
+            results = await scrape_handelsregister(
+                city=config["city"],
+                industry=config["industry"],
+                max_pages=config["max_pages"],
+                use_tor=config.get("use_tor", True),
+            )
         else:
             raise ValueError(f"Unknown source: {source_name}")
 
