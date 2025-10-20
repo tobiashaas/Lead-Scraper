@@ -18,7 +18,8 @@ from app.database.models import Base, User, UserRole
 @pytest.fixture(scope="session")
 def event_loop():
     """Create an instance of the default event loop for the test session."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
+    policy = asyncio.get_event_loop_policy()
+    loop = policy.new_event_loop()
     yield loop
     loop.close()
 
@@ -159,13 +160,13 @@ async def async_client(db_session):
     from app.main import app
 
     # Override to return the same session instance
-    async def override_get_db():
+    def override_get_db():
         yield db_session
 
     app.dependency_overrides[get_db] = override_get_db
 
-    async with AsyncClient(app=app, base_url="http://test") as test_client:
-        yield test_client
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        yield client
 
     app.dependency_overrides.clear()
 

@@ -253,7 +253,9 @@ class LeadScorer:
         breakdown["status"] = "present"
 
         # Hochwertige Branche (10 Punkte)
-        if any(keyword in industry for keyword in self.HIGH_VALUE_INDUSTRIES):
+        # Use word boundaries to avoid false matches (e.g., "it" in "Retail")
+        industry_words = set(industry.lower().split())
+        if any(keyword in industry_words for keyword in self.HIGH_VALUE_INDUSTRIES):
             score += 10
             breakdown["high_value"] = True
         else:
