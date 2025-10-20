@@ -7,6 +7,7 @@ import asyncio
 from collections.abc import Generator
 
 import pytest
+import pytest_asyncio
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -149,10 +150,11 @@ def client(db_session):
     app.dependency_overrides.clear()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def async_client(db_session):
     """
     FastAPI Async Test Client with database session override
+    Uses pytest_asyncio.fixture decorator for proper async handling
     """
     from httpx import AsyncClient
 
