@@ -8,14 +8,14 @@ from httpx import AsyncClient
 
 
 @pytest.mark.asyncio
-async def test_bulk_update_companies(client: AsyncClient, auth_headers: dict):
+async def test_bulk_update_companies(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Update"""
     request_data = {
         "company_ids": [1, 2, 3],
         "updates": {"lead_status": "contacted", "lead_quality": "warm"},
     }
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/bulk/companies/update", json=request_data, headers=auth_headers
     )
 
@@ -30,14 +30,14 @@ async def test_bulk_update_companies(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_bulk_update_invalid_fields(client: AsyncClient, auth_headers: dict):
+async def test_bulk_update_invalid_fields(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Update mit ungültigen Feldern"""
     request_data = {
         "company_ids": [1, 2],
         "updates": {"invalid_field": "value", "another_invalid": "test"},
     }
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/bulk/companies/update", json=request_data, headers=auth_headers
     )
 
@@ -45,11 +45,11 @@ async def test_bulk_update_invalid_fields(client: AsyncClient, auth_headers: dic
 
 
 @pytest.mark.asyncio
-async def test_bulk_delete_soft(client: AsyncClient, auth_headers: dict):
+async def test_bulk_delete_soft(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Soft Delete"""
     request_data = {"company_ids": [1, 2], "soft_delete": True}
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/bulk/companies/delete", json=request_data, headers=auth_headers
     )
 
@@ -62,11 +62,11 @@ async def test_bulk_delete_soft(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_bulk_delete_hard(client: AsyncClient, auth_headers: dict):
+async def test_bulk_delete_hard(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Hard Delete"""
     request_data = {"company_ids": [1], "soft_delete": False}
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/bulk/companies/delete", json=request_data, headers=auth_headers
     )
 
@@ -78,7 +78,7 @@ async def test_bulk_delete_hard(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_bulk_status_change(client: AsyncClient, auth_headers: dict):
+async def test_bulk_status_change(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Status Change"""
     request_data = {
         "company_ids": [1, 2, 3],
@@ -86,7 +86,7 @@ async def test_bulk_status_change(client: AsyncClient, auth_headers: dict):
         "lead_quality": "hot",
     }
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/bulk/companies/status", json=request_data, headers=auth_headers
     )
 
@@ -99,11 +99,11 @@ async def test_bulk_status_change(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_bulk_status_change_no_updates(client: AsyncClient, auth_headers: dict):
+async def test_bulk_status_change_no_updates(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Status Change ohne Updates"""
     request_data = {"company_ids": [1, 2]}
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/bulk/companies/status", json=request_data, headers=auth_headers
     )
 
@@ -111,9 +111,9 @@ async def test_bulk_status_change_no_updates(client: AsyncClient, auth_headers: 
 
 
 @pytest.mark.asyncio
-async def test_bulk_restore_companies(client: AsyncClient, auth_headers: dict):
+async def test_bulk_restore_companies(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Restore"""
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/bulk/companies/restore",
         json=[1, 2, 3],
         headers=auth_headers,
@@ -127,21 +127,21 @@ async def test_bulk_restore_companies(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_bulk_operations_unauthorized(client: AsyncClient):
+async def test_bulk_operations_unauthorized(async_client: AsyncClient):
     """Test Bulk Operations ohne Authentication"""
     request_data = {"company_ids": [1], "updates": {"lead_status": "new"}}
 
-    response = await client.post("/api/v1/bulk/companies/update", json=request_data)
+    response = await async_client.post("/api/v1/bulk/companies/update", json=request_data)
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 @pytest.mark.asyncio
-async def test_bulk_update_empty_ids(client: AsyncClient, auth_headers: dict):
+async def test_bulk_update_empty_ids(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Update mit leerer ID Liste"""
     request_data = {"company_ids": [], "updates": {"lead_status": "new"}}
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/bulk/companies/update", json=request_data, headers=auth_headers
     )
 
@@ -149,14 +149,14 @@ async def test_bulk_update_empty_ids(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_bulk_update_nonexistent_companies(client: AsyncClient, auth_headers: dict):
+async def test_bulk_update_nonexistent_companies(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Update mit nicht existierenden Companies"""
     request_data = {
         "company_ids": [999998, 999999],
         "updates": {"lead_status": "contacted"},
     }
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/bulk/companies/update", json=request_data, headers=auth_headers
     )
 

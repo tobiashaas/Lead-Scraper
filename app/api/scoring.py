@@ -49,9 +49,11 @@ async def score_single_company(
             "email": company.email,
             "phone": company.phone,
             "website": company.website,
-            "address": f"{company.street}, {company.postal_code} {company.city}"
-            if company.street
-            else None,
+            "address": (
+                f"{company.street}, {company.postal_code} {company.city}"
+                if company.street
+                else None
+            ),
             "city": company.city,
             "industry": company.industry,
             "team_size": None,  # TODO: Add to model
@@ -140,9 +142,11 @@ async def score_multiple_companies(
                 "email": company.email,
                 "phone": company.phone,
                 "website": company.website,
-                "address": f"{company.street}, {company.postal_code} {company.city}"
-                if company.street
-                else None,
+                "address": (
+                    f"{company.street}, {company.postal_code} {company.city}"
+                    if company.street
+                    else None
+                ),
                 "city": company.city,
                 "industry": company.industry,
                 "team_size": None,

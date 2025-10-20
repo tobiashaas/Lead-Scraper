@@ -113,7 +113,7 @@ def test_score_website_https():
     website_score = result["breakdown"]["website"]
 
     assert website_score["status"] == "present"
-    assert website_score["https"] is True
+    assert website_score["https"] == True
 
 
 def test_score_website_no_https():
@@ -126,7 +126,7 @@ def test_score_website_no_https():
     website_score = result["breakdown"]["website"]
 
     assert website_score["status"] == "present"
-    assert website_score["https"] is False
+    assert website_score["https"] == False
 
 
 def test_score_high_value_industry():
@@ -139,7 +139,7 @@ def test_score_high_value_industry():
     industry_score = result["breakdown"]["industry"]
 
     assert industry_score["status"] == "present"
-    assert industry_score["high_value"] is True
+    assert industry_score["high_value"] == True
 
 
 def test_score_regular_industry():
@@ -152,7 +152,7 @@ def test_score_regular_industry():
     industry_score = result["breakdown"]["industry"]
 
     assert industry_score["status"] == "present"
-    assert industry_score["high_value"] is False
+    assert industry_score["high_value"] == False
 
 
 def test_score_company_size_large():
@@ -200,21 +200,21 @@ def test_email_validation():
     """Test Email Validation"""
     scorer = LeadScorer()
 
-    assert scorer._is_valid_email("test@example.com") is True
-    assert scorer._is_valid_email("invalid-email") is False
-    assert scorer._is_valid_email("") is False
-    assert scorer._is_valid_email(None) is False
+    assert scorer._is_valid_email("test@example.com") == True
+    assert scorer._is_valid_email("invalid-email") == False
+    assert scorer._is_valid_email("") == False
+    assert scorer._is_valid_email(None) == False
 
 
 def test_phone_validation():
     """Test Phone Validation"""
     scorer = LeadScorer()
 
-    assert scorer._is_valid_phone("+49 711 123456") is True
-    assert scorer._is_valid_phone("0711-123456") is True
-    assert scorer._is_valid_phone("123") is False
-    assert scorer._is_valid_phone("") is False
-    assert scorer._is_valid_phone(None) is False
+    assert scorer._is_valid_phone("+49 711 123456") == True
+    assert scorer._is_valid_phone("0711-123456") == True
+    assert scorer._is_valid_phone("123") == False
+    assert scorer._is_valid_phone("") == False
+    assert scorer._is_valid_phone(None) == False
 
 
 def test_quality_categories():

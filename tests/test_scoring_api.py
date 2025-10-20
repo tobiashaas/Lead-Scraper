@@ -8,9 +8,11 @@ from httpx import AsyncClient
 
 
 @pytest.mark.asyncio
-async def test_score_single_company(client: AsyncClient, auth_headers: dict, test_company_id: int):
+async def test_score_single_company(
+    async_client: AsyncClient, auth_headers: dict, test_company_id: int
+):
     """Test einzelne Company bewerten"""
-    response = await client.post(
+    response = await async_client.post(
         f"/api/v1/scoring/companies/{test_company_id}", headers=auth_headers
     )
 
@@ -32,19 +34,19 @@ async def test_score_single_company(client: AsyncClient, auth_headers: dict, tes
 
 
 @pytest.mark.asyncio
-async def test_score_nonexistent_company(client: AsyncClient, auth_headers: dict):
+async def test_score_nonexistent_company(async_client: AsyncClient, auth_headers: dict):
     """Test Scoring für nicht existierende Company"""
-    response = await client.post("/api/v1/scoring/companies/999999", headers=auth_headers)
+    response = await async_client.post("/api/v1/scoring/companies/999999", headers=auth_headers)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 @pytest.mark.asyncio
-async def test_bulk_score_companies(client: AsyncClient, auth_headers: dict):
+async def test_bulk_score_companies(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Scoring"""
     request_data = {"company_ids": [1, 2, 3], "limit": 10}
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/scoring/companies/bulk", json=request_data, headers=auth_headers
     )
 
@@ -59,9 +61,9 @@ async def test_bulk_score_companies(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_bulk_score_with_filters(client: AsyncClient, auth_headers: dict):
+async def test_bulk_score_with_filters(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Scoring mit Filtern"""
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/scoring/companies/bulk?lead_status=new&limit=5", headers=auth_headers
     )
 
@@ -73,9 +75,9 @@ async def test_bulk_score_with_filters(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_scoring_stats(client: AsyncClient, auth_headers: dict):
+async def test_scoring_stats(async_client: AsyncClient, auth_headers: dict):
     """Test Scoring Statistiken"""
-    response = await client.get("/api/v1/scoring/stats", headers=auth_headers)
+    response = await async_client.get("/api/v1/scoring/stats", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -92,19 +94,19 @@ async def test_scoring_stats(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_score_company_unauthorized(client: AsyncClient):
+async def test_score_company_unauthorized(async_client: AsyncClient):
     """Test Scoring ohne Authentication"""
-    response = await client.post("/api/v1/scoring/companies/1")
+    response = await async_client.post("/api/v1/scoring/companies/1")
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 @pytest.mark.asyncio
-async def test_bulk_score_empty_list(client: AsyncClient, auth_headers: dict):
+async def test_bulk_score_empty_list(async_client: AsyncClient, auth_headers: dict):
     """Test Bulk Scoring mit leerer Liste"""
     request_data = {"company_ids": []}
 
-    response = await client.post(
+    response = await async_client.post(
         "/api/v1/scoring/companies/bulk", json=request_data, headers=auth_headers
     )
 
@@ -114,10 +116,10 @@ async def test_bulk_score_empty_list(client: AsyncClient, auth_headers: dict):
 
 @pytest.mark.asyncio
 async def test_scoring_quality_categories(
-    client: AsyncClient, auth_headers: dict, test_company_id: int
+    async_client: AsyncClient, auth_headers: dict, test_company_id: int
 ):
     """Test dass Quality Kategorien korrekt zugewiesen werden"""
-    response = await client.post(
+    response = await async_client.post(
         f"/api/v1/scoring/companies/{test_company_id}", headers=auth_headers
     )
 

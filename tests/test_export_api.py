@@ -8,9 +8,9 @@ from httpx import AsyncClient
 
 
 @pytest.mark.asyncio
-async def test_export_companies_csv(client: AsyncClient, auth_headers: dict):
+async def test_export_companies_csv(async_client: AsyncClient, auth_headers: dict):
     """Test CSV Export"""
-    response = await client.get("/api/v1/export/companies/csv?limit=10", headers=auth_headers)
+    response = await async_client.get("/api/v1/export/companies/csv?limit=10", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     assert response.headers["content-type"] == "text/csv; charset=utf-8"
@@ -25,9 +25,11 @@ async def test_export_companies_csv(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_export_companies_json(client: AsyncClient, auth_headers: dict):
+async def test_export_companies_json(async_client: AsyncClient, auth_headers: dict):
     """Test JSON Export"""
-    response = await client.get("/api/v1/export/companies/json?limit=10", headers=auth_headers)
+    response = await async_client.get(
+        "/api/v1/export/companies/json?limit=10", headers=auth_headers
+    )
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -41,9 +43,9 @@ async def test_export_companies_json(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_export_companies_json_with_filters(client: AsyncClient, auth_headers: dict):
+async def test_export_companies_json_with_filters(async_client: AsyncClient, auth_headers: dict):
     """Test JSON Export mit Filtern"""
-    response = await client.get(
+    response = await async_client.get(
         "/api/v1/export/companies/json?lead_status=new&limit=5", headers=auth_headers
     )
 
@@ -55,9 +57,9 @@ async def test_export_companies_json_with_filters(client: AsyncClient, auth_head
 
 
 @pytest.mark.asyncio
-async def test_export_companies_stats(client: AsyncClient, auth_headers: dict):
+async def test_export_companies_stats(async_client: AsyncClient, auth_headers: dict):
     """Test Statistics Export"""
-    response = await client.get("/api/v1/export/companies/stats", headers=auth_headers)
+    response = await async_client.get("/api/v1/export/companies/stats", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -73,17 +75,19 @@ async def test_export_companies_stats(client: AsyncClient, auth_headers: dict):
 
 
 @pytest.mark.asyncio
-async def test_export_csv_unauthorized(client: AsyncClient):
+async def test_export_csv_unauthorized(async_client: AsyncClient):
     """Test CSV Export ohne Authentication"""
-    response = await client.get("/api/v1/export/companies/csv")
+    response = await async_client.get("/api/v1/export/companies/csv")
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 @pytest.mark.asyncio
-async def test_export_json_limit_validation(client: AsyncClient, auth_headers: dict):
+async def test_export_json_limit_validation(async_client: AsyncClient, auth_headers: dict):
     """Test JSON Export mit ungültigem Limit"""
-    response = await client.get("/api/v1/export/companies/json?limit=20000", headers=auth_headers)
+    response = await async_client.get(
+        "/api/v1/export/companies/json?limit=20000", headers=auth_headers
+    )
 
     # Should be rejected or capped at max
     assert response.status_code in [
@@ -93,9 +97,9 @@ async def test_export_json_limit_validation(client: AsyncClient, auth_headers: d
 
 
 @pytest.mark.asyncio
-async def test_export_stats_empty_database(client: AsyncClient, auth_headers: dict):
+async def test_export_stats_empty_database(async_client: AsyncClient, auth_headers: dict):
     """Test Statistics mit leerer Database"""
-    response = await client.get("/api/v1/export/companies/stats", headers=auth_headers)
+    response = await async_client.get("/api/v1/export/companies/stats", headers=auth_headers)
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()

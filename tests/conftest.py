@@ -148,6 +148,28 @@ def client(db_session):
     app.dependency_overrides.clear()
 
 
+@pytest.fixture(scope="function")
+async def async_client(db_session):
+    """
+    FastAPI Async Test Client with database session override
+    """
+    from httpx import AsyncClient
+
+    from app.database.database import get_db
+    from app.main import app
+
+    # Override to return the same session instance
+    async def override_get_db():
+        yield db_session
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    async with AsyncClient(app=app, base_url="http://test") as test_client:
+        yield test_client
+
+    app.dependency_overrides.clear()
+
+
 @pytest.fixture(autouse=True)
 def reset_database(db_session):
     """

@@ -14,32 +14,28 @@ print()
 
 for file_path in files:
     print(f"📝 Processing: {file_path}")
-    
+
     # Read file
     path = pathlib.Path(file_path)
     if not path.exists():
         print(f"  ❌ File not found!")
         continue
-    
+
     # Read with universal newlines, then write with LF
-    content = path.read_text(encoding='utf-8')
-    
+    content = path.read_text(encoding="utf-8")
+
     # Ensure LF line endings
-    content = content.replace('\r\n', '\n')
-    
+    content = content.replace("\r\n", "\n")
+
     # Write back with LF
-    path.write_text(content, encoding='utf-8', newline='\n')
+    path.write_text(content, encoding="utf-8", newline="\n")
     print(f"  ✅ Converted to LF")
 
 print()
 print("🎨 Running Black...")
 
 # Run black on all files
-result = subprocess.run(
-    ["venv/Scripts/black.exe"] + files,
-    capture_output=True,
-    text=True
-)
+result = subprocess.run(["venv/Scripts/black.exe"] + files, capture_output=True, text=True)
 
 print(result.stdout)
 if result.stderr:
