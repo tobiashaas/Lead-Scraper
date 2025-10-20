@@ -149,7 +149,7 @@ def client(db_session):
     app.dependency_overrides.clear()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 async def async_client(db_session):
     """
     FastAPI Async Test Client with database session override
@@ -168,6 +168,7 @@ async def async_client(db_session):
     async with AsyncClient(app=app, base_url="http://test") as client:
         yield client
 
+    # Cleanup
     app.dependency_overrides.clear()
 
 
