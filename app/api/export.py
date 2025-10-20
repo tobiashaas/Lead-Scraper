@@ -82,7 +82,7 @@ async def export_companies_csv(
             writer.writerow(
                 [
                     company.id,
-                    company.name,
+                    company.company_name,
                     company.city,
                     company.street,
                     company.postal_code,
@@ -152,7 +152,7 @@ async def export_companies_json(
             companies_data.append(
                 {
                     "id": company.id,
-                    "name": company.name,
+                    "name": company.company_name,
                     "city": company.city,
                     "street": company.street,
                     "postal_code": company.postal_code,
