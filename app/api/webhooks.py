@@ -38,6 +38,13 @@ class WebhookResponse(BaseModel):
     created_at: datetime
 
 
+class WebhookUpdate(BaseModel):
+    """Webhook Update Schema"""
+
+    active: bool | None = None
+    events: list[str] | None = None
+
+
 # In-Memory Webhook Storage (TODO: Move to Database)
 WEBHOOKS: dict[int, dict[str, Any]] = {}
 WEBHOOK_ID_COUNTER = 1
@@ -157,8 +164,7 @@ async def get_webhook(
 @router.patch("/{webhook_id}")
 async def update_webhook(
     webhook_id: int,
-    active: bool | None = None,
-    events: list[str] | None = None,
+    update_data: WebhookUpdate,
     current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """
@@ -174,11 +180,11 @@ async def update_webhook(
     if webhook["user_id"] != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
-    if active is not None:
-        webhook["active"] = active
+    if update_data.active is not None:
+        webhook["active"] = update_data.active
 
-    if events is not None:
-        webhook["events"] = events
+    if update_data.events is not None:
+        webhook["events"] = update_data.events
 
     logger.info(f"Webhook updated: ID={webhook_id} (user: {current_user.username})")
 

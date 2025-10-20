@@ -96,7 +96,7 @@ def test_update_webhook(client: TestClient, auth_headers: dict):
     # Update it
     response = client.patch(
         f"/api/v1/webhooks/{webhook_id}",
-        params={"active": False, "events": ["job.completed", "job.failed"]},
+        json={"active": False, "events": ["job.completed", "job.failed"]},
         headers=auth_headers,
     )
 
