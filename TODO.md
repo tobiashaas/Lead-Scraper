@@ -258,6 +258,246 @@
 
 ---
 
-**Letzte Aktualisierung:** 2025-10-17
-**Nächster Review:** Nach Integration Tests & API Authentication
-**Neue Features:** Unternehmensverzeichnis.org Scraper, Database Migration, 47 Unit Tests
+## 🎉 HEUTE FERTIG (20.10.2025) - Alle High Priority Features!
+
+### ✅ Phase 1: Backend Features (KOMPLETT)
+
+**1. Webhook Delivery System**
+- ✅ HMAC-SHA256 Signaturen für Sicherheit
+- ✅ Retry Logic mit Exponential Backoff (1s, 2s, 4s)
+- ✅ Async HTTP Delivery (blockiert API nicht)
+- ✅ 3 Events: `job.started`, `job.completed`, `job.failed`
+- ✅ Detailliertes Logging & Error Handling
+- **Dateien:** `app/utils/webhook_delivery.py`, `app/utils/webhook_helpers.py`
+- **Integration:** In `app/api/scraping.py` integriert
+
+**2. Company Deduplicator**
+- ✅ 3 Detection Strategies:
+  - Exact phone match (100% confidence)
+  - Exact website match (95% confidence)
+  - Fuzzy name + city matching (85%+ confidence)
+- ✅ Smart Merging (keep primary, fill missing fields)
+- ✅ Auto-deduplication nach Scraping (95% threshold)
+- ✅ API Endpoints: find duplicates, merge, scan all
+- ✅ Dry-run mode für sicheres Testen
+- **Dateien:** `app/utils/deduplicator.py`, `app/api/deduplication.py`
+- **API Endpoints:**
+  - `GET /api/v1/deduplication/companies/{id}/duplicates`
+  - `POST /api/v1/deduplication/merge`
+  - `POST /api/v1/deduplication/scan`
+
+**3. Alle 6 Scraper aktiviert**
+- ✅ 11880.com
+- ✅ Gelbe Seiten
+- ✅ Das Örtliche
+- ✅ GoYellow
+- ✅ Unternehmensverzeichnis
+- ✅ Handelsregister
+- **Datei:** `app/api/scraping.py` - Alle Scraper sind jetzt über API verfügbar
+
+### ✅ Phase 2: Dashboard Frontend (KOMPLETT)
+
+**4. React Dashboard mit TypeScript + Vite**
+- ✅ **Login Page** - JWT Authentication
+- ✅ **Dashboard** - Übersicht mit Statistiken & Quick Actions
+- ✅ **Scraping Page** - Stadt/PLZ eingeben & Scraper starten! 🎯
+- ✅ **Companies Page** - Alle Firmen mit Suche, Filter & Pagination
+
+**Features:**
+- ✅ Live Job Monitoring (auto-refresh alle 5 Sekunden)
+- ✅ 6 Scraper-Quellen Auswahl
+- ✅ Responsive Design mit TailwindCSS
+- ✅ Lead Quality Badges (A, B, C, D)
+- ✅ Pagination für Company List
+- ✅ Real-time Status Updates
+
+**Tech Stack:**
+- React 18 + TypeScript
+- Vite (schneller Build)
+- TailwindCSS (Styling)
+- React Query (TanStack Query) - API State Management
+- React Router - Navigation
+- Axios - HTTP Client
+- Lucide Icons
+
+**Dateien:**
+- `frontend/src/pages/Login.tsx`
+- `frontend/src/pages/Dashboard.tsx`
+- `frontend/src/pages/Scraping.tsx` - **HAUPTFEATURE: Stadt/PLZ Input!**
+- `frontend/src/pages/Companies.tsx`
+- `frontend/src/lib/api.ts` - API Client
+- `frontend/src/App.tsx` - Routing
+
+---
+
+## 🚀 MORGEN STARTEN (21.10.2025)
+
+### Schritt 1: Repository pullen
+```bash
+cd /Users/tobiashaas/Desktop/Lead-Scraper
+git pull origin fix/config-extra-fields
+```
+
+### Schritt 2: Backend starten
+```bash
+# Docker Services starten (PostgreSQL, Redis, Ollama)
+docker-compose up -d
+
+# Warten bis Services ready sind (ca. 30 Sekunden)
+sleep 30
+
+# API starten
+make run
+# ODER
+uvicorn app.main:app --reload
+```
+
+**Backend läuft auf:** `http://localhost:8000`
+**API Docs:** `http://localhost:8000/docs`
+
+### Schritt 3: Frontend starten
+```bash
+cd frontend
+
+# Dependencies installieren (nur beim ersten Mal)
+npm install
+
+# Dev Server starten
+npm run dev
+```
+
+**Frontend läuft auf:** `http://localhost:5173`
+
+### Schritt 4: Testen!
+
+**1. Login:**
+- Öffne `http://localhost:5173`
+- Login mit deinem User (oder erstelle einen via API)
+
+**2. Dashboard:**
+- Siehst du die Statistiken?
+- Funktionieren die Quick Action Buttons?
+
+**3. Scraping Page (HAUPTFEATURE!):**
+- Klicke auf "Neuen Scraping-Job starten"
+- **Stadt/PLZ eingeben:** z.B. "Stuttgart" oder "70173"
+- **Branche eingeben:** z.B. "IT", "Handwerk", "Gastronomie"
+- **Quelle wählen:** z.B. "11880.com"
+- **Max. Seiten:** z.B. 5
+- **Klick auf "Scraping starten"**
+- Beobachte die Job-Tabelle unten - sie aktualisiert sich automatisch alle 5 Sekunden!
+
+**4. Companies Page:**
+- Siehst du die gescrapten Firmen?
+- Funktioniert die Suche?
+- Funktioniert die Pagination?
+
+### Schritt 5: Features testen
+
+**Webhook Delivery:**
+```bash
+# Webhook erstellen (via API Docs oder curl)
+curl -X POST "http://localhost:8000/api/v1/webhooks" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://webhook.site/YOUR-UNIQUE-URL",
+    "events": ["job.completed", "job.failed"],
+    "secret": "my-secret-key",
+    "active": true
+  }'
+
+# Dann Scraping Job starten und Webhook wird getriggert!
+```
+
+**Deduplication:**
+```bash
+# Duplikate scannen (dry-run)
+curl -X POST "http://localhost:8000/api/v1/deduplication/scan?dry_run=true" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Duplikate für eine Firma finden
+curl "http://localhost:8000/api/v1/deduplication/companies/123/duplicates" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+---
+
+## 📝 Was zu testen ist:
+
+### ✅ Checklist für morgen:
+
+**Backend:**
+- [ ] API startet ohne Fehler
+- [ ] Alle 6 Scraper funktionieren
+- [ ] Webhook Delivery funktioniert
+- [ ] Deduplication funktioniert
+- [ ] Auto-Dedup nach Scraping läuft
+
+**Frontend:**
+- [ ] Login funktioniert
+- [ ] Dashboard zeigt Statistiken
+- [ ] Scraping Page: Stadt/PLZ Input funktioniert
+- [ ] Scraping Job startet erfolgreich
+- [ ] Live Job Monitoring funktioniert (5s refresh)
+- [ ] Companies Page zeigt Firmen
+- [ ] Suche funktioniert
+- [ ] Pagination funktioniert
+
+**Integration:**
+- [ ] Frontend → Backend Kommunikation
+- [ ] Authentication Flow
+- [ ] Real-time Updates
+- [ ] Error Handling
+
+---
+
+## 🐛 Falls Probleme auftreten:
+
+### Backend startet nicht:
+```bash
+# Logs checken
+docker-compose logs
+
+# Services neu starten
+docker-compose down
+docker-compose up -d
+
+# Database neu initialisieren
+make db-init
+```
+
+### Frontend startet nicht:
+```bash
+cd frontend
+
+# Node modules neu installieren
+rm -rf node_modules package-lock.json
+npm install
+
+# Dev Server starten
+npm run dev
+```
+
+### API Connection Error:
+- Prüfe `.env` Datei im Frontend: `VITE_API_URL=http://localhost:8000/api/v1`
+- Prüfe ob Backend läuft: `curl http://localhost:8000/health`
+
+### CORS Errors:
+- Backend sollte CORS bereits konfiguriert haben
+- Falls nicht, in `app/main.py` CORS Middleware prüfen
+
+---
+
+## 🎯 Nächste Schritte (nach Testing):
+
+1. **Feinschliff UI** - Basierend auf deinem Feedback
+2. **Mehr Features** - z.B. Webhook Management UI, Deduplication UI
+3. **Production Deployment** - Optional
+4. **Documentation** - User Guide
+
+---
+
+**Letzte Aktualisierung:** 2025-10-20 21:57 Uhr
+**Status:** ✅ Alle High Priority Features fertig!
+**Nächster Schritt:** Testing morgen am Arbeits-PC
