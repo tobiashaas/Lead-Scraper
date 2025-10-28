@@ -71,18 +71,18 @@ from stem.control import Controller
 
 class TorProxyManager:
     """Tor Network für Anonymität - kostenlos und ausreichend für Start"""
-    
+
     def __init__(self):
         self.tor_proxy = "socks5://127.0.0.1:9050"
         self.control_port = 9051
         self.password = "your_tor_password"
-    
+
     async def get_new_identity(self):
         """Neue Tor-Identität anfordern (neue IP)"""
         with Controller.from_port(port=self.control_port) as controller:
             controller.authenticate(password=self.password)
             controller.signal(Signal.NEWNYM)
-    
+
     def get_proxy_config(self):
         return {"http://": self.tor_proxy, "https://": self.tor_proxy}
 
@@ -120,12 +120,12 @@ class ElevenEightyScaper(BaseScraper):
     Öffentliches Branchenbuch, relativ scraping-freundlich
     Keine Login erforderlich, einfache HTML-Struktur
     """
-    
+
     async def get_search_urls(self, **filters):
         # BW-spezifische Suchterms
         cities = ['Stuttgart', 'Karlsruhe', 'Mannheim', 'Freiburg', 'Heidelberg', ...]
         industries = ['IT-Service', 'Bürotechnik', 'Dokumentenmanagement', ...]
-        
+
     async def parse_search_results(self, html, url):
         # BeautifulSoup Implementation
 ```
@@ -167,27 +167,27 @@ import random
 
 class PlaywrightBrowserManager:
     """Playwright mit Stealth-Mode und Tor-Integration"""
-    
+
     def __init__(self, use_tor=True):
         self.use_tor = use_tor
         self.tor_proxy = "socks5://127.0.0.1:9050" if use_tor else None
-    
+
     async def create_browser_context(self):
         """Browser-Context mit Anti-Detection Settings"""
         playwright = await async_playwright().start()
-        
+
         # Verschiedene User-Agents für Rotation
         user_agents = [
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
             "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
         ]
-        
+
         browser = await playwright.chromium.launch(
             headless=True,
             proxy={"server": self.tor_proxy} if self.use_tor else None
         )
-        
+
         context = await browser.new_context(
             user_agent=random.choice(user_agents),
             viewport={"width": 1920, "height": 1080},
@@ -197,16 +197,16 @@ class PlaywrightBrowserManager:
             java_script_enabled=True,
             bypass_csp=True
         )
-        
+
         # Stealth-Mode: WebDriver-Property verstecken
         await context.add_init_script("""
             Object.defineProperty(navigator, 'webdriver', {
                 get: () => undefined
             });
         """)
-        
+
         return context, browser, playwright
-    
+
     async def close(self, browser, playwright):
         await browser.close()
         await playwright.stop()
@@ -252,7 +252,7 @@ class TwoCaptchaSolver:
     def __init__(self, api_key: str):
         self.api_key = api_key
         self.base_url = "http://2captcha.com"
-    
+
     async def solve_recaptcha(self, site_key: str, page_url: str):
         """reCAPTCHA v2 lösen"""
         # Implementation nur bei Bedarf
@@ -272,7 +272,7 @@ import spacy
 class GermanNERProcessor:
     def __init__(self):
         self.nlp = spacy.load("de_core_news_lg")
-        
+
     def extract_entities(self, text: str) -> Dict:
         doc = self.nlp(text)
         entities = {
@@ -289,13 +289,13 @@ class GermanNERProcessor:
 # app/ai/scorer.py
 class DecisionMakerScorer:
     """Bewertet Entscheidungsgewalt basierend auf Job Title"""
-    
+
     DECISION_MAKER_KEYWORDS = {
         "c_level": ["CEO", "CTO", "CIO", "Geschäftsführer", "Vorstand"],
         "director": ["Direktor", "Leiter", "Head of", "Director"],
         "manager": ["Manager", "Teamleiter", "Abteilungsleiter"]
     }
-    
+
     def score_contact(self, job_title: str) -> float:
         # Scoring: C-Level=1.0, Director=0.7, Manager=0.5
         pass
@@ -350,15 +350,15 @@ async def start_scraping_job(
     """Neuen Scraping-Job im Hintergrund starten"""
     background_tasks.add_task(run_scraping_job, job_config)
     return {"status": "started", "job_id": job_config.id}
-    
+
 @app.get("/companies")
 async def get_companies(filters: CompanyFilters = Depends()):
     """Gefilterte Unternehmensliste abrufen"""
-    
+
 @app.get("/leads")
 async def get_leads(filters: LeadFilters = Depends()):
     """Lead-Management Endpoints"""
-    
+
 @app.get("/stats")
 async def get_statistics():
     """Scraping-Statistiken und Performance-Metriken"""
@@ -371,7 +371,7 @@ async def get_statistics():
 class SmartWeClient:
     async def sync_companies(self, companies: List[Company]):
         """Unternehmen zu SmartWe synchronisieren"""
-        
+
     async def sync_contacts(self, contacts: List[Contact]):
         """Kontakte zu SmartWe synchronisieren"""
 ```
@@ -391,7 +391,7 @@ from app.database.models import Company, Contact
 class CompanyFactory(Factory):
     class Meta:
         model = Company
-        
+
     name = Faker('company')
     website = Faker('url')
     city = Faker('city')
@@ -427,7 +427,7 @@ services:
     volumes:
       - ./data:/app/data  # Für Logs und Exports
     restart: unless-stopped
-    
+
   postgres:
     image: postgres:15-alpine
     environment:
@@ -438,7 +438,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-      
+
   redis:
     image: redis:7-alpine
     ports:
@@ -483,7 +483,7 @@ from logging.handlers import RotatingFileHandler
 
 # File Logging mit Rotation
 handler = RotatingFileHandler(
-    'logs/scraper.log', 
+    'logs/scraper.log',
     maxBytes=10*1024*1024,  # 10MB
     backupCount=5
 )
@@ -633,34 +633,34 @@ async def send_telegram_alert(message: str):
    ```bash
    # Core Framework
    pip install fastapi uvicorn sqlalchemy alembic psycopg2-binary
-   
+
    # Scraping & Browser
    pip install playwright beautifulsoup4 httpx lxml
    pip install playwright-stealth  # Anti-Detection
    playwright install chromium
-   
+
    # Tor Integration
    pip install stem  # Tor Controller für IP-Rotation
    pip install pysocks  # SOCKS Proxy Support
-   
+
    # Data Processing
    pip install redis fuzzywuzzy python-Levenshtein
    pip install email-validator phonenumbers
-   
+
    # AI/NLP (optional, später)
    # pip install spacy
    # python -m spacy download de_core_news_lg
-   
+
    # Config & Utils
    pip install python-dotenv pydantic-settings
    ```
-   
+
    **Tor installieren**:
-   
+
    ```bash
    # macOS
    brew install tor
-   
+
    # Linux
    sudo apt install tor
    ```

@@ -1,261 +1,564 @@
-"""
-Integration Tests für Scraping API Endpoints
-"""
+"""Integration tests for Scraping API endpoints and background job."""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+from datetime import datetime, timedelta, timezone
+from typing import Any
 
 import pytest
+from sqlalchemy.orm import sessionmaker
 
-from app.database.models import Source
-
-
-@pytest.fixture
-def create_test_source(db_session):
-    """Create a test source in database"""
-    source = Source(
-        name="test_source",
-        display_name="Test Source",
-        url="https://test-source.com",
-        source_type="web_scraper",
-        is_active=True,
-    )
-    db_session.add(source)
-    db_session.commit()
-    db_session.refresh(source)
-    # Expunge to make it accessible from other sessions
-    db_session.expunge(source)
-    return source
+from app.api import scraping as scraping_module
+from app.database.models import Company, ScrapingJob, Source
+from app.scrapers.base import ScraperResult
 
 
 @pytest.fixture
-def sample_scraping_job_data():
-    """Sample scraping job data"""
+def create_source(db_session) -> Callable[..., Source]:
+    """Create a scraping source in the test database."""
+
+    def _create(**overrides: Any) -> Source:
+        source = Source(
+            name=overrides.get("name", "11880"),
+            display_name=overrides.get("display_name", "11880"),
+            url=overrides.get("url", "https://example.com"),
+            source_type=overrides.get("source_type", "directory"),
+            is_active=overrides.get("is_active", True),
+        )
+        db_session.add(source)
+        db_session.commit()
+        db_session.refresh(source)
+        return source
+
+    return _create
+
+
+@pytest.fixture
+def scraping_payload(create_source) -> dict[str, Any]:
+    """Default payload for scraping job creation (ensures source exists)."""
+
+    create_source(name="11880")
     return {
-        "source_name": "test_source",
+        "source_name": "11880",
         "city": "Stuttgart",
-        "industry": "IT-Services",
-        "max_pages": 3,
+        "industry": "IT",
+        "max_pages": 2,
         "use_tor": False,
-        "use_ai": False,
+        "use_ai": True,
     }
 
 
-class TestScrapingEndpoints:
-    """Test Suite für Scraping API Endpoints"""
+@pytest.fixture
+def override_session_factory(db_session, monkeypatch) -> sessionmaker:
+    """Force run_scraping_job to use the pytest-managed database session."""
+    from app.database import database as database_module
 
-    def test_create_scraping_job(
-        self, create_test_source, sample_scraping_job_data, db_session, client, auth_headers
-    ):
-        """Test: Create a new scraping job"""
-        # Debug: Check if source exists
-        from app.database.models import Source
+    engine = db_session.get_bind().engine
+    test_sessionlocal = sessionmaker(bind=engine)
+    original_sessionlocal = database_module.SessionLocal
 
-        sources = db_session.query(Source).all()
-        print(f"Available sources: {[s.name for s in sources]}")
+    monkeypatch.setattr(database_module, "SessionLocal", test_sessionlocal)
 
-        response = client.post(
-            "/api/v1/scraping/jobs", json=sample_scraping_job_data, headers=auth_headers
-        )
-        print(f"Sources in DB: {[s.name for s in sources]}")
-        print(f"Source ID: {create_test_source.id}, Name: {create_test_source.name}")
+    yield test_sessionlocal
+
+    monkeypatch.setattr(database_module, "SessionLocal", original_sessionlocal)
+
+
+class TestScrapingAPI:
+    """HTTP endpoint coverage for scraping jobs."""
+
+    def test_create_scraping_job_triggers_background_task(
+        self, client, auth_headers, scraping_payload, monkeypatch, db_session
+    ) -> None:
+        captured: list[tuple[int, dict[str, Any]]] = []
+
+        async def fake_run(job_id: int, config: dict[str, Any]) -> None:
+            captured.append((job_id, config))
+
+        monkeypatch.setattr(scraping_module, "run_scraping_job", fake_run)
+
+        response = client.post("/api/v1/scraping/jobs", json=scraping_payload, headers=auth_headers)
 
         assert response.status_code == 201
         data = response.json()
+        assert captured and captured[0][0] == data["id"]
+        assert captured[0][1]["source_name"] == scraping_payload["source_name"]
 
-        assert "id" in data
-        assert data["city"] == sample_scraping_job_data["city"]
-        assert data["industry"] == sample_scraping_job_data["industry"]
-        assert data["status"] in ["pending", "running"]
-        assert "created_at" in data
-
-    def test_create_scraping_job_invalid_source(
-        self, sample_scraping_job_data, client, auth_headers
-    ):
-        """Test: Creating job with invalid source should fail"""
-        invalid_data = sample_scraping_job_data.copy()
-        invalid_data["source_name"] = "non_existent_source"
-
-        response = client.post("/api/v1/scraping/jobs", json=invalid_data, headers=auth_headers)
-
-        assert response.status_code == 404
-        data = response.json()
-        assert "detail" in data
-
-    def test_create_scraping_job_missing_fields(self, client, auth_headers):
-        """Test: Creating job with missing required fields should fail"""
-        incomplete_data = {
-            "source_name": "test_source"
-            # Missing city, industry
+        db_session.expire_all()
+        job = db_session.get(ScrapingJob, data["id"])
+        assert job is not None
+        assert job.status == "pending"
+        assert job.config == {
+            "use_tor": scraping_payload["use_tor"],
+            "use_ai": scraping_payload["use_ai"],
         }
 
-        response = client.post("/api/v1/scraping/jobs", json=incomplete_data, headers=auth_headers)
-        assert response.status_code == 422
+    def test_create_scraping_job_unknown_source(
+        self, client, auth_headers, scraping_payload
+    ) -> None:
+        payload = dict(scraping_payload)
+        payload["source_name"] = "unknown"
 
-    def test_list_scraping_jobs(self, client, auth_headers):
-        """Test: List all scraping jobs"""
-        response = client.get("/api/v1/scraping/jobs", headers=auth_headers)
-
-        assert response.status_code == 200
-        data = response.json()
-
-        assert "total" in data
-        assert "skip" in data
-        assert "limit" in data
-        assert "items" in data
-        assert isinstance(data["items"], list)
-
-    def test_list_scraping_jobs_with_pagination(self, client, auth_headers):
-        """Test: List jobs with pagination"""
-        response = client.get("/api/v1/scraping/jobs?skip=0&limit=10", headers=auth_headers)
-
-        assert response.status_code == 200
-        data = response.json()
-
-        assert data["skip"] == 0
-        assert data["limit"] == 10
-
-    def test_list_scraping_jobs_with_status_filter(self, client, auth_headers):
-        """Test: Filter jobs by status"""
-        response = client.get("/api/v1/scraping/jobs?status=completed", headers=auth_headers)
-
-        assert response.status_code == 200
-        data = response.json()
-
-        # All returned jobs should have status 'completed'
-        for job in data["items"]:
-            assert job["status"] == "completed"
-
-    def test_get_scraping_job_by_id(
-        self, create_test_source, sample_scraping_job_data, client, auth_headers
-    ):
-        """Test: Get scraping job by ID"""
-        # Create a job first
-        create_response = client.post(
-            "/api/v1/scraping/jobs", json=sample_scraping_job_data, headers=auth_headers
-        )
-        assert create_response.status_code == 201
-        job_id = create_response.json()["id"]
-
-        # Get the job
-        response = client.get(f"/api/v1/scraping/jobs/{job_id}", headers=auth_headers)
-
-        assert response.status_code == 200
-        data = response.json()
-
-        assert data["id"] == job_id
-        assert data["city"] == sample_scraping_job_data["city"]
-
-    def test_get_scraping_job_not_found(self, client, auth_headers):
-        """Test: Get non-existent job returns 404"""
-        response = client.get("/api/v1/scraping/jobs/99999", headers=auth_headers)
+        response = client.post("/api/v1/scraping/jobs", json=payload, headers=auth_headers)
 
         assert response.status_code == 404
-        data = response.json()
-        assert "detail" in data
+        assert "not found" in response.json()["detail"]
 
-    def test_cancel_scraping_job(
-        self, create_test_source, sample_scraping_job_data, client, auth_headers
-    ):
-        """Test: Cancel a running scraping job"""
-        # Create a job
-        create_response = client.post(
-            "/api/v1/scraping/jobs", json=sample_scraping_job_data, headers=auth_headers
-        )
-        assert create_response.status_code == 201
-        job_id = create_response.json()["id"]
+    def test_list_scraping_jobs_with_filters(
+        self, client, auth_headers, db_session, create_source
+    ) -> None:
+        source = create_source(name="11880")
+        other_source = create_source(name="gelbe_seiten")
 
-        # Cancel the job
-        response = client.delete(f"/api/v1/scraping/jobs/{job_id}", headers=auth_headers)
+        jobs = [
+            ScrapingJob(
+                job_name="pending-job",
+                source_id=source.id,
+                city="Berlin",
+                industry="IT",
+                max_pages=1,
+                status="pending",
+                created_at=datetime.now(timezone.utc) - timedelta(minutes=5),
+            ),
+            ScrapingJob(
+                job_name="completed-job",
+                source_id=other_source.id,
+                city="Munich",
+                industry="Consulting",
+                max_pages=1,
+                status="completed",
+                created_at=datetime.now(timezone.utc) - timedelta(minutes=1),
+            ),
+        ]
+        db_session.add_all(jobs)
+        db_session.commit()
 
-        # Accept both 204 (success) and 400 (job already completed/cancelled)
-        assert response.status_code in [204, 400]
-
-        # Verify job is cancelled
-        get_response = client.get(f"/api/v1/scraping/jobs/{job_id}", headers=auth_headers)
-        assert get_response.status_code == 200
-        assert get_response.json()["status"] in ["cancelled", "failed"]
-
-    def test_scraping_job_response_schema(
-        self, create_test_source, sample_scraping_job_data, client, auth_headers
-    ):
-        """Test: Scraping job response has correct schema"""
-        response = client.post(
-            "/api/v1/scraping/jobs", json=sample_scraping_job_data, headers=auth_headers
-        )
-
-        assert response.status_code == 201
-        data = response.json()
-
-        # Required fields
-        assert "id" in data
-        assert "status" in data
-        assert "city" in data
-        assert "industry" in data
-        assert "created_at" in data
-
-        # Optional fields
-        assert "job_name" in data
-        assert "progress" in data or data.get("progress") is None
-        assert "results_count" in data or data.get("results_count") is None
-
-    def test_scraping_job_config(
-        self, create_test_source, sample_scraping_job_data, client, auth_headers
-    ):
-        """Test: Scraping job stores config correctly"""
-        response = client.post(
-            "/api/v1/scraping/jobs", json=sample_scraping_job_data, headers=auth_headers
-        )
-
-        assert response.status_code == 201
-        data = response.json()
-
-        # Config should be stored
-        if "config" in data:
-            config = data["config"]
-            assert config["use_tor"] == sample_scraping_job_data["use_tor"]
-            assert config["use_ai"] == sample_scraping_job_data["use_ai"]
-
-    def test_scraping_job_auto_naming(self, create_test_source, client, auth_headers):
-        """Test: Job name is auto-generated if not provided"""
-        job_data = {
-            "source_name": "test_source",
-            "city": "Stuttgart",
-            "industry": "IT",
-            "max_pages": 1,
-            "use_tor": False,
-            "use_ai": False,
-            # No job_name provided
-        }
-
-        response = client.post("/api/v1/scraping/jobs", json=job_data, headers=auth_headers)
-
-        assert response.status_code == 201
-        data = response.json()
-
-        # Job name should be auto-generated
-        assert "job_name" in data
-        assert data["job_name"] is not None
-        assert "test_source" in data["job_name"]
-        assert "Stuttgart" in data["job_name"]
-
-    def test_list_scraping_jobs_ordering(self, client, auth_headers):
-        """Test: Jobs are ordered by creation date (newest first)"""
         response = client.get("/api/v1/scraping/jobs", headers=auth_headers)
-
         assert response.status_code == 200
         data = response.json()
+        assert data["total"] == len(jobs)
+        assert [item["job_name"] for item in data["items"]] == ["completed-job", "pending-job"]
 
-        if len(data["items"]) > 1:
-            # Check that jobs are ordered by created_at descending
-            for i in range(len(data["items"]) - 1):
-                current = data["items"][i]["created_at"]
-                next_item = data["items"][i + 1]["created_at"]
-                assert current >= next_item
+        response = client.get(
+            "/api/v1/scraping/jobs",
+            params={"status": "completed"},
+            headers=auth_headers,
+        )
+        assert response.status_code == 200
+        filtered = response.json()
+        assert filtered["total"] == 1
+        assert filtered["items"][0]["status"] == "completed"
 
-    def test_scraping_job_pagination_limits(self, client, auth_headers):
-        """Test: Pagination limits are enforced"""
-        # Test max limit
-        response = client.get("/api/v1/scraping/jobs?limit=2000", headers=auth_headers)
-        assert response.status_code == 422
+    def test_get_scraping_job_success(
+        self, client, auth_headers, db_session, scraping_payload
+    ) -> None:
+        job = ScrapingJob(
+            job_name="lookup-job",
+            city="Stuttgart",
+            industry="IT",
+            max_pages=1,
+            status="pending",
+            source_id=db_session.query(Source).filter_by(name="11880").one().id,
+        )
+        db_session.add(job)
+        db_session.commit()
 
-        # Test negative skip
-        response = client.get("/api/v1/scraping/jobs?skip=-1", headers=auth_headers)
-        assert response.status_code == 422
+        response = client.get(f"/api/v1/scraping/jobs/{job.id}", headers=auth_headers)
+        assert response.status_code == 200
+        assert response.json()["id"] == job.id
+
+    def test_get_scraping_job_not_found(self, client, auth_headers) -> None:
+        response = client.get("/api/v1/scraping/jobs/999999", headers=auth_headers)
+        assert response.status_code == 404
+
+    def test_cancel_scraping_job_success(
+        self, client, auth_headers, db_session, scraping_payload
+    ) -> None:
+        source = db_session.query(Source).filter_by(name="11880").one()
+        job = ScrapingJob(
+            job_name="cancel-me",
+            source_id=source.id,
+            city="Berlin",
+            industry="IT",
+            max_pages=1,
+            status="pending",
+        )
+        db_session.add(job)
+        db_session.commit()
+
+        response = client.delete(f"/api/v1/scraping/jobs/{job.id}", headers=auth_headers)
+        assert response.status_code == 204
+
+        db_session.refresh(job)
+        assert job.status == "cancelled"
+
+    def test_cancel_scraping_job_completed_state(
+        self, client, auth_headers, db_session, scraping_payload
+    ) -> None:
+        source = db_session.query(Source).filter_by(name="11880").one()
+        job = ScrapingJob(
+            job_name="done-job",
+            source_id=source.id,
+            city="Berlin",
+            industry="IT",
+            max_pages=1,
+            status="completed",
+        )
+        db_session.add(job)
+        db_session.commit()
+
+        response = client.delete(f"/api/v1/scraping/jobs/{job.id}", headers=auth_headers)
+        assert response.status_code == 400
+        assert "Cannot cancel job" in response.json()["detail"]
+
+    def test_cancel_scraping_job_not_found(self, client, auth_headers) -> None:
+        response = client.delete("/api/v1/scraping/jobs/424242", headers=auth_headers)
+        assert response.status_code == 404
+
+
+class TestRunScrapingJob:
+    """Direct tests for the asynchronous background task."""
+
+    @staticmethod
+    def _create_job(db_session, source: Source, **overrides: Any) -> ScrapingJob:
+        job = ScrapingJob(
+            job_name=overrides.get("job_name", "job"),
+            source_id=source.id,
+            city=overrides.get("city", "Berlin"),
+            industry=overrides.get("industry", "IT"),
+            max_pages=overrides.get("max_pages", 1),
+            status=overrides.get("status", "pending"),
+        )
+        db_session.add(job)
+        db_session.commit()
+        db_session.refresh(job)
+        return job
+
+    @pytest.mark.asyncio
+    async def test_run_scraping_job_inserts_and_updates(
+        self, override_session_factory, db_session, create_source, monkeypatch
+    ) -> None:
+        source = create_source(name="11880")
+        existing = Company(
+            company_name="Existing GmbH", city="Berlin", website="https://old.example"
+        )
+        db_session.add(existing)
+        db_session.commit()
+
+        job = self._create_job(
+            db_session,
+            source,
+            job_name="update-and-insert",
+            city="Berlin",
+            industry="IT",
+        )
+
+        class DummyResult:
+            def __init__(self, name: str, city: str, website: str) -> None:
+                self.company_name = name
+                self.city = city
+                self.website = website
+
+            def to_dict(self) -> dict[str, Any]:
+                return {
+                    "company_name": self.company_name,
+                    "city": self.city,
+                    "website": self.website,
+                    "phone": "+49 711 0000",
+                }
+
+        async def fake_scrape_11880(*args: Any, **kwargs: Any) -> list[DummyResult]:
+            return [
+                DummyResult("Existing GmbH", "Berlin", "https://updated.example"),
+                DummyResult("New Company GmbH", "Berlin", "https://new.example"),
+            ]
+
+        monkeypatch.setattr("app.scrapers.eleven_eighty.scrape_11880", fake_scrape_11880)
+
+        await scraping_module.run_scraping_job(
+            job.id,
+            {
+                "source_name": "11880",
+                "city": "Berlin",
+                "industry": "IT",
+                "max_pages": 1,
+                "use_tor": False,
+            },
+        )
+
+        session_factory = override_session_factory
+        session = session_factory()
+        try:
+            job_in_db = session.get(ScrapingJob, job.id)
+            assert job_in_db.status == "completed"
+            assert job_in_db.results_count == 2
+            assert job_in_db.new_companies == 1
+            assert job_in_db.updated_companies == 1
+            assert job_in_db.error_message is None
+
+            updated_company = session.query(Company).filter_by(company_name="Existing GmbH").one()
+            assert updated_company.website == "https://updated.example"
+
+            new_company = session.query(Company).filter_by(company_name="New Company GmbH").one()
+            assert new_company.phone == "+49 711 0000"
+        finally:
+            session.close()
+
+    @pytest.mark.asyncio
+    async def test_run_scraping_job_gelbe_seiten_path(
+        self, override_session_factory, db_session, create_source, monkeypatch
+    ) -> None:
+        source = create_source(name="gelbe_seiten")
+        job = self._create_job(db_session, source, city="Munich", industry="Consulting")
+
+        class DummyResult:
+            def __init__(self) -> None:
+                self.company_name = "Gelbe Seiten GmbH"
+                self.city = "Munich"
+                self.postal_code = "80331"
+                self.website = "https://gelbe-seiten.example"
+                self.phone = "+49 89 123456"
+                self.email = "info@gelbe-seiten.example"
+
+            def to_dict(self) -> dict[str, Any]:
+                return {
+                    "company_name": self.company_name,
+                    "city": self.city,
+                    "postal_code": self.postal_code,
+                    "website": self.website,
+                    "phone": self.phone,
+                    "email": self.email,
+                }
+
+        async def fake_scrape(*args: Any, **kwargs: Any) -> list[DummyResult]:
+            return [DummyResult()]
+
+        monkeypatch.setattr("app.scrapers.gelbe_seiten.scrape_gelbe_seiten", fake_scrape)
+
+        await scraping_module.run_scraping_job(
+            job.id,
+            {
+                "source_name": "gelbe_seiten",
+                "city": "Munich",
+                "industry": "Consulting",
+                "max_pages": 1,
+                "use_tor": True,
+            },
+        )
+
+        session = override_session_factory()
+        try:
+            job_in_db = session.get(ScrapingJob, job.id)
+            assert job_in_db.status == "completed", job_in_db.error_message
+            assert job_in_db.results_count == 1
+        finally:
+            session.close()
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_run_scraping_job_scraper_failure(
+        self, override_session_factory, db_session, create_source, monkeypatch
+    ) -> None:
+        source = create_source(name="11880")
+        job = self._create_job(db_session, source)
+
+        async def failing_scrape(*args: Any, **kwargs: Any) -> list[Any]:
+            raise RuntimeError("scrape failed")
+
+        monkeypatch.setattr("app.scrapers.eleven_eighty.scrape_11880", failing_scrape)
+
+        await scraping_module.run_scraping_job(
+            job.id,
+            {
+                "source_name": "11880",
+                "city": "Berlin",
+                "industry": "IT",
+                "max_pages": 1,
+                "use_tor": False,
+            },
+        )
+
+        session = override_session_factory()
+        try:
+            job_in_db = session.get(ScrapingJob, job.id)
+            assert job_in_db.status == "failed"
+            assert job_in_db.error_message == "scrape failed"
+        finally:
+            session.close()
+
+    @pytest.mark.asyncio
+    async def test_run_scraping_job_missing_job(self, override_session_factory) -> None:
+        await scraping_module.run_scraping_job(
+            999999,
+            {
+                "source_name": "11880",
+                "city": "Berlin",
+                "industry": "IT",
+                "max_pages": 1,
+                "use_tor": False,
+            },
+        )
+
+        session = override_session_factory()
+        try:
+            assert session.query(ScrapingJob).count() == 0
+        finally:
+            session.close()
+
+    @pytest.mark.asyncio
+    async def test_run_scraping_job_failure(
+        self,
+        override_session_factory,
+        db_session,
+        create_source,
+        monkeypatch,
+    ) -> None:
+        source = create_source(name="11880")
+        job = ScrapingJob(
+            job_name="failure-job",
+            source_id=source.id,
+            city="Berlin",
+            industry="Finance",
+            max_pages=1,
+            status="pending",
+        )
+        db_session.add(job)
+        db_session.commit()
+        job_id = job.id
+
+        async def failing_scrape(*args: Any, **kwargs: Any) -> list[ScraperResult]:
+            raise RuntimeError("boom")
+
+        monkeypatch.setattr(
+            "app.scrapers.eleven_eighty.scrape_11880",
+            failing_scrape,
+        )
+
+        await scraping_module.run_scraping_job(
+            job_id,
+            {
+                "source_name": "11880",
+                "city": "Berlin",
+                "industry": "Finance",
+                "max_pages": 1,
+                "use_tor": False,
+            },
+        )
+
+        SessionFactory = override_session_factory
+        verification_session = SessionFactory()
+        try:
+            job_in_db = verification_session.get(ScrapingJob, job_id)
+            assert job_in_db is not None
+            assert job_in_db.status == "failed"
+            assert job_in_db.error_message == "boom"
+            assert job_in_db.completed_at is not None
+        finally:
+            verification_session.close()
+
+    @pytest.mark.asyncio
+    async def test_run_scraping_job_gelbe_seiten(
+        self,
+        override_session_factory,
+        db_session,
+        create_source,
+        monkeypatch,
+    ) -> None:
+        source = create_source(name="gelbe_seiten")
+        job = ScrapingJob(
+            job_name="gelbe-seiten-job",
+            source_id=source.id,
+            city="Munich",
+            industry="Consulting",
+            max_pages=1,
+            status="pending",
+        )
+        db_session.add(job)
+        db_session.commit()
+        job_id = job.id
+
+        class FakeResult:
+            def __init__(self) -> None:
+                self.company_name = "Gelbe Seiten Test GmbH"
+                self.city = "Munich"
+
+            def to_dict(self) -> dict[str, Any]:
+                return {
+                    "company_name": self.company_name,
+                    "city": self.city,
+                    "postal_code": "80331",
+                }
+
+        async def fake_scrape_gelbe_seiten(*args: Any, **kwargs: Any) -> list[FakeResult]:
+            return [FakeResult()]
+
+        monkeypatch.setattr(
+            "app.scrapers.gelbe_seiten.scrape_gelbe_seiten",
+            fake_scrape_gelbe_seiten,
+        )
+
+        await scraping_module.run_scraping_job(
+            job_id,
+            {
+                "source_name": "gelbe_seiten",
+                "city": "Munich",
+                "industry": "Consulting",
+                "max_pages": 1,
+                "use_tor": False,
+            },
+        )
+
+        SessionFactory = override_session_factory
+        monkeypatch.setattr(scraping_module, "SessionLocal", SessionFactory, raising=False)
+        verification_session = SessionFactory()
+        try:
+            job_in_db = verification_session.get(ScrapingJob, job_id)
+            assert job_in_db is not None
+            assert job_in_db.status == "completed"
+            assert job_in_db.results_count == 1
+        finally:
+            verification_session.close()
+
+    @pytest.mark.asyncio
+    async def test_run_scraping_job_unknown_source(
+        self,
+        override_session_factory,
+        db_session,
+        create_source,
+        monkeypatch,
+    ) -> None:
+        source = create_source(name="unknown_source")
+        job = ScrapingJob(
+            job_name="unknown-job",
+            source_id=source.id,
+            city="Berlin",
+            industry="Tech",
+            max_pages=1,
+            status="pending",
+        )
+        db_session.add(job)
+        db_session.commit()
+        job_id = job.id
+
+        await scraping_module.run_scraping_job(
+            job_id,
+            {
+                "source_name": "unknown_source",
+                "city": "Berlin",
+                "industry": "Tech",
+                "max_pages": 1,
+                "use_tor": False,
+            },
+        )
+
+        SessionFactory = override_session_factory
+        monkeypatch.setattr(scraping_module, "SessionLocal", SessionFactory, raising=False)
+        verification_session = SessionFactory()
+        try:
+            job_in_db = verification_session.get(ScrapingJob, job_id)
+            assert job_in_db is not None
+            assert job_in_db.status == "failed"
+            assert "Unknown source" in job_in_db.error_message
+        finally:
+            verification_session.close()

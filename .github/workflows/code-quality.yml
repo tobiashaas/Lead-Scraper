@@ -9,32 +9,32 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.13'
         cache: 'pip'
-    
+
     - name: Install linting tools
       run: |
         python -m pip install --upgrade pip
         pip install flake8 black isort mypy
-    
+
     - name: Run Black (Code Formatter Check)
       run: |
         black --check . || echo "⚠️ Black would reformat some files (non-blocking)"
         echo "✅ Black formatting check completed"
-    
+
     - name: Run isort (Import Sorting Check)
       run: |
         isort --check-only app/ tests/ || true
         echo "✅ isort check completed"
-    
+
     - name: Run Ruff (Linting)
       shell: bash {0}  # Run without -e flag
       run: |
@@ -43,12 +43,12 @@ jobs:
         ruff check --fix . || true
         ruff check . || true
         echo "✅ Ruff linting completed (warnings are non-blocking)"
-    
+
     - name: Run mypy (Type Checking)
       run: |
         mypy app/ --ignore-missing-imports --no-strict-optional || true
         echo "✅ mypy type checking completed"
-    
+
     - name: Code Quality Summary
       if: always()
       run: |

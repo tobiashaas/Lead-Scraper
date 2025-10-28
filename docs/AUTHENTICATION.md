@@ -297,31 +297,31 @@ curl -X GET "http://localhost:8000/api/v1/companies/" \
 ```typescript
 async function makeAuthenticatedRequest(url: string) {
   let accessToken = getAccessToken();
-  
+
   // Try request with current token
   let response = await fetch(url, {
     headers: { 'Authorization': `Bearer ${accessToken}` }
   });
-  
+
   // If token expired, refresh and retry
   if (response.status === 401) {
     const refreshToken = getRefreshToken();
-    
+
     const refreshResponse = await fetch('/api/v1/auth/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refreshToken })
     });
-    
+
     const { access_token } = await refreshResponse.json();
     setAccessToken(access_token);
-    
+
     // Retry original request
     response = await fetch(url, {
       headers: { 'Authorization': `Bearer ${access_token}` }
     });
   }
-  
+
   return response;
 }
 ```

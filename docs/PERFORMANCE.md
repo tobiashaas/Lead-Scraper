@@ -141,22 +141,22 @@ def cache_result(ttl: int = 300):
         @wraps(func)
         async def wrapper(*args, **kwargs):
             cache_key = f"{func.__name__}:{args}:{kwargs}"
-            
+
             # Try cache first
             cached = await redis_client.get(cache_key)
             if cached:
                 return json.loads(cached)
-            
+
             # Execute function
             result = await func(*args, **kwargs)
-            
+
             # Store in cache
             await redis_client.setex(
                 cache_key,
                 ttl,
                 json.dumps(result)
             )
-            
+
             return result
         return wrapper
     return decorator
@@ -175,7 +175,7 @@ async def get_company_stats():
 async def update_company(company_id: int, data: dict):
     # Update database
     await db.execute(...)
-    
+
     # Invalidate related caches
     await redis_client.delete(f"company:{company_id}")
     await redis_client.delete("company_stats")
@@ -325,7 +325,7 @@ from locust import HttpUser, task, between
 
 class APIUser(HttpUser):
     wait_time = between(1, 3)
-    
+
     def on_start(self):
         # Login
         response = self.client.post("/api/v1/auth/login", json={
@@ -334,21 +334,21 @@ class APIUser(HttpUser):
         })
         self.token = response.json()["access_token"]
         self.headers = {"Authorization": f"Bearer {self.token}"}
-    
+
     @task(3)
     def list_companies(self):
         self.client.get(
             "/api/v1/companies?limit=100",
             headers=self.headers
         )
-    
+
     @task(1)
     def get_company(self):
         self.client.get(
             "/api/v1/companies/1",
             headers=self.headers
         )
-    
+
     @task(1)
     def export_stats(self):
         self.client.get(

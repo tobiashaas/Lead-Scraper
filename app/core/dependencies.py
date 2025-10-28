@@ -59,8 +59,8 @@ async def get_current_user(
         )
 
     # Get user from database
-    username: str = payload.get("sub")
-    if not username:
+    username = payload.get("sub")
+    if not username or not isinstance(username, str):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
@@ -68,7 +68,7 @@ async def get_current_user(
         )
 
     user = db.query(User).filter(User.username == username).first()
-    if not user:
+    if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found",

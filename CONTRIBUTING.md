@@ -141,10 +141,10 @@ def test_feature_name():
     """Test: Beschreibung was getestet wird"""
     # Arrange
     setup_data()
-    
+
     # Act
     result = function_to_test()
-    
+
     # Assert
     assert result == expected_value
 ```
@@ -195,17 +195,17 @@ Nutze Google-Style Docstrings:
 def scrape_companies(city: str, industry: str) -> List[Company]:
     """
     Scrape companies from Gelbe Seiten.
-    
+
     Args:
         city: City name (e.g. "Stuttgart")
         industry: Industry name (e.g. "IT-Services")
-    
+
     Returns:
         List of Company objects
-    
+
     Raises:
         ScraperError: If scraping fails
-    
+
     Example:
         >>> companies = scrape_companies("Stuttgart", "IT")
         >>> len(companies)
@@ -403,7 +403,7 @@ def test_new_feature():
 async def create_company():
     """
     Create a new company.
-    
+
     - **company_name**: Name of the company
     - **city**: City where company is located
     """

@@ -6,7 +6,7 @@ Request/Response models
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from app.database.models import LeadQuality, LeadStatus
 
@@ -83,8 +83,7 @@ class CompanyResponse(CompanyBase):
     is_active: bool
     extra_data: dict[str, Any] | None = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CompanyList(BaseModel):
@@ -128,8 +127,7 @@ class ScrapingJobResponse(BaseModel):
     error_message: str | None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ScrapingJobList(BaseModel):
@@ -161,5 +159,4 @@ class NoteResponse(BaseModel):
     created_at: datetime
     created_by: str | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

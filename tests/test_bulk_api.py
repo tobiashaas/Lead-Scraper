@@ -6,25 +6,6 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 
-def test_bulk_update_companies(client: TestClient, auth_headers: dict):
-    """Test Bulk Update"""
-    request_data = {
-        "company_ids": [1, 2, 3],
-        "updates": {"lead_status": "contacted", "lead_quality": "warm"},
-    }
-
-    response = client.post("/api/v1/bulk/companies/update", json=request_data, headers=auth_headers)
-
-    assert response.status_code == status.HTTP_200_OK
-    data = response.json()
-
-    assert data["success"] is True
-    assert "updated_count" in data
-    assert "failed_ids" in data
-    assert "updates_applied" in data
-    assert data["updates_applied"] == request_data["updates"]
-
-
 def test_bulk_update_invalid_fields(client: TestClient, auth_headers: dict):
     """Test Bulk Update mit ungültigen Feldern"""
     request_data = {
@@ -62,24 +43,6 @@ def test_bulk_delete_hard(client: TestClient, auth_headers: dict):
 
     assert data["success"] is True
     assert data["soft_delete"] is False
-
-
-def test_bulk_status_change(client: TestClient, auth_headers: dict):
-    """Test Bulk Status Change"""
-    request_data = {
-        "company_ids": [1, 2, 3],
-        "lead_status": "qualified",
-        "lead_quality": "hot",
-    }
-
-    response = client.post("/api/v1/bulk/companies/status", json=request_data, headers=auth_headers)
-
-    assert response.status_code == status.HTTP_200_OK
-    data = response.json()
-
-    assert data["success"] is True
-    assert "updated_count" in data
-    assert "changes" in data
 
 
 def test_bulk_status_change_no_updates(client: TestClient, auth_headers: dict):

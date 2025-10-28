@@ -1,6 +1,6 @@
 # 📊 Progress Summary - KR Lead Scraper
 
-**Datum:** 17. Oktober 2025  
+**Datum:** 17. Oktober 2025
 **Session:** Database Migration & Testing Implementation
 
 ---
@@ -170,6 +170,6 @@
 
 ---
 
-**Status:** 🟢 Auf Kurs  
-**Nächster Meilenstein:** Integration Tests & API Authentication  
+**Status:** 🟢 Auf Kurs
+**Nächster Meilenstein:** Integration Tests & API Authentication
 **Geschätzter Fortschritt:** ~45% (war 40%, jetzt +5% durch Tests)

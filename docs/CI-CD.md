@@ -337,11 +337,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Deploy to Production
       env:
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}

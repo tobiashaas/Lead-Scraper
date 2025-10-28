@@ -89,7 +89,7 @@ KR-Lead-Scraper/
    # macOS
    brew install tor
    tor
-   
+
    # Linux
    sudo apt install tor
    sudo systemctl start tor
@@ -243,7 +243,7 @@ pytest tests/integration/
 - ⚠️ **Vorsicht**: robots.txt beachten, Rate Limiting einhalten
 - ❌ **Verboten**: LinkedIn/Xing Scraping (ToS-Verstoß)
 
-**Empfehlung**: 
+**Empfehlung**:
 - Langsames Scraping (3-8 Sekunden Delay)
 - Tor/VPN für Anonymität
 - Bei Unsicherheit rechtliche Beratung einholen

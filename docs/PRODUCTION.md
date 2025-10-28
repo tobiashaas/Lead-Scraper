@@ -233,13 +233,13 @@ http {
         # API Proxy
         location / {
             limit_req zone=api_limit burst=20 nodelay;
-            
+
             proxy_pass http://api;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
-            
+
             # Timeouts
             proxy_connect_timeout 60s;
             proxy_send_timeout 60s;

@@ -38,7 +38,7 @@ class BulkScoreRequest(BaseModel):
     model_config = {"extra": "forbid"}  # Reject unknown fields
 
 
-@router.post("/companies/{company_id}")
+@router.post("/companies/{company_id:int}")
 async def score_single_company(
     company_id: int,
     db: Session = Depends(get_db),
@@ -152,9 +152,21 @@ async def score_multiple_companies(
             query = select(Company).limit(limit)
 
             if lead_status:
-                query = query.where(Company.lead_status == lead_status)
+                try:
+                    status_enum = Company.lead_status.type.enum_class[lead_status.upper()]
+                except KeyError as exc:
+                    raise HTTPException(
+                        status_code=400, detail="Invalid lead_status filter"
+                    ) from exc
+                query = query.where(Company.lead_status == status_enum)
             if lead_quality:
-                query = query.where(Company.lead_quality == lead_quality)
+                try:
+                    quality_enum = Company.lead_quality.type.enum_class[lead_quality.upper()]
+                except KeyError as exc:
+                    raise HTTPException(
+                        status_code=400, detail="Invalid lead_quality filter"
+                    ) from exc
+                query = query.where(Company.lead_quality == quality_enum)
 
         result = db.execute(query)
         companies = result.scalars().all()
@@ -215,6 +227,8 @@ async def score_multiple_companies(
             "stats": stats,
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Bulk scoring failed: {e}")
         raise HTTPException(status_code=500, detail=f"Bulk scoring failed: {str(e)}") from e

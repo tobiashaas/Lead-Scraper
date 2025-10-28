@@ -42,7 +42,7 @@ class DataValidator:
         try:
             # Validate with email-validator
             valid = validate_email(email, check_deliverability=False)
-            return valid.normalized
+            return str(valid.normalized) if valid.normalized else None
         except EmailNotValidError as e:
             logger.debug(f"Invalid email '{email}': {e}")
             return None
@@ -75,9 +75,10 @@ class DataValidator:
             # Validate
             if phonenumbers.is_valid_number(parsed):
                 # Format as international
-                return phonenumbers.format_number(
+                formatted = phonenumbers.format_number(
                     parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL
                 )
+                return str(formatted) if formatted else None
             else:
                 logger.debug(f"Invalid phone number: {phone}")
                 return None

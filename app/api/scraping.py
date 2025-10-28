@@ -48,7 +48,7 @@ async def create_scraping_job(
     db.refresh(db_job)
 
     # Start job in background
-    background_tasks.add_task(run_scraping_job, db_job.id, job.dict())
+    background_tasks.add_task(run_scraping_job, db_job.id, job.model_dump())
 
     return db_job
 
@@ -130,11 +130,12 @@ async def run_scraping_job(job_id: int, config: dict):
         job_id: Scraping job ID
         config: Job configuration
     """
-    from datetime import datetime
+    from datetime import datetime, timezone
 
     from app.database.database import SessionLocal
 
     db = SessionLocal()
+    job = None
 
     try:
         # Get job
@@ -145,7 +146,7 @@ async def run_scraping_job(job_id: int, config: dict):
 
         # Update status
         job.status = "running"
-        job.started_at = datetime.utcnow()
+        job.started_at = datetime.now(timezone.utc)
         db.commit()
 
         # Import scraper based on source
@@ -202,21 +203,26 @@ async def run_scraping_job(job_id: int, config: dict):
 
         # Update job
         job.status = "completed"
-        job.completed_at = datetime.utcnow()
-        job.duration_seconds = (job.completed_at - job.started_at).total_seconds()
+        job.completed_at = datetime.now(timezone.utc)
+        # Convert naive datetime to timezone-aware for subtraction
+        started_at_aware = job.started_at.replace(tzinfo=timezone.utc) if job.started_at.tzinfo is None else job.started_at
+        job.duration_seconds = (job.completed_at - started_at_aware).total_seconds()
         job.results_count = len(results)
         job.new_companies = new_count
         job.updated_companies = updated_count
         db.commit()
 
     except Exception as e:
-        # Update job with error
-        job.status = "failed"
-        job.error_message = str(e)
-        job.completed_at = datetime.utcnow()
-        if job.started_at:
-            job.duration_seconds = (job.completed_at - job.started_at).total_seconds()
-        db.commit()
+        # Update job with error (if job available)
+        if job is not None:
+            job.status = "failed"
+            job.error_message = str(e)
+            job.completed_at = datetime.now(timezone.utc)
+            if job.started_at:
+                # Convert naive datetime to timezone-aware for subtraction
+                started_at_aware = job.started_at.replace(tzinfo=timezone.utc) if job.started_at.tzinfo is None else job.started_at
+                job.duration_seconds = (job.completed_at - started_at_aware).total_seconds()
+            db.commit()
 
     finally:
         db.close()

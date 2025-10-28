@@ -92,13 +92,20 @@ class LeadScorer:
             {
                 "score": 75,
                 "quality": "warm",
-                "breakdown": {...},
-                "recommendations": [...]
+                "breakdown": {
+                    "contact_data": dict[str, Any],
+                    "website": dict[str, Any],
+                    "industry": dict[str, Any],
+                    "company_size": dict[str, Any],
+                    "technologies": dict[str, Any],
+                    "data_quality": dict[str, Any]
+                },
+                "recommendations": list[str]
             }
         """
         score = 0
-        breakdown = {}
-        recommendations = []
+        breakdown: dict[str, dict[str, Any]] = {}
+        recommendations: list[str] = []
 
         # 1. Kontaktdaten Vollständigkeit (0-30 Punkte)
         contact_score, contact_breakdown = self._score_contact_data(company_data)
@@ -160,10 +167,19 @@ class LeadScorer:
             "recommendations": recommendations,
         }
 
-    def _score_contact_data(self, data: dict[str, Any]) -> tuple[int, dict]:
-        """Bewertet Kontaktdaten Vollständigkeit (0-30 Punkte)"""
+    def _score_contact_data(self, data: dict[str, Any]) -> tuple[int, dict[str, str]]:
+        """Bewertet Kontaktdaten Vollständigkeit (0-30 Punkte)
+        
+        Args:
+            data: Dictionary mit Firmendaten
+            
+        Returns:
+            Tuple aus (Punktzahl, Breakdown-Dictionary)
+            - Punktzahl: Integer zwischen 0 und 30
+            - Breakdown: Dictionary mit Validierungsstatus für Kontaktfelder
+        """
         score = 0
-        breakdown = {}
+        breakdown: dict[str, str] = {}
 
         # Email (10 Punkte)
         if data.get("email") or data.get("contact_email"):
@@ -205,20 +221,41 @@ class LeadScorer:
 
         return score, breakdown
 
-    def _score_website(self, data: dict[str, Any]) -> tuple[int, dict]:
-        """Bewertet Website Qualität (0-20 Punkte)"""
+    def _score_website(self, data: dict[str, Any]) -> tuple[int, dict[str, str | bool]]:
+        """Bewertet die Qualität der Unternehmenswebsite
+        
+        Args:
+            data: Dictionary mit Firmendaten, das das 'website'-Feld enthalten kann
+            
+        Returns:
+            Tuple aus (Punktzahl, Breakdown-Dictionary)
+            - Punktzahl: Integer zwischen 0 und 20
+            - Breakdown: Dictionary mit Details zur Website-Bewertung, enthält:
+                - present: bool - Ob eine Website vorhanden ist
+                - https: bool - Ob HTTPS verwendet wird
+                - own_domain: bool - Ob es sich um eine eigene Domain handelt
+                - status: str - Status der Website ('missing' oder 'present')
+        """
         score = 0
-        breakdown = {}
+        breakdown: dict[str, str | bool] = {
+            "present": False,
+            "https": False,
+            "own_domain": False,
+            "status": "missing"  # 'missing' oder 'present'
+        }
 
-        website = data.get("website") or data.get("source_url")
+        website = data.get("website")
+        if not website or not isinstance(website, str):
+            return 0, breakdown
 
+        website = website.lower().strip()
         if not website:
-            breakdown["status"] = "missing"
             return 0, breakdown
 
         # Website vorhanden (10 Punkte)
-        score += 10
+        breakdown["present"] = True
         breakdown["status"] = "present"
+        score += 10
 
         # HTTPS (5 Punkte)
         if website.startswith("https://"):
@@ -229,7 +266,7 @@ class LeadScorer:
 
         # Eigene Domain (nicht Social Media) (5 Punkte)
         social_domains = ["facebook", "linkedin", "twitter", "instagram", "xing"]
-        if not any(domain in website.lower() for domain in social_domains):
+        if not any(domain in website for domain in social_domains):
             score += 5
             breakdown["own_domain"] = True
         else:
@@ -237,36 +274,80 @@ class LeadScorer:
 
         return score, breakdown
 
-    def _score_industry(self, data: dict[str, Any]) -> tuple[int, dict]:
-        """Bewertet Branche/Industry (0-15 Punkte)"""
+    def _score_industry(self, data: dict[str, Any]) -> tuple[int, dict[str, str | bool]]:
+        """Bewertet die Branchenzugehörigkeit des Unternehmens
+        
+        Args:
+            data: Dictionary mit Firmendaten, das das 'industry'-Feld enthalten kann
+            
+        Returns:
+            Tuple aus (Punktzahl, Breakdown-Dictionary)
+            - Punktzahl: Integer zwischen 0 und 15
+            - Breakdown: Dictionary mit Details zur Branchenbewertung, enthält:
+                - status: str - 'missing' oder 'present'
+                - high_value: bool - Ob die Branche als hochwertig eingestuft wird
+                
+        Bewertungskriterien:
+        - Vorhandene Branche: 5 Punkte
+        - Hochwertige Branche: 10 zusätzliche Punkte
+        """
         score = 0
-        breakdown = {}
+        breakdown: dict[str, str | bool] = {
+            "status": "missing",  # 'missing' oder 'present'
+            "high_value": False  # True wenn Branche in HIGH_VALUE_INDUSTRIES
+        }
 
-        industry = data.get("industry", "").lower()
-
-        if not industry:
-            breakdown["status"] = "missing"
+        industry = data.get("industry")
+        if not industry or not isinstance(industry, str) or not industry.strip():
             return 0, breakdown
 
+        industry = industry.lower().strip()
+        
         # Industry vorhanden (5 Punkte)
         score += 5
         breakdown["status"] = "present"
 
         # Hochwertige Branche (10 Punkte)
-        # Use word boundaries to avoid false matches (e.g., "it" in "Retail")
-        industry_words = set(industry.lower().split())
-        if any(keyword in industry_words for keyword in self.HIGH_VALUE_INDUSTRIES):
+        industry_words = set(industry.split())
+        breakdown["high_value"] = any(
+            keyword in industry_words 
+            for keyword in self.HIGH_VALUE_INDUSTRIES
+        )
+        
+        if breakdown["high_value"]:
             score += 10
-            breakdown["high_value"] = True
-        else:
-            breakdown["high_value"] = False
 
         return score, breakdown
 
-    def _score_company_size(self, data: dict[str, Any]) -> tuple[int, dict]:
-        """Bewertet Firmengröße (0-15 Punkte)"""
+    def _score_company_size(self, data: dict[str, Any]) -> tuple[int, dict[str, str | int | None]]:
+        """Bewertet die Firmengröße basierend auf der Teamgröße
+        
+        Args:
+            data: Dictionary mit Firmendaten, das das 'team_size'-Feld enthalten kann
+            
+        Returns:
+            Tuple aus (Punktzahl, Breakdown-Dictionary)
+            - Punktzahl: Integer zwischen 0 und 15
+            - Breakdown: Dictionary mit Details zur Größenbewertung, enthält:
+                - status: str - 'missing', 'unknown' oder 'present'
+                - value: Optional[int] - Die ursprüngliche Teamgröße
+                - size_category: Optional[str] - Kategorie der Firmengröße
+                - category: Optional[str] - Alias für size_category (kompatibilität)
+                
+        Bewertungskriterien:
+        - Keine Angabe: 5 Punkte (default)
+        - Sehr klein (<10): 7 Punkte
+        - Klein (10-49): 10 Punkte
+        - Mittel (50-99): 12 Punkte
+        - Groß (100+): 15 Punkte
+        """
         score = 0
-        breakdown = {}
+        breakdown: dict[str, str | int | None] = {
+            "status": "missing",  # 'missing', 'unknown' oder 'present'
+            "value": None,  # Die ursprüngliche Teamgröße
+            "size_category": None,  # 'very_small', 'small', 'medium', 'large'
+            "category": None  # Alias für size_category (kompatibilität)
+        }
 
         team_size = data.get("team_size")
 
@@ -298,10 +379,31 @@ class LeadScorer:
 
         return score, breakdown
 
-    def _score_technologies(self, data: dict[str, Any]) -> tuple[int, dict]:
-        """Bewertet Technologie Stack (0-10 Punkte)"""
+    def _score_technologies(self, data: dict[str, Any]) -> tuple[int, dict[str, int | str]]:
+        """Bewertet den Technologie-Stack des Unternehmens
+        
+        Args:
+            data: Dictionary mit Firmendaten, das ein 'technologies'-Feld enthalten kann
+            
+        Returns:
+            Tuple aus (Punktzahl, Breakdown-Dictionary)
+            - Punktzahl: Integer zwischen 0 und 10
+            - Breakdown: Dictionary mit Details zur Technologiebewertung, enthält:
+                - status: str - 'missing' oder 'present'
+                - count: int - Anzahl der Technologien
+                - modern_count: int - Anzahl der modernen Technologien
+                
+        Bewertungskriterien:
+        - Keine Technologien: 0 Punkte
+        - Mindestens eine Technologie: 5 Punkte
+        - Jede moderne Technologie: 1 Punkt (max. 5 Punkte)
+        """
         score = 0
-        breakdown = {}
+        breakdown: dict[str, int | str] = {
+            "status": "missing",  # 'missing' oder 'present'
+            "count": 0,  # Gesamtanzahl der Technologien
+            "modern_count": 0  # Anzahl der modernen Technologien
+        }
 
         technologies = data.get("technologies", [])
 
@@ -365,16 +467,16 @@ class LeadScorer:
         else:
             return "low_quality"
 
-    def _is_valid_email(self, email: str) -> bool:
+    def _is_valid_email(self, email: str | None) -> bool:
         """Validiert Email Format"""
-        if not email:
+        if not email or not isinstance(email, str):
             return False
         pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         return bool(re.match(pattern, email))
 
-    def _is_valid_phone(self, phone: str) -> bool:
+    def _is_valid_phone(self, phone: str | None) -> bool:
         """Validiert Telefonnummer (einfache Prüfung)"""
-        if not phone:
+        if not phone or not isinstance(phone, str):
             return False
         # Mindestens 6 Ziffern
         digits = re.sub(r"\D", "", phone)
@@ -391,10 +493,28 @@ def score_company(company_data: dict[str, Any]) -> dict[str, Any]:
     Convenience Function für schnelles Lead Scoring
 
     Args:
-        company_data: Company Daten Dictionary
+        company_data: Company Daten Dictionary mit Firmeninformationen
 
     Returns:
-        Scoring Result mit score, quality, breakdown, recommendations
+        dict[str, Any]: {
+            'score': int,  # Punktewert 0-100
+            'quality': Literal['hot', 'warm', 'cold', 'low_quality'],
+            'breakdown': {
+                'contact_data': dict[str, Any],
+                'website': dict[str, Any],
+                'industry': dict[str, Any],
+                'company_size': dict[str, Any],
+                'technologies': dict[str, Any],
+                'data_quality': dict[str, Any]
+            },
+            'recommendations': list[str]
+        }
     """
     scorer = LeadScorer()
-    return scorer.score_lead(company_data)
+    result = scorer.score_lead(company_data)
+    
+    # Zusätzliche Typvalidierung für das Ergebnis
+    if not all(key in result for key in ('score', 'quality', 'breakdown', 'recommendations')):
+        raise ValueError("Ungültiges Ergebnisformat vom LeadScorer")
+        
+    return result

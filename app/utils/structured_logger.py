@@ -8,7 +8,7 @@ import logging
 import sys
 import traceback
 from contextvars import ContextVar
-from datetime import datetime
+from datetime import datetime, timezone
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
@@ -28,7 +28,7 @@ class JSONFormatter(logging.Formatter):
 
         # Base log entry
         log_entry = {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),
@@ -47,7 +47,7 @@ class JSONFormatter(logging.Formatter):
             log_entry.update(record.extra_fields)
 
         # Add exception info if present
-        if record.exc_info:
+        if record.exc_info and record.exc_info[0] is not None:
             log_entry["exception"] = {
                 "type": record.exc_info[0].__name__,
                 "message": str(record.exc_info[1]),

@@ -101,7 +101,7 @@ Für Production-Deployments:
 
 1. **Logs anschauen:**
    - Actions Tab → Workflow → Run → Job → Step
-   
+
 2. **Lokal reproduzieren:**
    ```bash
    pytest tests/ -v

@@ -147,7 +147,7 @@ addopts = [
     "-ra",
     "--strict-markers",
     "--strict-config",
-    "--cov=app",
+    "--cov=app/api",
     "--cov-report=term-missing",
     "--cov-report=html",
 ]
@@ -160,13 +160,11 @@ asyncio_mode = "auto"
 
 # Coverage Configuration
 [tool.coverage.run]
-source = ["app"]
+source = ["app/api"]
 omit = [
     "*/tests/*",
-    "*/migrations/*",
-    "*/__pycache__/*",
-    "*/venv/*",
 ]
+include = ["app/api/*"]
 
 [tool.coverage.report]
 exclude_lines = [

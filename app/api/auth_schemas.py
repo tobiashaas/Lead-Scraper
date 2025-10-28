@@ -5,7 +5,7 @@ Pydantic models for authentication endpoints
 
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from app.database.models import UserRole
 
@@ -59,8 +59,7 @@ class UserResponse(UserBase):
     last_login: datetime | None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Login Schema

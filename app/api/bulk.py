@@ -12,7 +12,7 @@ from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, get_db
-from app.database.models import Company, User
+from app.database.models import Company, LeadQuality, LeadStatus, User
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/bulk", tags=["Bulk Operations"])
@@ -87,6 +87,21 @@ async def bulk_update_companies(
         if not request.company_ids:
             raise HTTPException(status_code=400, detail="No company IDs provided")
 
+        normalized_updates = dict(request.updates)
+        if "lead_status" in normalized_updates:
+            try:
+                member = LeadStatus.__members__[normalized_updates["lead_status"].upper()]
+                normalized_updates["lead_status"] = member.name
+            except KeyError as exc:
+                raise HTTPException(status_code=400, detail="Invalid lead_status value") from exc
+
+        if "lead_quality" in normalized_updates:
+            try:
+                quality_member = LeadQuality.__members__[normalized_updates["lead_quality"].upper()]
+                normalized_updates["lead_quality"] = quality_member.name
+            except KeyError as exc:
+                raise HTTPException(status_code=400, detail="Invalid lead_quality value") from exc
+
         # Prüfe ob Companies existieren
         result = db.execute(select(Company.id).where(Company.id.in_(request.company_ids)))
         existing_ids = {row[0] for row in result.all()}
@@ -95,7 +110,9 @@ async def bulk_update_companies(
         # Bulk Update
         if existing_ids:
             stmt = (
-                update(Company).where(Company.id.in_(list(existing_ids))).values(**request.updates)
+                update(Company)
+                .where(Company.id.in_(list(existing_ids)))
+                .values(**normalized_updates)
             )
             db.execute(stmt)
             db.commit()
@@ -104,11 +121,22 @@ async def bulk_update_companies(
 
         logger.info(f"Bulk update: {updated_count} companies updated by {current_user.username}")
 
+        response_updates: dict[str, str | int | bool | None] = {}
+        for key, value in normalized_updates.items():
+            if key == "lead_status":
+                status_member = LeadStatus.__members__.get(value)
+                response_updates[key] = status_member.value if status_member else value
+            elif key == "lead_quality":
+                quality_member = LeadQuality.__members__.get(value)
+                response_updates[key] = quality_member.value if quality_member else value
+            else:
+                response_updates[key] = value
+
         return {
             "success": True,
             "updated_count": updated_count,
             "failed_ids": failed_ids,
-            "updates_applied": request.updates,
+            "updates_applied": response_updates,
         }
 
     except HTTPException:
@@ -228,11 +256,17 @@ async def bulk_change_status(
             )
 
         # Build updates dict
-        updates = {}
+        updates: dict[str, str] = {}
         if request.lead_status:
-            updates["lead_status"] = request.lead_status
+            try:
+                updates["lead_status"] = LeadStatus[request.lead_status.upper()].name
+            except KeyError as exc:
+                raise HTTPException(status_code=400, detail="Invalid lead_status value") from exc
         if request.lead_quality:
-            updates["lead_quality"] = request.lead_quality
+            try:
+                updates["lead_quality"] = LeadQuality[request.lead_quality.upper()].name
+            except KeyError as exc:
+                raise HTTPException(status_code=400, detail="Invalid lead_quality value") from exc
 
         # Prüfe ob Companies existieren
         result = db.execute(select(Company.id).where(Company.id.in_(request.company_ids)))
@@ -249,10 +283,15 @@ async def bulk_change_status(
             f"Bulk status change: {updated_count} companies updated by {current_user.username}"
         )
 
+        response_changes = {
+            key: (LeadStatus if key == "lead_status" else LeadQuality)[value].value
+            for key, value in updates.items()
+        }
+
         return {
             "success": True,
             "updated_count": updated_count,
-            "changes": updates,
+            "changes": response_changes,
         }
 
     except HTTPException:
@@ -300,6 +339,8 @@ async def bulk_restore_companies(
             "restored_count": restored_count,
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Bulk restore failed: {e}")
         db.rollback()

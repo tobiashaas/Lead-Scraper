@@ -169,13 +169,13 @@ data = scraper.extract_company_data("https://company.com")
 ```python
 try:
     data = scraper.extract_company_data(url)
-    
+
     if "error" in data:
         print(f"Fehler: {data['error']}")
     else:
         # Verarbeite Daten
         process_company_data(data)
-        
+
 except Exception as e:
     logger.error(f"Scraping fehlgeschlagen: {e}")
 ```
@@ -190,7 +190,7 @@ urls = ["https://company1.com", "https://company2.com", ...]
 for url in urls:
     data = scraper.extract_company_data(url)
     process_data(data)
-    
+
     # Pause zwischen Requests
     time.sleep(2)
 ```
@@ -220,16 +220,16 @@ class EnhancedScraper(BaseScraper):
     def __init__(self):
         super().__init__()
         self.ai_scraper = AIWebScraper()
-    
+
     def scrape(self, url: str):
         # 1. Normale Scraping-Logik
         basic_data = super().scrape(url)
-        
+
         # 2. AI-Enhancement für fehlende Daten
         if not basic_data.get("employees"):
             ai_data = self.ai_scraper.extract_employees(url)
             basic_data["employees"] = ai_data
-        
+
         return basic_data
 ```
 
@@ -238,7 +238,7 @@ class EnhancedScraper(BaseScraper):
 ```python
 def scrape_company_smart(url: str):
     """Hybrid: Normale Scraper + AI Fallback"""
-    
+
     # 1. Versuche normalen Scraper
     try:
         data = normal_scraper.scrape(url)
@@ -246,7 +246,7 @@ def scrape_company_smart(url: str):
             return data
     except Exception as e:
         logger.warning(f"Normal scraper failed: {e}")
-    
+
     # 2. Fallback zu AI Scraper
     logger.info("Using AI scraper as fallback")
     ai_scraper = AIWebScraper()
@@ -363,28 +363,28 @@ from app.utils.ai_web_scraper import AIWebScraper
 
 def enrich_company_data(company: Company):
     """Erweitere Company-Daten mit AI Scraper"""
-    
+
     if not company.website:
         return
-    
+
     scraper = AIWebScraper()
-    
+
     # Extrahiere zusätzliche Daten
     ai_data = scraper.extract_company_data(company.website)
-    
+
     # Update Company
     if ai_data.get("employees"):
         company.employee_count = len(ai_data["employees"])
-    
+
     if ai_data.get("services"):
         company.services = ", ".join(ai_data["services"])
-    
+
     # Speichere Mitarbeiter separat
     for emp_data in ai_data.get("employees", []):
         # Erstelle Employee-Objekt
         employee = create_employee(emp_data, company)
         db.add(employee)
-    
+
     db.commit()
 ```
 
@@ -396,30 +396,30 @@ from app.database.models import Company
 
 def enrich_all_companies():
     """Erweitere alle Companies mit AI-Daten"""
-    
+
     db = next(get_db())
     scraper = AIWebScraper()
-    
+
     companies = db.query(Company).filter(
         Company.website.isnot(None),
         Company.employee_count.is_(None)
     ).all()
-    
+
     for company in companies:
         try:
             print(f"Processing: {company.company_name}")
-            
+
             ai_data = scraper.extract_company_data(company.website)
-            
+
             # Update Company
             if ai_data.get("employees"):
                 company.employee_count = len(ai_data["employees"])
-            
+
             db.commit()
-            
+
             # Rate limiting
             time.sleep(5)
-            
+
         except Exception as e:
             logger.error(f"Error processing {company.company_name}: {e}")
             continue

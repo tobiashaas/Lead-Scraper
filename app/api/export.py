@@ -45,17 +45,17 @@ async def export_companies_csv(
 
         if lead_status:
             try:
-                status_enum = LeadStatus(lead_status)
+                status_enum = LeadStatus[lead_status.upper()]
                 query = query.where(Company.lead_status == status_enum)
-            except ValueError:
+            except KeyError:
                 raise HTTPException(
                     status_code=400, detail=f"Invalid lead_status: {lead_status}"
                 ) from None
         if lead_quality:
             try:
-                quality_enum = LeadQuality(lead_quality)
+                quality_enum = LeadQuality[lead_quality.upper()]
                 query = query.where(Company.lead_quality == quality_enum)
-            except ValueError:
+            except KeyError:
                 raise HTTPException(
                     status_code=400, detail=f"Invalid lead_quality: {lead_quality}"
                 ) from None
@@ -105,8 +105,8 @@ async def export_companies_csv(
                     company.lead_status,
                     company.lead_quality,
                     company.lead_score,
-                    company.created_at.isoformat() if company.created_at else "",
-                    company.updated_at.isoformat() if company.updated_at else "",
+                    company.first_scraped_at.isoformat() if company.first_scraped_at else "",
+                    company.last_updated_at.isoformat() if company.last_updated_at else "",
                 ]
             )
 
@@ -121,6 +121,8 @@ async def export_companies_csv(
             headers={"Content-Disposition": f"attachment; filename={filename}"},
         )
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"CSV export failed: {e}")
         raise HTTPException(status_code=500, detail=f"CSV export failed: {str(e)}") from e
@@ -187,8 +189,12 @@ async def export_companies_json(
                     "lead_status": company.lead_status,
                     "lead_quality": company.lead_quality,
                     "lead_score": company.lead_score,
-                    "created_at": company.created_at.isoformat() if company.created_at else None,
-                    "updated_at": company.updated_at.isoformat() if company.updated_at else None,
+                    "created_at": company.first_scraped_at.isoformat()
+                    if company.first_scraped_at
+                    else None,
+                    "updated_at": company.last_updated_at.isoformat()
+                    if company.last_updated_at
+                    else None,
                 }
             )
 
@@ -203,6 +209,8 @@ async def export_companies_json(
             "companies": companies_data,
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"JSON export failed: {e}")
         raise HTTPException(status_code=500, detail=f"JSON export failed: {str(e)}") from e
@@ -282,6 +290,8 @@ async def export_companies_stats(
             "exported_at": datetime.now().isoformat(),
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Stats export failed: {e}")
         raise HTTPException(status_code=500, detail=f"Stats export failed: {str(e)}") from e

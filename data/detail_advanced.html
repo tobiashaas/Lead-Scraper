@@ -1,6 +1,6 @@
 <!DOCTYPE html><html class="js" lang="de"><head>
     <link rel="preconnect" href="https://a.delivery.consentmanager.net"><link rel="preconnect" href="https://cdn.consentmanager.net"><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-KNK9MRG"></script><script>if(!("gdprAppliesGlobally" in window)){window.gdprAppliesGlobally=true}if(!("cmp_id" in window)||window.cmp_id<1){window.cmp_id=0}if(!("cmp_cdid" in window)){window.cmp_cdid="257e89ef4274"}if(!("cmp_params" in window)){window.cmp_params=""}if(!("cmp_host" in window)){window.cmp_host="a.delivery.consentmanager.net"}if(!("cmp_cdn" in window)){window.cmp_cdn="cdn.consentmanager.net"}if(!("cmp_proto" in window)){window.cmp_proto="https:"}if(!("cmp_codesrc" in window)){window.cmp_codesrc="1"}window.cmp_getsupportedLangs=function(){var b=["DE","EN","FR","IT","NO","DA","FI","ES","PT","RO","BG","ET","EL","GA","HR","LV","LT","MT","NL","PL","SV","SK","SL","CS","HU","RU","SR","ZH","TR","UK","AR","BS"];if("cmp_customlanguages" in window){for(var a=0;a<window.cmp_customlanguages.length;a++){b.push(window.cmp_customlanguages[a].l.toUpperCase())}}return b};window.cmp_getRTLLangs=function(){var a=["AR"];if("cmp_customlanguages" in window){for(var b=0;b<window.cmp_customlanguages.length;b++){if("r" in window.cmp_customlanguages[b]&&window.cmp_customlanguages[b].r){a.push(window.cmp_customlanguages[b].l)}}}return a};window.cmp_getlang=function(j){if(typeof(j)!="boolean"){j=true}if(j&&typeof(cmp_getlang.usedlang)=="string"&&cmp_getlang.usedlang!==""){return cmp_getlang.usedlang}var g=window.cmp_getsupportedLangs();var c=[];var f=location.hash;var e=location.search;var a="languages" in navigator?navigator.languages:[];if(f.indexOf("cmplang=")!=-1){c.push(f.substr(f.indexOf("cmplang=")+8,2).toUpperCase())}else{if(e.indexOf("cmplang=")!=-1){c.push(e.substr(e.indexOf("cmplang=")+8,2).toUpperCase())}else{if("cmp_setlang" in window&&window.cmp_setlang!=""){c.push(window.cmp_setlang.toUpperCase())}else{if(a.length>0){for(var d=0;d<a.length;d++){c.push(a[d])}}}}}if("language" in navigator){c.push(navigator.language)}if("userLanguage" in navigator){c.push(navigator.userLanguage)}var h="";for(var d=0;d<c.length;d++){var b=c[d].toUpperCase();if(g.indexOf(b)!=-1){h=b;break}if(b.indexOf("-")!=-1){b=b.substr(0,2)}if(g.indexOf(b)!=-1){h=b;break}}if(h==""&&typeof(cmp_getlang.defaultlang)=="string"&&cmp_getlang.defaultlang!==""){return cmp_getlang.defaultlang}else{if(h==""){h="EN"}}h=h.toUpperCase();return h};(function(){var u=document;var v=u.getElementsByTagName;var h=window;var o="";var b="_en";if("cmp_getlang" in h){o=h.cmp_getlang().toLowerCase();if("cmp_customlanguages" in h){for(var q=0;q<h.cmp_customlanguages.length;q++){if(h.cmp_customlanguages[q].l.toUpperCase()==o.toUpperCase()){o="en";break}}}b="_"+o}function x(i,e){var w="";i+="=";var s=i.length;var d=location;if(d.hash.indexOf(i)!=-1){w=d.hash.substr(d.hash.indexOf(i)+s,9999)}else{if(d.search.indexOf(i)!=-1){w=d.search.substr(d.search.indexOf(i)+s,9999)}else{return e}}if(w.indexOf("&")!=-1){w=w.substr(0,w.indexOf("&"))}return w}var k=("cmp_proto" in h)?h.cmp_proto:"https:";if(k!="http:"&&k!="https:"){k="https:"}var g=("cmp_ref" in h)?h.cmp_ref:location.href;var j=u.createElement("script");j.setAttribute("data-cmp-ab","1");var c=x("cmpdesign","cmp_design" in h?h.cmp_design:"");var f=x("cmpregulationkey","cmp_regulationkey" in h?h.cmp_regulationkey:"");var r=x("cmpgppkey","cmp_gppkey" in h?h.cmp_gppkey:"");var n=x("cmpatt","cmp_att" in h?h.cmp_att:"");j.src=k+"//"+h.cmp_host+"/delivery/cmp.php?"+("cmp_id" in h&&h.cmp_id>0?"id="+h.cmp_id:"")+("cmp_cdid" in h?"&cdid="+h.cmp_cdid:"")+"&h="+encodeURIComponent(g)+(c!=""?"&cmpdesign="+encodeURIComponent(c):"")+(f!=""?"&cmpregulationkey="+encodeURIComponent(f):"")+(r!=""?"&cmpgppkey="+encodeURIComponent(r):"")+(n!=""?"&cmpatt="+encodeURIComponent(n):"")+("cmp_params" in h?"&"+h.cmp_params:"")+(u.cookie.length>0?"&__cmpfcc=1":"")+"&l="+o.toLowerCase()+"&o="+(new Date()).getTime();j.type="text/javascript";j.async=true;if(u.currentScript&&u.currentScript.parentElement){u.currentScript.parentElement.appendChild(j)}else{if(u.body){u.body.appendChild(j)}else{var t=v("body");if(t.length==0){t=v("div")}if(t.length==0){t=v("span")}if(t.length==0){t=v("ins")}if(t.length==0){t=v("script")}if(t.length==0){t=v("head")}if(t.length>0){t[0].appendChild(j)}}}var m="js";var p=x("cmpdebugunminimized","cmpdebugunminimized" in h?h.cmpdebugunminimized:0)>0?"":".min";var a=x("cmpdebugcoverage","cmp_debugcoverage" in h?h.cmp_debugcoverage:"");if(a=="1"){m="instrumented";p=""}var j=u.createElement("script");j.src=k+"//"+h.cmp_cdn+"/delivery/"+m+"/cmp"+b+p+".js";j.type="text/javascript";j.setAttribute("data-cmp-ab","1");j.async=true;if(u.currentScript&&u.currentScript.parentElement){u.currentScript.parentElement.appendChild(j)}else{if(u.body){u.body.appendChild(j)}else{var t=v("body");if(t.length==0){t=v("div")}if(t.length==0){t=v("span")}if(t.length==0){t=v("ins")}if(t.length==0){t=v("script")}if(t.length==0){t=v("head")}if(t.length>0){t[0].appendChild(j)}}}})();window.cmp_addFrame=function(b){if(!window.frames[b]){if(document.body){var a=document.createElement("iframe");a.style.cssText="display:none";if("cmp_cdn" in window&&"cmp_ultrablocking" in window&&window.cmp_ultrablocking>0){a.src="//"+window.cmp_cdn+"/delivery/empty.html"}a.name=b;a.setAttribute("title","Intentionally hidden, please ignore");a.setAttribute("role","none");a.setAttribute("tabindex","-1");document.body.appendChild(a)}else{window.setTimeout(window.cmp_addFrame,10,b)}}};window.cmp_rc=function(h){var b=document.cookie;var f="";var d=0;while(b!=""&&d<100){d++;while(b.substr(0,1)==" "){b=b.substr(1,b.length)}var g=b.substring(0,b.indexOf("="));if(b.indexOf(";")!=-1){var c=b.substring(b.indexOf("=")+1,b.indexOf(";"))}else{var c=b.substr(b.indexOf("=")+1,b.length)}if(h==g){f=c}var e=b.indexOf(";")+1;if(e==0){e=b.length}b=b.substring(e,b.length)}return(f)};window.cmp_stub=function(){var a=arguments;__cmp.a=__cmp.a||[];if(!a.length){return __cmp.a}else{if(a[0]==="ping"){if(a[1]===2){a[2]({gdprApplies:gdprAppliesGlobally,cmpLoaded:false,cmpStatus:"stub",displayStatus:"hidden",apiVersion:"2.0",cmpId:31},true)}else{a[2](false,true)}}else{if(a[0]==="getUSPData"){a[2]({version:1,uspString:window.cmp_rc("")},true)}else{if(a[0]==="getTCData"){__cmp.a.push([].slice.apply(a))}else{if(a[0]==="addEventListener"||a[0]==="removeEventListener"){__cmp.a.push([].slice.apply(a))}else{if(a.length==4&&a[3]===false){a[2]({},false)}else{__cmp.a.push([].slice.apply(a))}}}}}}};window.cmp_gpp_ping=function(){return{gppVersion:"1.0",cmpStatus:"stub",cmpDisplayStatus:"hidden",supportedAPIs:["tcfca","usnat","usca","usva","usco","usut","usct"],cmpId:31}};window.cmp_gppstub=function(){var a=arguments;__gpp.q=__gpp.q||[];if(!a.length){return __gpp.q}var g=a[0];var f=a.length>1?a[1]:null;var e=a.length>2?a[2]:null;if(g==="ping"){return window.cmp_gpp_ping()}else{if(g==="addEventListener"){__gpp.e=__gpp.e||[];if(!("lastId" in __gpp)){__gpp.lastId=0}__gpp.lastId++;var c=__gpp.lastId;__gpp.e.push({id:c,callback:f});return{eventName:"listenerRegistered",listenerId:c,data:true,pingData:window.cmp_gpp_ping()}}else{if(g==="removeEventListener"){var h=false;__gpp.e=__gpp.e||[];for(var d=0;d<__gpp.e.length;d++){if(__gpp.e[d].id==e){__gpp.e[d].splice(d,1);h=true;break}}return{eventName:"listenerRemoved",listenerId:e,data:h,pingData:window.cmp_gpp_ping()}}else{if(g==="getGPPData"){return{sectionId:3,gppVersion:1,sectionList:[],applicableSections:[0],gppString:"",pingData:window.cmp_gpp_ping()}}else{if(g==="hasSection"||g==="getSection"||g==="getField"){return null}else{__gpp.q.push([].slice.apply(a))}}}}}};window.cmp_msghandler=function(d){var a=typeof d.data==="string";try{var c=a?JSON.parse(d.data):d.data}catch(f){var c=null}if(typeof(c)==="object"&&c!==null&&"__cmpCall" in c){var b=c.__cmpCall;window.__cmp(b.command,b.parameter,function(h,g){var e={__cmpReturn:{returnValue:h,success:g,callId:b.callId}};d.source.postMessage(a?JSON.stringify(e):e,"*")})}if(typeof(c)==="object"&&c!==null&&"__uspapiCall" in c){var b=c.__uspapiCall;window.__uspapi(b.command,b.version,function(h,g){var e={__uspapiReturn:{returnValue:h,success:g,callId:b.callId}};d.source.postMessage(a?JSON.stringify(e):e,"*")})}if(typeof(c)==="object"&&c!==null&&"__tcfapiCall" in c){var b=c.__tcfapiCall;window.__tcfapi(b.command,b.version,function(h,g){var e={__tcfapiReturn:{returnValue:h,success:g,callId:b.callId}};d.source.postMessage(a?JSON.stringify(e):e,"*")},b.parameter)}if(typeof(c)==="object"&&c!==null&&"__gppCall" in c){var b=c.__gppCall;window.__gpp(b.command,function(h,g){var e={__gppReturn:{returnValue:h,success:g,callId:b.callId}};d.source.postMessage(a?JSON.stringify(e):e,"*")},"parameter" in b?b.parameter:null,"version" in b?b.version:1)}};window.cmp_setStub=function(a){if(!(a in window)||(typeof(window[a])!=="function"&&typeof(window[a])!=="object"&&(typeof(window[a])==="undefined"||window[a]!==null))){window[a]=window.cmp_stub;window[a].msgHandler=window.cmp_msghandler;window.addEventListener("message",window.cmp_msghandler,false)}};window.cmp_setGppStub=function(a){if(!(a in window)||(typeof(window[a])!=="function"&&typeof(window[a])!=="object"&&(typeof(window[a])==="undefined"||window[a]!==null))){window[a]=window.cmp_gppstub;window[a].msgHandler=window.cmp_msghandler;window.addEventListener("message",window.cmp_msghandler,false)}};window.cmp_addFrame("__cmpLocator");if(!("cmp_disableusp" in window)||!window.cmp_disableusp){window.cmp_addFrame("__uspapiLocator")}if(!("cmp_disabletcf" in window)||!window.cmp_disabletcf){window.cmp_addFrame("__tcfapiLocator")}if(!("cmp_disablegpp" in window)||!window.cmp_disablegpp){window.cmp_addFrame("__gppLocator")}window.cmp_setStub("__cmp");if(!("cmp_disabletcf" in window)||!window.cmp_disabletcf){window.cmp_setStub("__tcfapi")}if(!("cmp_disableusp" in window)||!window.cmp_disableusp){window.cmp_setStub("__uspapi")}if(!("cmp_disablegpp" in window)||!window.cmp_disablegpp){window.cmp_setGppStub("__gpp")};</script><script data-cmp-ab="1" src="https://a.delivery.consentmanager.net/delivery/cmp.php?&amp;cdid=257e89ef4274&amp;h=https%3A%2F%2Fwww.11880.com%2Fbranchenbuch%2Fdonaueschingen%2F251090143B50860312%2Fims-gear-se-co-kgaa.html&amp;&amp;__cmpfcc=1&amp;l=en&amp;o=1759264308359" type="text/javascript" async=""></script><script src="https://cdn.consentmanager.net/delivery/js/cmp_en.min.js" type="text/javascript" data-cmp-ab="1" async=""></script>
-    
+
 <meta charset="UTF-8">
 <title>IMS Gear Donaueschingen | Öffnungszeiten | Telefon | Adresse</title>
 <meta name="robots" content="index, follow">
@@ -14,7 +14,7 @@
 <meta property="og:description" content="Antriebstechnik | ⌚ Öffnungszeiten | ✉ Adresse | ☎ Telefonnummer | ➤ Heinrich-Hertz-Str. 16 - 78166 Donaueschingen">
 <meta property="og:locale" content="de_DE">
 <meta property="og:url" content="https://www.11880.com/branchenbuch/donaueschingen/251090143B50860312/ims-gear-se-co-kgaa.html">
-<meta property="fb:app_id" content="164582917283669"> 
+<meta property="fb:app_id" content="164582917283669">
 
 
 <link rel="preconnect" href="https://static.11880.com/" crossorigin=""><link rel="preconnect" href="https://static.11880.com/"><link rel="dns-prefetch" href="https://myk.11880.com"><link rel="preconnect" href="https://cdn.11880.com/"><link rel="dns-prefetch" href="https://statistics.11880.com/"><link rel="preload" href="//static.11880.com/Portal/css/common.min+1758798149967.css" as="style"><link rel="preload" href="//static.11880.com/Portal/css/portaldetailentry.min+1758798149967.css" as="style"><link rel="dns-prefetch" href="https://osms.11880.com"><link rel="dns-prefetch" href="https://adservice.google.com"><link rel="dns-prefetch" href="https://adservice.google.de"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><link rel="dns-prefetch" href="https://securepubads.g.doubleclick.net"><link rel="dns-prefetch" href="https://stats.g.doubleclick.net"><link rel="dns-prefetch" href="https://tpc.googlesyndication.com"><link rel="dns-prefetch" href="https://www.google.com"><link rel="dns-prefetch" href="https://www.google.de"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://www.googletagservices.com"><link rel="preload" href="//static.11880.com/Portal/fonts/sourcesanspro/sourcesanspro-regular-latin.woff2" as="font" type="font/woff2" crossorigin=""><link rel="preload" href="//static.11880.com/Portal/fonts/sourcesanspro/sourcesanspro-bold-latin.woff2" as="font" type="font/woff2" crossorigin=""><link rel="preload" href="//static.11880.com/Portal/fonts/icons-de-tl/11880-icons+1758798149967.woff2" as="font" type="font/woff2" crossorigin="">
@@ -26,7 +26,7 @@
 
 <link rel="apple-touch-icon" href="//static.11880.com/Portal/images/apple-touch-icon-11880.png">
 <link rel="icon" href="//static.11880.com/Portal/images/11880/favicon.ico">
-	
+
 	                        <!-- Google Tag Manager -->
     <script type="text/javascript">
         window['gtag_enable_tcf_support'] = true;
@@ -65,7 +65,7 @@
     </script>
     <!-- End Google Tag Manager -->
 
-        
+
                         <!-- Google tag (gtag.js) [GA4] -->
     <script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-DW1FF9MZ2J"></script>
     <script type="text/javascript">
@@ -89,7 +89,7 @@
     </script>
     <!-- End Google Tag (gtag.js) [GA4] -->
 
-        	
+
 
 <script type="text/javascript">if (window.location.hash == '#_=_')window.location.hash = '';</script>
 
@@ -142,7 +142,7 @@
         //User Auth
         kt.Data.User.isLoggedIn = false;
     kt.Data.User.role = 'guest';
-        
+
     </script>
 
 
@@ -168,7 +168,7 @@
 
 <!-- your ad tag -->
 <script type="text/plain" async="async" class="cmplazyload" data-cmp-vendor="s1" data-cmp-purpose="s2,7" data-cmp-src="https://h5v.11880.com/latest/moli.min.mjs"></script><script type="text/plain" class="cmplazyload" data-cmp-vendor="s1" data-cmp-purpose="s2,7">window.moli = window.moli || { que: [] };window.moli.que.push(function (adTag) {adTag.setTargeting('url', window.location.pathname.substr(0, 40));adTag.setTargeting('branche', ["3300143"]);adTag.setTargeting('suche', ["Antriebstechnik"]);adTag.setTargeting('ort', ["donaueschingen"]);adTag.setAdUnitPathVariables({pageType: 'Detail_Branche'});adTag.requestAds();});</script>
-    
+
 
 
     <script type="text/javascript">
@@ -189,14 +189,14 @@
                                     <form class="link-form" action="https://www.11880.com/form" method="POST" target="_blank"><input type="hidden" name="source" value="*JSPPyTNQ4HnYNS1Ye1m4MOgNTfrtfQtxizfOOgUDidABCTCNG2nUFFsX9GicBFXRtraptDTig_NIvMNY2QnbdQ"><button class="link nav-register hidden-special hidden-sm hidden-xs" title="Gratis: Ihre Firma eintragen" type="submit">
                         Gratis: Ihre Firma eintragen
                     </button></form>
-                
+
                 <ul class="nav navbar-nav navbar-right">
                                             <li id="navbar-search-icon" class="navbar-search-icon" style="display: none;">
                             <button class="link" data-bind="click: kt.Service.TopNavigation.toggleSearchNavigation" aria-label="Suche einblenden">
                                 <span id="toggle-search-icons" class="icon-search"></span>
                             </button>
                         </li>
-                    
+
                                                                         <li class="navbar-user-info">
                                 <form class="link-form" action="https://www.11880.com/form" method="POST"><input type="hidden" name="source" value="*JSPPyTNQ4HkO-uFFPTtpOidLHJ9bvI_NpB8xHHruMiM4GEmrUktRqpZtVm2VgfcsTzVUP7CF_RKRvqk9pWkBO6acMqCUADo6RLNnQHSjBp-75XlxyW-pbjo2KfG0fsmw79wARmtpGekOmhpqgyEDH0aSkJwIUldHDX__gkp6i6KcV1WAYYjVACZnKUuK2Qpc5qEJooeAqLI"><button class="link log-user" aria-label="Anmelden" type="submit">
                                     <span class="icon-user"></span>
@@ -215,9 +215,9 @@
                                                 <button data-bind="click: kt.Service.TopNavigation.toggleBurgerMenu" aria-label="Menü" class="options-close"><span class="icon-close"></span></button>
                                             </li>
                                                                                     </ul>
-                                                                                                                                
+
     <ul class="list-unstyled col-xs-12">
-                    
+
                                                 <li>
                         <button class="js-toggle-for-users" data-bind="click: function() { kt.Service.TopNavigation.toggleMenuX('burger', 'for-users', false); }">
                             Für Sie
@@ -243,72 +243,72 @@
                                     Für Sie
                                 </div>
 
-                                    
+
     <ul class="list-unstyled col-xs-12">
-                    
+
                                                 <li>
                         <a title="Detailsuche" href="https://www.11880.com/suche">
                             Detailsuche
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Personensuche" href="https://www.11880.com/personensuche">
                             Personensuche
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Rückwärtssuche" href="https://www.11880.com/rueckwaertssuche">
                             Rückwärtssuche
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Branchenbuch" href="https://www.11880.com/branchenbuch">
                             Branchenbuch
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Telefonbuch" href="https://www.11880.com/telefonbuch">
                             Telefonbuch
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Firmenverzeichnis" href="https://www.11880.com/firmen-abc">
                             Firmenverzeichnis
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Preisvergleich" href="https://www.11880.com/preisvergleich">
                             Preisvergleich
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Telefonauskunft" href="https://www.11880.com/telefonauskunft">
                             Telefonauskunft
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Firmensuche" href="https://www.11880.com/firmen-finden">
                             Firmensuche
                         </a>
                     </li>
-                                    
+
     </ul>
 
                             </div>
                         </div>
                     </li>
-                                                
+
                             <li class="separator clearfix">
                 </li>
-                                
+
                                                 <li>
                         <button class="js-toggle-for-business" data-bind="click: function() { kt.Service.TopNavigation.toggleMenuX('burger', 'for-business', false); }">
                             Für Firmeninhaber
@@ -334,21 +334,21 @@
                                     Für Firmeninhaber
                                 </div>
 
-                                    
+
     <ul class="list-unstyled col-xs-12">
-                    
+
                                                 <li>
                         <a title="Unsere Produkte" rel="noopener" target="_blank" href="https://unternehmen.11880.com">
                             Unsere Produkte
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Unser Angebotsservice" href="https://www.11880.com/angebotsservice">
                             Unser Angebotsservice
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <button class="js-toggle-more-portals" data-bind="click: function() { kt.Service.TopNavigation.toggleMenuX('burger', 'more-portals', false); }">
                             Unsere Portale
@@ -374,66 +374,66 @@
                                     Unsere Portale
                                 </div>
 
-                                    
+
     <ul class="list-unstyled col-xs-12">
-                    
+
                                                 <li>
                         <a title="11880 Fachportale" rel="noopener" target="_blank" href="https://unternehmen.11880.com/fachportaleintrag#fachportale">
                             11880 Fachportale
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="werkenntdenBESTEN" rel="noopener" target="_blank" href="https://www.werkenntdenbesten.de">
                             werkenntdenBESTEN
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="wirfindendeinenJOB" rel="noopener" target="_blank" href="https://www.wirfindendeinenjob.de/">
                             wirfindendeinenJOB
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="cleverB2B" rel="noopener" target="_blank" href="https://business.cleverb2b.de">
                             cleverB2B
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Postleitzahlen.de" rel="noopener" target="_blank" href="https://www.postleitzahlen.de">
                             Postleitzahlen.de
                         </a>
                     </li>
-                                    
+
     </ul>
 
                             </div>
                         </div>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Referenzen" rel="noopener" target="_blank" href="https://erfahrungen.11880.com">
                             Referenzen
                         </a>
                     </li>
-                                    
+
     </ul>
 
                             </div>
                         </div>
                     </li>
-                                                
+
                             <li>
                     <a class="register-company" title="Firma eintragen" rel="noopener" href="https://firma-eintragen-kostenlos.11880.com">
                         Firma eintragen
                     </a>
                 </li>
-                                
+
                             <li class="separator clearfix">
                 </li>
-                                
+
                                                 <li>
                         <button class="js-toggle-about-us" data-bind="click: function() { kt.Service.TopNavigation.toggleMenuX('burger', 'about-us', false); }">
                             Über 11880.com
@@ -459,33 +459,33 @@
                                     Über 11880.com
                                 </div>
 
-                                    
+
     <ul class="list-unstyled col-xs-12">
-                    
+
                                                 <li>
                         <a title="Über uns" rel="noopener" target="_blank" href="https://unternehmen.11880.com/ueber-uns">
                             Über uns
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Arbeiten bei 11880.com" rel="noopener" target="_blank" href="https://karriere.11880.com">
                             Arbeiten bei 11880.com
                         </a>
                     </li>
-                                                
+
                                                 <li>
                         <a title="Investor Relations" rel="noopener" target="_blank" href="https://ir.11880.com">
                             Investor Relations
                         </a>
                     </li>
-                                    
+
     </ul>
 
                             </div>
                         </div>
                     </li>
-                                    
+
     </ul>
 
                                                                     </div>
@@ -498,7 +498,7 @@
                         Sie sind ein Unternehmen?<br>
                         <a href="https://unternehmen.11880.com" rel="noopener nofollow" title="11880.com-Unternehmensbereich" target="_blank">Zum 11880.com-Unternehmensbereich wechseln</a>
                     </div>
-                
+
                 <div class="nav-search-bar-header navbar-left navbar-search" data-bind="visible: kt.Service.TopNavigation.isSearchBarVisible" style="">
                     <div class="search-bar-header">
                         <search-bar-header params="{ 'instance': 'header' }">
@@ -663,7 +663,7 @@
 
     <section class="content-body content entry-detail-content">
                 <div class="container-fluid">
-            
+
 <script type="text/javascript">
     var kt = kt || {};
     kt.Data = kt.Data || {};
@@ -672,14 +672,14 @@
 </script>
 <section id="entry-detail" data-entry-encrypted-id="251090143B50860312" data-bind="component: 'entry-detail' " class="entry-detail--portal entry-type-advanced">
     <section class="entry-detail__main-content">
-        
+
 
 <section id="entry" class="box-entry-detail box-entry-detail--main" data-company-id="50860312">
     <!--entry header-->
         <!--end entry header-->
 
-    
-    
+
+
     <!--owners name-->
     <div class="row row--spacing">
 	    <div class="col-xs-10 col-sm-9">
@@ -703,12 +703,12 @@
                     Vom Inhaber bestätigt
                 </span>
             </div>
-        
+
     </div>
 
             </div>
         </div>
-    
+
     <div class="detail-information-grid-start">
         <div class="item-detail-bewertung">
                                                 <div class="entry-detail__entry-rating">
@@ -727,7 +727,7 @@
                                                     <div class="entry-detail__next-opening-hours next-opening-hours next-opening-hours--closed" scrollto="#opening-hours">
                                                                                     Geschlossen bis Mi., 07:30 Uhr
                                                                         </div>
-                            
+
                             <div class="entry-detail-list__item">
                                             <div class="entry-detail__categories no-logo">
                             <span class="entry-item-head">
@@ -745,12 +745,12 @@
             <span class="ugc-add-media__icon icon icon-add-photo hidden-sm-up"></span>
             <img class="hidden-xs" width="240" height="180" src="//static.11880.com/Portal/images/11880/add-photo-upload.webp" fetchpriority="high" alt="Platzhalterbild für IMS Gear SE &amp; Co. KGaA Donaueschingen" title="Platzhalterbild für IMS Gear SE &amp; Co. KGaA Donaueschingen">
         </button>
-    
+
                                      </div>
                     </div>
 
         <div class="item-detail-mobile-action-bar">
-                            
+
     <ul class="mobile-action-bar">
                     <li class="mobile-action-bar__item">
                                                             <a rel="noopener" href="tel:+4977185070" target="_self">
@@ -782,7 +782,7 @@
                                                     <meta itemprop="url" content="https://www.imsgear.com">
                                                                     </a>
                                                 </li>
-        
+
     </ul>
 
                     </div>
@@ -798,7 +798,7 @@
                                                             </div>
                         </a>
                     </div>
-                
+
                                     <div class="entry-detail-list__item">
                         <div class="entry-detail-list__wrapper">
                             <div class="entry-detail-list__icon entry-detail-list__icon--location">
@@ -817,7 +817,7 @@
                             </div>
                         </div>
                     </div>
-                
+
                 <div class="entry-detail-list">
                                             <div class="entry-detail-list__item">
                                                             <a href="mailto:info@imsgear.com?subject=Anfrage über 11880.com" title="info@imsgear.com" data-company-id="50860312" class="tracking-mail-to entry-detail-list__wrapper" id="box-email-link">
@@ -830,7 +830,7 @@
                                     </div>
                                 </a>
                                                     </div>
-                    
+
                                             <div class="entry-detail-list__item">
                                                             <a class="entry-detail-list__wrapper btn-leadform tracking--entry-detail-website-link" target="_blank" rel="noopener nofollow" href="https://www.imsgear.com" data-bind="click: function() { kt.Service.Tracking.triggerROA('url', null, '251090143B50860312'); return true; }">
                                                                 <div class="entry-detail-list__icon entry-detail-list__icon--website">
@@ -865,7 +865,7 @@
                     mobil optimiert
                 </span>
             </div>
-        
+
     </div>
 
                                                         </div>
@@ -883,8 +883,8 @@
                                                 </div>
 
         <div class="item-detail-changes-link">
-                                        
-                                        
+
+
                     </div>
     </div>
 </section>
@@ -895,26 +895,26 @@
         <section class="left-section">
                             <section class="box-entry-detail box-entry-detail--ad">
                                 <div id="middle_ad" class="middle-ad" style="min-height: 250px;"></div>
-    
+
                 </section>
-                        
+
 	<section id="opening-hours" class="box-entry-detail box-entry-detail--opening-hours"><div class="link--jumpmark" id="oeffnungszeiten"></div><div class="entry-left-item"><h2 class="entryboxes-title">Öffnungszeiten</h2><div class="content"><span class="sut-title">Hier finden Sie die Öffnungszeiten von IMS Gear SE &amp; Co. KGaA in Donaueschingen.</span><table class="openingHourTable"><tbody><tr class="openingHourRow"><td class="week-days">Montag</td><td class="hours1">07:30-17:00</td></tr><tr class="openingHourRow active"><td class="week-days">Dienstag</td><td class="hours1">07:30-17:00</td></tr><tr class="openingHourRow"><td class="week-days">Mittwoch</td><td class="hours1">07:30-17:00</td></tr><tr class="openingHourRow"><td class="week-days">Donnerstag</td><td class="hours1">07:30-17:00</td></tr><tr class="openingHourRow"><td class="week-days">Freitag</td><td class="hours1">07:30-16:00</td></tr></tbody></table></div></div></section>
 
 
             <div id="responsive-bhvr--entry-ratings-sm"></div>
-            
-            			
+
+
 	<section id="trade-service-features" class="box-entry-detail box-entry-detail--trade-service-features"><div class="link--jumpmark" id="leistungen"></div><div class="entry-left-item"><h2 class="entryboxes-title">Leistungen</h2><div class="content"><p class="term-box__panel-infotext">Dieses Unternehmen bietet Dienstleistungen in folgenden Branchen an:</p><div class="term-box__panel-content"><div class="row"><div class="term-box__panel-col col-xs-12 col-sm-3 ">Antriebstechnik</div></div></div></div></div></section>
 
-            
-            
 
-            
+
+
+
                                                     <div id="responsive-bhvr--ad-sidebar-xs-sm">
-            
+
         </div>
-    
-                        
+
+
                 <section id="auszeichnungen" class="box-entry-detail">
         <div class="entry-left-item">
             <div class="row">
@@ -931,17 +931,17 @@
                             <img class="unveil unveil-placeholder" data-src="https://www.11880.com/Portal/assets/dynamic/wkdbRatingSeal__%2AHgy43UhWXnanx9Su4cBVcOmi0q_OjdY9bhN0u9zVsKd0Ss76FNdjKtRDXK1g_P735dROTFS4iYBeB2f2oqWweBGCnmrMTSRsGPuHHoDSG0Vd16dF9Dyyqqe-9T3O2gWkSIGwEyEDhxk.png" data-src-retina="https://www.11880.com/Portal/assets/dynamic/wkdbRatingSeal__%2AHgy43UhWXnanx9Su4cBVcOmi0q_OjdY9bhN0u9zVsKd0Ss76FNdjKtRDXK1g_P735dROTFS4iYBeB2f2oqWweBGCnmrMTSRsGPuHHoDSG0Vd16dF9Dyyqqe-9T3O2gWkSIGwEyEDhxk@2x.png" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="werkenntdenBESTEN Siegel mit der Bewertung Gut" title="Zum Eintrag auf werkenntdenBESTEN.de" height="125" width="125">
                         </a>
                     </div>
-                
-                
-                
-                
-                
+
+
+
+
+
             </div>
         </div>
     </section>
 
             <div id="responsive-bhvr--entry-ratings-md-lg">
-                	
+
 			<div id="ratings-position-desktop"></div>
 						<section id="ratings" class="box-entry-detail box-entry-detail--ratings" data-bind="component: { 'name': 'ratings', params : { 'comment' : '', 'selectedRate' : '' }}">
 		    <div id="bewertungen" class="link--jumpmark"></div>
@@ -959,7 +959,7 @@
 			            </div>
 		            		        </div>
 		    </div>
-            
+
 <div id="rating-form-modal" class="entry-modal modal fade" data-backdrop="true" data-keyboard="true" tabindex="-1" role="dialog" aria-labelledby="ratingFormLabel" aria-hidden="true">
 	<div class="modal-dialog" data-bind="ratingInitialized: true">
 		<div class="modal-content">
@@ -985,7 +985,7 @@
                                                                                     <span class="rating-one-star icon-star-empty" data-bind="click: rate.bind( $data, 3 ), event: { mouseover: rateMouseOver.bind( $data, 3 ), mouseout: rateMouseOut},  css: (hoveredRate() >= 3 || ( hoveredRate() == 0 &amp;&amp; selectedRate() >= 3 )) ? 'icon-star' : 'icon-star-empty' "></span>
                                                                                     <span class="rating-one-star icon-star-empty" data-bind="click: rate.bind( $data, 4 ), event: { mouseover: rateMouseOver.bind( $data, 4 ), mouseout: rateMouseOut},  css: (hoveredRate() >= 4 || ( hoveredRate() == 0 &amp;&amp; selectedRate() >= 4 )) ? 'icon-star' : 'icon-star-empty' "></span>
                                                                                     <span class="rating-one-star icon-star-empty" data-bind="click: rate.bind( $data, 5 ), event: { mouseover: rateMouseOver.bind( $data, 5 ), mouseout: rateMouseOut},  css: (hoveredRate() >= 5 || ( hoveredRate() == 0 &amp;&amp; selectedRate() >= 5 )) ? 'icon-star' : 'icon-star-empty' "></span>
-                                        
+
                                         <span class="star-status" data-bind="text: rateDescription">Sterne auswählen</span>
                                         <input type="hidden" name="rating[rating_stars]" data-bind=" value: selectedRate" value="0">
                                         <input type="hidden" name="rating[company_id]" value="50860312">
@@ -1004,7 +1004,7 @@
                                 </div>
 
                                 <div class="rating-form-buttons clearfix">
-                                    
+
 
                                         <button type="submit" class="btn btn-default-highlight btn-right" value="submit">Jetzt bewerten</button>
                                                                     </div>
@@ -1012,11 +1012,11 @@
                                                             <div class="page page-2" data-bind="visible: page() == 2" style="display: none;">
                                     <div class="rating-form-box">
                                         <div class="buttons-box">
-                                            
+
                                             <label for="rating_name" class="heading" id="rating_name--label">Ihr Name* </label>
                                             <input type="text" class="rating_name" id="rating_name" name="rating[name]" value="" placeholder="Max Mustermann" data-bind="valueUpdate: 'afterkeydown', css: { error: nameErrorMessage() }, hasFocus: ratingNameSelected" autocomplete="off">
                                             <span data-bind="html: nameErrorMessage() ? nameErrorMessage() : '', css: nameErrorMessage() ? 'error-msg' : '' "></span>
-                                            
+
                                             <label for="rating_email" class="heading">Ihre E-Mail-Adresse* <span class="subtext">(wird nicht angezeigt, nur für die Bestätigungs-E-Mail)</span></label>
                                             <input type="text" class="rating_email" id="rating_email" name="rating[email]" value="" placeholder="max.mustermann@musterhausen.de" data-bind="value: email, valueUpdate: 'afterkeydown', css: { error: emailErrorMessage() }, hasFocus: ratingEmailSelected">
                                             <span data-bind="html: emailErrorMessage() ? emailErrorMessage() : '', css: emailErrorMessage() ? 'error-msg' : '' "></span>
@@ -1031,7 +1031,7 @@
                                     </div>
                                 </div>
                             					    </form>
-                        
+
                         <form action="//my.11880.com/login?callbackUrl=http%3A%2F%2Fwww.11880.com%2Fbranchenbuch%2Fdonaueschingen%2F251090143B50860312%2Fims-gear-se-co-kgaa.html" method="post" class="rate-data-form">
                             <input type="hidden" name="rating[rating_stars]" data-bind="value: selectedRate" value="0">
                             <input type="hidden" name="rating[company_id]" value="50860312">
@@ -1056,9 +1056,9 @@
 
 
 		</section>
-	
+
             </div>
-                            
+
                                         <div class="map-section box-entry-detail box-entry-detail--map-section" id="map-section">
                     <div class="link--jumpmark" id="karte-und-route"></div>
                     <h2 class="entryboxes-title">Karte &amp; Route</h2>
@@ -1070,12 +1070,12 @@
                         </button></form>
                     </div>
                 </div>
-                        
+
         </section>
 
         <section data-bind="css: { 'ads-init': adsInitialized, 'ads-hidden': adsVisible() == false }" class="right-section ads-init">
 
-            
+
                                                 <section class="supraregional-entries-box common-aside-box" data-address-id="17476"><div class="supraregional-entries-box__header"><i class="icon-office"></i><span>Diese Anbieter aus der Umgebung bieten auch Dienste in Donaueschingen an.</span></div><div class="supraregional-entries-box__content"><ul class="supraregional-entries-box__list" id="supraregional-entries-box__list"><li class="supraregional-entries-box__entry supraregional-entries__entry"><div class="supraregional-entries__entry-wrapper" data-eid="60ca8b337c1ea19e00298183" data-pid="156"><div class="supraregional-entries__name"><a href="/branchenbuch/eschwege/251090143B27964403/praewema-antriebstechnik-gmbh.html" class="supraregional-entries__link">Präwema Antriebstechnik GmbH</a></div><div class="supraregional-entries__middle clearfix"><div class="supraregional-entries__text"><strong>Antriebstechnik</strong>&nbsp; – Lohnfertigungen, Hochleistungshonen&nbsp;in Eschwege</div><div class="supraregional-entries__image"><img src="https://cdn.11880.com/praewema-antriebstechnik-gmbh_52667_fw50h50_eschwege.webp" alt="Logo Präwema Antriebstechnik GmbH"></div></div><div class="supraregional-entries__footer clearfix"><div class="supraregional-entries__ratings"><p class="kt-rating">
     </p>
 
@@ -1087,20 +1087,20 @@
 
 
 </div><div class="clearfix"><div class="supraregional-entries__distance">652,8 km</div></div></div></div></li></ul></div><div class="supraregional-entries-box__footer"><button class="button-load-more-entries" id="button-load-more-entries" type="button" disabled="disabled" style="display: none;">Mehr laden</button></div></section>
-                            
+
                                                 <div id="responsive-bhvr--entry-contactform-md-lg" class="responsive-bhvr-entry-contactform-md-lg"></div>
-                            
-            
+
+
                             <div id="responsive-bhvr--ad-sidebar-sm-md-lg" class="responsive-bhvr-ad-sidebar-sm-md-lg--min-height"><div class="box-entry-detail box-entry-detail--ad">
                 <div id="sidebar_ad" class="sidebar-ad" style="min-height: 320px;"></div>
             </div></div>
-            
+
                                         <div class="box-entry-detail box-entry-detail--ad txt-center hidden-sm hidden-md hidden-lg">
             <div id="content_4" class="content-4" style="min-height: 280px;"></div>
         </div>
-    
-            
-                            
+
+
+
 	<section id="similar-entries" class="box-entry-detail box-entry-detail--similar-entries">
 	    <div class="entry-right-item">
 	        <h2 class="entryboxes-title">Ähnliche Anbieter in der Nähe</h2>
@@ -1145,20 +1145,20 @@
 
 </div><div class="clearfix"><div class="supraregional-entries__distance">14,4 km</div></div></div></div>
 					</div>
-	            
+
 	        </div>
 	    </div>
 	</section>
 
 
-                        
-            
-            
-            
-    
 
-            
-            
+
+
+
+
+
+
+
         </section>
     </section>
     <input id="entry-type" type="hidden" value="advanced" data-bind="text: kt.Data.isMediaEntry = ''">
@@ -1168,8 +1168,8 @@
     </div>
 
 
-            
-    
+
+
             <section id="faq" class="faq">
     <div class="faq-head faq-section">
         <div class="faq-headline">Häufige Fragen</div>
@@ -1179,7 +1179,7 @@
                     <div class="js-collapsible collapsible is-collapsed faq-collapsible">
     <div class="collapsible-section collapsible-head">
         <div class="collapsible-heading">
-            
+
     Unter welcher Adresse finde ich IMS Gear SE &amp; Co. KGaA?
 
         </div>
@@ -1192,7 +1192,7 @@
 
     <div class="collapsible-section collapsible-body">
         <div class="collapsible-contents">
-            
+
     Sie finden IMS Gear SE &amp; Co. KGaA unter der folgenden Adresse: Heinrich-Hertz-Str. 16, 78166 Donaueschingen.
 
         </div>
@@ -1202,7 +1202,7 @@
                     <div class="js-collapsible collapsible is-collapsed faq-collapsible">
     <div class="collapsible-section collapsible-head">
         <div class="collapsible-heading">
-            
+
     Welche Möglichkeiten gibt es, IMS Gear SE &amp; Co. KGaA zu kontaktieren?
 
         </div>
@@ -1215,7 +1215,7 @@
 
     <div class="collapsible-section collapsible-body">
         <div class="collapsible-contents">
-            
+
     Um IMS Gear SE &amp; Co. KGaA zu kontaktieren, wählen Sie einfach eine der hinterlegten Kontaktoptionen: 0771 85070 info@imsgear.com.
 
         </div>
@@ -1225,7 +1225,7 @@
                     <div class="js-collapsible collapsible is-collapsed faq-collapsible">
     <div class="collapsible-section collapsible-head">
         <div class="collapsible-heading">
-            
+
     Welche Öffnungszeiten gelten für IMS Gear SE &amp; Co. KGaA?
 
         </div>
@@ -1238,7 +1238,7 @@
 
     <div class="collapsible-section collapsible-body">
         <div class="collapsible-contents">
-            
+
     IMS Gear SE &amp; Co. KGaA ist zu diesen Zeiten geöffnet: Mo.: 07:30-17:00; Di.: 07:30-17:00; Mi.: 07:30-17:00; Do.: 07:30-17:00; Fr.: 07:30-16:00.
 
         </div>
@@ -1248,7 +1248,7 @@
                     <div class="js-collapsible collapsible is-collapsed faq-collapsible">
     <div class="collapsible-section collapsible-head">
         <div class="collapsible-heading">
-            
+
     Wo sehe ich, welche Preise für IMS Gear SE &amp; Co. KGaA zu erwarten sind?
 
         </div>
@@ -1261,7 +1261,7 @@
 
     <div class="collapsible-section collapsible-body">
         <div class="collapsible-contents">
-            
+
     Mithilfe der Euro-Symbole kennzeichnen wir, in welcher Preisrange sich IMS Gear SE &amp; Co. KGaA bewegt, wenn uns diese Information vorliegt.
 
         </div>
@@ -1271,7 +1271,7 @@
                     <div class="js-collapsible collapsible is-collapsed faq-collapsible">
     <div class="collapsible-section collapsible-head">
         <div class="collapsible-heading">
-            
+
     Kann man den Informationen von IMS Gear SE &amp; Co. KGaA vertrauen?
 
         </div>
@@ -1284,21 +1284,21 @@
 
     <div class="collapsible-section collapsible-body">
         <div class="collapsible-contents">
-            
+
     Die Informationen für IMS Gear SE &amp; Co. KGaA werden regelmäßig auf den neuesten Stand gebracht. Besonders hervorzuheben ist die Kennzeichnung "vom Inhaber bestätigt".
 
         </div>
     </div>
 </div>
 
-        
+
     </div>
 </section>
 
 
-    
-        
-    
+
+
+
     <section id="secure-data" class="secure-data">
         <div class="secure-data-note">
             <p class="heading">Woher kommen diese Daten?</p>
@@ -1334,7 +1334,7 @@
                             IMS Gear SE &amp; Co. KGaA in  Donaueschingen  wurde aktualisiert
                                                                                                     am 20.09.2025.
                         </p>
-                    
+
                                             <p class="secure-data-details-date">
                             Eintragsdaten vom 31.05.2025.
                         </p>
@@ -1343,7 +1343,7 @@
     </section>
 
 
-    
+
                 <div class="h5-sticky-ad u-hidden-desktop" data-ref="sticky-ad">
         <div id="11880_mobile_stickyad" class="h5-sticky-ad-container"></div>
         <button class="h5-sticky-ad-close" data-ref="sticky-ad-close" aria-label="Anzeige entfernen">
@@ -1356,36 +1356,36 @@
 
                                 <div id="bread-crumb">
             <div class="container-fluid">
-                
+
     <ol class="bread-crumb" itemscope="" itemtype="https://schema.org/BreadcrumbList">
-                    
+
             <li class="box-right-ar no-arrow" itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem">
                                     <a href="https://www.11880.com" title="11880.com Startseite" itemscope="" itemtype="https://schema.org/Thing" itemprop="item" itemid="https://www.11880.com">
                         <meta itemprop="name" content="11880.com - Telefonbuch - Branchenbuch">
                         <span>11880.com</span>
                     </a>
-                
+
                 <meta itemprop="position" content="1">
             </li>
-                    
+
             <li class="box-right-ar" itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem">
                                                             <a href="https://www.11880.com/suche/antriebstechnik/donaueschingen" title="Antriebstechnik Donaueschingen" itemscope="" itemtype="https://schema.org/Thing" itemprop="item" itemid="https://www.11880.com/suche/antriebstechnik/donaueschingen">
                             <span>Antriebstechnik Donaueschingen</span>
                             <meta itemprop="name" content="Antriebstechnik Donaueschingen">
                         </a>
-                                    
+
                 <meta itemprop="position" content="2">
             </li>
-                    
+
             <li class="box-right-ar" itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem">
                                     <span title="IMS Gear SE &amp; Co. KGaA" itemscope="" itemtype="https://schema.org/Thing" itemprop="item" itemid="https://www.11880.com/branchenbuch/donaueschingen/251090143B50860312/ims-gear-se-co-kgaa.html">
                         <meta itemprop="name" content="IMS Gear SE &amp; Co. KGaA">
                         <span>IMS Gear SE &amp; Co. KGaA</span>
                     </span>
-                
+
                 <meta itemprop="position" content="3">
             </li>
-        
+
     </ol>
 
             </div>
@@ -1473,7 +1473,7 @@
         </div>
     </footer>
 
-        
+
 
 </section>
 <span id="viewDetectorMobile" class="mobile"></span>

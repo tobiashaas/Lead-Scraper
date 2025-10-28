@@ -22,10 +22,10 @@ echo ""
 pull_model() {
     local model=$1
     local description=$2
-    
+
     echo "📥 Lade Model: $model"
     echo "   $description"
-    
+
     if ollama pull "$model"; then
         echo "✅ $model erfolgreich geladen"
     else

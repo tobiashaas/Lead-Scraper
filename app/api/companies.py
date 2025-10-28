@@ -102,7 +102,7 @@ async def create_company(
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Company already exists")
 
     # Create company
-    db_company = Company(**company.dict())
+    db_company = Company(**company.model_dump())
     db.add(db_company)
     db.commit()
     db.refresh(db_company)
@@ -128,7 +128,7 @@ async def update_company(
         )
 
     # Update fields
-    update_data = company_update.dict(exclude_unset=True)
+    update_data = company_update.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(company, field, value)
 

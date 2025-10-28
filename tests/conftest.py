@@ -13,7 +13,11 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import settings
 from app.core.security import get_password_hash
-from app.database.models import Base, User, UserRole
+from datetime import datetime, timedelta
+import random
+from typing import List
+
+from app.database.models import Base, Company, User, UserRole, LeadStatus, LeadQuality
 
 
 @pytest.fixture(scope="session")
@@ -195,6 +199,8 @@ def reset_database(db_session):
         Source,
         User,
         company_sources,
+        LeadStatus,
+        LeadQuality,
     )
 
     try:
@@ -274,8 +280,6 @@ def auth_headers(auth_user):
 @pytest.fixture
 def test_company_id(db_session, auth_user):
     """Create a test company and return its ID"""
-    from app.database.models import Company
-
     company = Company(
         company_name="Test Company GmbH",
         email="test@company.de",
@@ -285,8 +289,140 @@ def test_company_id(db_session, auth_user):
         postal_code="70173",
         city="Stuttgart",
         industry="Software Development",
+        status=LeadStatus.NEW,
+        quality=LeadQuality.MEDIUM,
     )
     db_session.add(company)
     db_session.commit()
     db_session.refresh(company)
     return company.id
+
+
+@pytest.fixture
+def test_companies(db_session):
+    """Create test companies with various statuses and qualities"""
+    industries = ["IT", "Consulting", "Manufacturing", "Finance", "Healthcare"]
+    cities = ["Berlin", "Munich", "Hamburg", "Cologne", "Frankfurt", "Stuttgart"]
+    
+    companies = []
+    for i in range(10):
+        company = Company(
+            company_name=f"Test Company {i+1} GmbH",
+            email=f"test{i+1}@company.de",
+            phone=f"+49 711 12345{i:02d}",
+            website=f"https://www.test-company-{i+1}.de",
+            street=f"Teststraße {i+1}",
+            postal_code=f"7017{3 + (i % 3)}",
+            city=random.choice(cities),
+            industry=random.choice(industries),
+            status=random.choice(list(LeadStatus)),
+            quality=random.choice(list(LeadQuality)),
+            description=f"Test company {i+1} description"
+        )
+        db_session.add(company)
+        companies.append(company)
+    
+    db_session.commit()
+    return companies
+
+
+@pytest.fixture
+def soft_deleted_company(db_session):
+    """Create a soft-deleted company"""
+    company = Company(
+        company_name="Deleted Company GmbH",
+        email="deleted@company.de",
+        phone="+49 711 999999",
+        website="https://www.deleted-company.de",
+        street="Deleted Street 99",
+        postal_code="70173",
+        city="Stuttgart",
+        industry="IT",
+        is_active=False,
+        deleted_at=datetime.utcnow()
+    )
+    db_session.add(company)
+    db_session.commit()
+    db_session.refresh(company)
+    return company
+
+
+@pytest.fixture
+def locked_user(db_session):
+    """Create a locked user"""
+    user = User(
+        username="locked_user",
+        email="locked@example.com",
+        full_name="Locked User",
+        hashed_password=get_password_hash("testpass123"),
+        role=UserRole.USER,
+        is_active=True,
+        locked_until=datetime.utcnow() + timedelta(minutes=15),
+        failed_login_attempts=5
+    )
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+    return user
+
+
+@pytest.fixture
+def inactive_user(db_session):
+    """Create an inactive user"""
+    user = User(
+        username="inactive_user",
+        email="inactive@example.com",
+        full_name="Inactive User",
+        hashed_password=get_password_hash("testpass123"),
+        role=UserRole.USER,
+        is_active=False
+    )
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+    return user
+
+
+@pytest.fixture
+def second_auth_user(db_session):
+    """Create a second test user for testing multi-user scenarios"""
+    user = User(
+        username="testuser2",
+        email="test2@example.com",
+        full_name="Test User 2",
+        hashed_password=get_password_hash("testpass123"),
+        role=UserRole.USER,
+        is_active=True,
+    )
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+    return user
+
+
+@pytest.fixture
+def second_auth_headers(second_auth_user):
+    """Get authentication headers for the second test user"""
+    from app.core.security import create_access_token
+    
+    access_token = create_access_token(data={"sub": second_auth_user.username})
+    return {"Authorization": f"Bearer {access_token}"}
+
+
+@pytest.fixture(autouse=True)
+def reset_webhook_storage():
+    """Reset webhook storage before each test"""
+    from app.api import webhooks
+    
+    original_webhooks = webhooks.WEBHOOKS.copy()
+    original_counter = webhooks.WEBHOOK_ID_COUNTER
+    
+    # Reset before test
+    webhooks.WEBHOOKS.clear()
+    webhooks.WEBHOOK_ID_COUNTER = 1
+    
+    yield
+    
+    # Restore after test
+    webhooks.WEBHOOKS = original_webhooks
+    webhooks.WEBHOOK_ID_COUNTER = original_counter

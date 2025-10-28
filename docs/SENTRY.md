@@ -33,7 +33,7 @@ SENTRY_TRACES_SAMPLE_RATE=1.0
 SENTRY_PROFILES_SAMPLE_RATE=1.0
 ```
 
-**Wichtig:** 
+**Wichtig:**
 - `SENTRY_ENABLED=true` aktiviert Sentry
 - `SENTRY_DSN` ist dein Projekt-DSN von Sentry
 - `SENTRY_ENVIRONMENT` sollte je nach Umgebung angepasst werden (development, staging, production)
@@ -155,14 +155,14 @@ from app.core.sentry import start_transaction
 
 # Track komplette Operation
 with start_transaction(name="scraping_job", op="scraping") as transaction:
-    
+
     # Track einzelne Schritte
     with transaction.start_child(op="http", description="Fetch page") as span:
         response = fetch_page(url)
-    
+
     with transaction.start_child(op="processing", description="Parse HTML") as span:
         data = parse_html(response)
-    
+
     with transaction.start_child(op="db", description="Save results") as span:
         save_to_database(data)
 ```
@@ -185,7 +185,7 @@ async def create_scraping_job(job: ScrapingJobCreate):
         "city": job.city,
         "industry": job.industry
     })
-    
+
     # Add breadcrumb
     add_breadcrumb(
         "Creating scraping job",
@@ -193,7 +193,7 @@ async def create_scraping_job(job: ScrapingJobCreate):
         level="info",
         data={"source": job.source_name}
     )
-    
+
     try:
         # Create job
         db_job = create_job(job)
@@ -210,12 +210,12 @@ from app.core.sentry import start_transaction, set_context
 
 async def run_scraping_job(job_id: int):
     with start_transaction(name="scraping_job", op="background_task") as transaction:
-        
+
         set_context("job", {"job_id": job_id})
-        
+
         with transaction.start_child(op="scraping", description="Scrape data"):
             results = scrape_data()
-        
+
         with transaction.start_child(op="db", description="Save results"):
             save_results(results)
 ```
@@ -327,7 +327,7 @@ def before_send_hook(event, hint):
         exc_type, exc_value, tb = hint['exc_info']
         if exc_type.__name__ == 'ValidationError':
             return None  # Event wird nicht gesendet
-    
+
     return event
 ```
 
@@ -338,7 +338,7 @@ def before_send_transaction_hook(event, hint):
     # Health Checks nicht tracken
     if event.get('transaction', '').startswith('/health'):
         return None
-    
+
     return event
 ```
 

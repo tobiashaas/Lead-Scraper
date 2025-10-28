@@ -187,7 +187,7 @@ class Deduplicator:
             .first()
         )
 
-        if existing:
+        if existing is not None:
             return existing
 
         # Calculate similarities

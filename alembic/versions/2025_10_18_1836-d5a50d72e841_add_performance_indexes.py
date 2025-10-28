@@ -8,7 +8,7 @@ Create Date: 2025-10-18 18:36:40.001743
 
 from collections.abc import Sequence
 
-from alembic import op
+from alembic import op  # type: ignore[attr-defined]
 
 # revision identifiers, used by Alembic.
 revision: str = "d5a50d72e841"

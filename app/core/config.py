@@ -101,10 +101,6 @@ class Settings(BaseSettings):
     )
     sentry_enabled: bool = Field(default=False, description="Enable Sentry error tracking")
 
-    # Environment
-    debug: bool = Field(default=True, description="Debug mode")
-    environment: str = Field(default="development", description="Environment")
-
     # Ollama Configuration
     ollama_host: str = Field(default="http://localhost:11434", description="Ollama API Host")
     ollama_model: str = Field(default="llama3.2", description="Default Ollama model")

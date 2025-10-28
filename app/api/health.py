@@ -2,7 +2,7 @@
 Health Check Endpoints
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, status
 
@@ -20,7 +20,7 @@ async def health_check():
     """
     return {
         "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "environment": settings.environment,
     }
 
@@ -65,7 +65,7 @@ async def detailed_health_check():
 
     return {
         "status": "healthy" if overall_healthy else "degraded",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "checks": checks,
     }
 
@@ -80,7 +80,7 @@ async def readiness_check():
     if not db_ok:
         return {"status": "not_ready", "reason": "database_unavailable"}
 
-    return {"status": "ready", "timestamp": datetime.utcnow().isoformat()}
+    return {"status": "ready", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 
 @router.get("/health/live", status_code=status.HTTP_200_OK)
@@ -88,4 +88,4 @@ async def liveness_check():
     """
     Liveness check for Kubernetes
     """
-    return {"status": "alive", "timestamp": datetime.utcnow().isoformat()}
+    return {"status": "alive", "timestamp": datetime.now(timezone.utc).isoformat()}

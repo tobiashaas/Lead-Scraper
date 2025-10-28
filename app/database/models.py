@@ -4,7 +4,7 @@ Definiert die Datenbankstruktur für Lead-Scraping
 """
 
 import enum
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import (
     JSON,
@@ -36,7 +36,7 @@ company_sources = Table(
     Base.metadata,
     Column("company_id", Integer, ForeignKey("companies.id"), primary_key=True),
     Column("source_id", Integer, ForeignKey("sources.id"), primary_key=True),
-    Column("created_at", DateTime, default=datetime.utcnow),
+    Column("created_at", DateTime, default=lambda: datetime.now(timezone.utc)),
 )
 
 
@@ -124,8 +124,8 @@ class Company(Base):
     lead_score = Column(Float, default=0.0)  # 0-100
 
     # Metadaten
-    first_scraped_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    last_updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    first_scraped_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    last_updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     last_contacted_at = Column(DateTime)
 
     # Flags
@@ -165,7 +165,7 @@ class Source(Base):
 
     # Metadaten
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # Relationships
     companies = relationship("Company", secondary=company_sources, back_populates="sources")
@@ -249,7 +249,7 @@ class CompanyNote(Base):
     note_type = Column(String(50))  # "contact", "research", "general", etc.
 
     # Metadaten
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     created_by = Column(String(100))
     updated_at = Column(DateTime, onupdate=datetime.utcnow)
 
@@ -287,7 +287,7 @@ class DuplicateCandidate(Base):
     reviewed_at = Column(DateTime)
 
     # Metadaten
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     def __repr__(self):
         return f"<DuplicateCandidate(id={self.id}, similarity={self.overall_similarity:.2f})>"
@@ -320,7 +320,7 @@ class User(Base):
     locked_until = Column(DateTime)
 
     # Metadaten
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __repr__(self):
