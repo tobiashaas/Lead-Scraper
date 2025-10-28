@@ -67,7 +67,7 @@ KR-Lead-Scraper/
 
 1. **Repository klonen**
    ```bash
-   git clone https://github.com/Kunze-Ritter/KR-Lead-Scraper.git
+   git clone https://github.com/tobiashaas/KR-Lead-Scraper.git
    cd KR-Lead-Scraper
    ```
 
