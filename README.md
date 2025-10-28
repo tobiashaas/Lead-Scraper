@@ -16,7 +16,7 @@ Automatisiertes Lead-Scraping-System zur Extraktion von Unternehmensdaten aus Ba
 
 ## 📋 Übersicht
 
-KR-Lead-Scraper ist ein Python-basiertes Web-Scraping-Tool, das öffentliche Branchenbücher (11880, Gelbe Seiten, etc.) durchsucht und qualitativ hochwertige B2B-Leads für die Region Baden-Württemberg sammelt.
+Lead-Scraper ist ein Python-basiertes Web-Scraping-Tool, das öffentliche Branchenbücher (11880, Gelbe Seiten, etc.) durchsucht und qualitativ hochwertige B2B-Leads für die Region Baden-Württemberg sammelt.
 
 ### ✨ Features
 
@@ -38,7 +38,7 @@ KR-Lead-Scraper ist ein Python-basiertes Web-Scraping-Tool, das öffentliche Bra
 ## 🏗️ Architektur
 
 ```
-KR-Lead-Scraper/
+Lead-Scraper/
 ├── app/
 │   ├── scrapers/          # Scraper-Implementierungen
 │   ├── database/          # SQLAlchemy Models & Migrations
@@ -68,7 +68,7 @@ KR-Lead-Scraper/
 1. **Repository klonen**
    ```bash
    git clone https://github.com/tobiashaas/Lead-Scraper.git
-   cd KR-Lead-Scraper
+   cd Lead-Scraper
    ```
 
 2. **Virtual Environment erstellen**
