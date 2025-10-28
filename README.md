@@ -1,4 +1,4 @@
-# 🚀 KR-Lead-Scraper
+# 🚀 Lead-Scraper
 
 [![Tests](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/tests.yml/badge.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/tests.yml)
 [![Code Quality](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/code-quality.yml/badge.svg)](https://github.com/tobiashaas/Lead-Scraper/actions/workflows/code-quality.yml)
@@ -67,7 +67,7 @@ KR-Lead-Scraper/
 
 1. **Repository klonen**
    ```bash
-   git clone https://github.com/tobiashaas/KR-Lead-Scraper.git
+   git clone https://github.com/tobiashaas/Lead-Scraper.git
    cd KR-Lead-Scraper
    ```
 
