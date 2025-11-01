@@ -98,7 +98,9 @@ class AWSSecretsProvider(SecretsProvider):
         try:
             response = self._client.get_secret_value(SecretId=secret_name)
         except self._client_error as err:
-            logger.warning("Failed to fetch secret '%s' from AWS Secrets Manager: %s", secret_name, err)
+            logger.warning(
+                "Failed to fetch secret '%s' from AWS Secrets Manager: %s", secret_name, err
+            )
             return {}
         except self._boto_error as err:  # pragma: no cover - network issues
             logger.warning("AWS BotoCore error while fetching secret '%s': %s", secret_name, err)
@@ -131,7 +133,9 @@ class AWSSecretsProvider(SecretsProvider):
                 SecretString=json.dumps(secret_value),
             )
         except self._client_error as err:
-            logger.error("Failed to update secret '%s' in AWS Secrets Manager: %s", secret_name, err)
+            logger.error(
+                "Failed to update secret '%s' in AWS Secrets Manager: %s", secret_name, err
+            )
             return False
         except self._boto_error as err:  # pragma: no cover - network issues
             logger.error("AWS BotoCore error while updating secret '%s': %s", secret_name, err)
@@ -243,7 +247,9 @@ class ProviderConfig:
     vault_path: str = "secret/data/kr-scraper"
 
 
-def get_secrets_provider(provider_type: str, config: ProviderConfig | None = None) -> SecretsProvider | None:
+def get_secrets_provider(
+    provider_type: str, config: ProviderConfig | None = None
+) -> SecretsProvider | None:
     """Factory returning a secrets provider instance."""
 
     provider = (provider_type or "none").lower().strip()
@@ -287,7 +293,10 @@ def get_secrets_provider(provider_type: str, config: ProviderConfig | None = Non
             logger.warning("Failed to initialize Vault secrets provider: %s", exc)
         return None
 
-    logger.warning("Unknown secrets manager provider '%s'; falling back to environment variables.", provider_type)
+    logger.warning(
+        "Unknown secrets manager provider '%s'; falling back to environment variables.",
+        provider_type,
+    )
     return None
 
 
@@ -311,7 +320,9 @@ def load_secrets_from_manager(
     if secrets:
         logger.info("Loaded secrets for '%s' from provider.", secret_name)
     else:
-        logger.warning("Secret '%s' not found in provider; falling back to environment variables.", secret_name)
+        logger.warning(
+            "Secret '%s' not found in provider; falling back to environment variables.", secret_name
+        )
 
     return secrets
 

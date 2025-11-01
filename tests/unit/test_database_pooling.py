@@ -67,7 +67,11 @@ def test_create_engine_uses_settings(monkeypatch):
     monkeypatch.setattr(database_module, "create_engine", fake_create_engine)
     monkeypatch.setattr(database_module, "text", lambda sql: sql)
 
-    monkeypatch.setattr(database_module.settings, "database_url_psycopg3", "postgresql://user:pass@localhost:5432/db")
+    monkeypatch.setattr(
+        database_module.settings,
+        "database_url_psycopg3",
+        "postgresql://user:pass@localhost:5432/db",
+    )
     monkeypatch.setattr(database_module.settings, "db_pool_size", 42)
     monkeypatch.setattr(database_module.settings, "db_max_overflow", 17)
     monkeypatch.setattr(database_module.settings, "db_pool_timeout", 55)

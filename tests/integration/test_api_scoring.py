@@ -230,7 +230,9 @@ class TestScoringEndpoints:
         assert data["total_scored"] == 0
         assert data["results"] == []
 
-    def test_score_single_company_with_full_address(self, create_company, client, auth_headers) -> None:
+    def test_score_single_company_with_full_address(
+        self, create_company, client, auth_headers
+    ) -> None:
         company = create_company(street="Main St 1", postal_code="70173", city="Stuttgart")
 
         response = client.post(f"/api/v1/scoring/companies/{company.id}", headers=auth_headers)

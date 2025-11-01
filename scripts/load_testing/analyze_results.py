@@ -6,7 +6,7 @@ import csv
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Optional
 
 DEFAULT_TARGETS = {
     "p95_latency_ms": 200.0,
@@ -42,7 +42,7 @@ class EndpointStats:
 
 @dataclass(slots=True)
 class TestStats:
-    endpoints: List[EndpointStats]
+    endpoints: list[EndpointStats]
     total_requests: int
     total_failures: int
     duration_seconds: float
@@ -66,7 +66,7 @@ class TestStats:
 
 def parse_locust_stats(csv_file: Path) -> TestStats:
     """Parse Locust statistics CSV into structured data."""
-    endpoints: List[EndpointStats] = []
+    endpoints: list[EndpointStats] = []
     total_requests = 0
     total_failures = 0
     test_duration_seconds: Optional[float] = None
@@ -103,12 +103,17 @@ def parse_locust_stats(csv_file: Path) -> TestStats:
         total_rps = sum(ep.rps for ep in endpoints)
         test_duration_seconds = total_requests / total_rps if total_rps else 0.0
 
-    return TestStats(endpoints=endpoints, total_requests=total_requests, total_failures=total_failures, duration_seconds=test_duration_seconds or 0.0)
+    return TestStats(
+        endpoints=endpoints,
+        total_requests=total_requests,
+        total_failures=total_failures,
+        duration_seconds=test_duration_seconds or 0.0,
+    )
 
 
-def calculate_performance_score(stats: TestStats, targets: Dict[str, float]) -> Dict[str, Any]:
+def calculate_performance_score(stats: TestStats, targets: dict[str, float]) -> dict[str, Any]:
     """Calculate overall performance score compared to targets."""
-    scores: Dict[str, Tuple[float, bool]] = {}
+    scores: dict[str, tuple[float, bool]] = {}
 
     # Throughput score
     throughput_target = targets.get("throughput_rpm", DEFAULT_TARGETS["throughput_rpm"])
@@ -149,8 +154,8 @@ def calculate_performance_score(stats: TestStats, targets: Dict[str, float]) -> 
     }
 
 
-def identify_bottlenecks(stats: TestStats) -> List[Dict[str, Any]]:
-    bottlenecks: List[Dict[str, Any]] = []
+def identify_bottlenecks(stats: TestStats) -> list[dict[str, Any]]:
+    bottlenecks: list[dict[str, Any]] = []
     for endpoint in stats.endpoints:
         if endpoint.requests == 0:
             continue
@@ -169,7 +174,7 @@ def identify_bottlenecks(stats: TestStats) -> List[Dict[str, Any]]:
     return bottlenecks
 
 
-def compare_with_baseline(current: TestStats, baseline: TestStats) -> Dict[str, Any]:
+def compare_with_baseline(current: TestStats, baseline: TestStats) -> dict[str, Any]:
     return {
         "throughput_delta_rpm": round(current.throughput_rpm - baseline.throughput_rpm, 2),
         "error_rate_delta_pct": round(current.error_rate_pct - baseline.error_rate_pct, 3),
@@ -178,12 +183,12 @@ def compare_with_baseline(current: TestStats, baseline: TestStats) -> Dict[str, 
 
 def generate_markdown_report(
     stats: TestStats,
-    score: Dict[str, Any],
-    bottlenecks: List[Dict[str, Any]],
-    baseline_comparison: Optional[Dict[str, Any]] = None,
+    score: dict[str, Any],
+    bottlenecks: list[dict[str, Any]],
+    baseline_comparison: Optional[dict[str, Any]] = None,
     scenario_name: Optional[str] = None,
 ) -> str:
-    lines: List[str] = []
+    lines: list[str] = []
     lines.append("# Load Test Analysis Report\n")
     if scenario_name:
         lines.append(f"**Scenario:** `{scenario_name}`\n")
@@ -202,20 +207,14 @@ def generate_markdown_report(
 
     if baseline_comparison:
         lines.append("\n## Baseline Comparison\n")
-        lines.append(
-            f"- Throughput Δ: {baseline_comparison['throughput_delta_rpm']:+.2f} rpm\n"
-        )
-        lines.append(
-            f"- Error Rate Δ: {baseline_comparison['error_rate_delta_pct']:+.2f}%\n"
-        )
+        lines.append(f"- Throughput Δ: {baseline_comparison['throughput_delta_rpm']:+.2f} rpm\n")
+        lines.append(f"- Error Rate Δ: {baseline_comparison['error_rate_delta_pct']:+.2f}%\n")
 
     lines.append("\n## Endpoint Metrics\n")
     lines.append(
         "| Endpoint | Method | Requests | Failures | Error % | p50 ms | p95 ms | p99 ms | RPS |\n"
     )
-    lines.append(
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |\n"
-    )
+    lines.append("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |\n")
     for endpoint in stats.endpoints:
         lines.append(
             "| {name} | {method} | {req} | {fail} | {err:.2f} | {p50:.1f} | {p95:.1f} | {p99:.1f} | {rps:.2f} |\n".format(
@@ -250,7 +249,7 @@ def generate_markdown_report(
     return "".join(lines)
 
 
-def load_targets(targets_path: Optional[Path]) -> Dict[str, float]:
+def load_targets(targets_path: Optional[Path]) -> dict[str, float]:
     if targets_path and targets_path.exists():
         with targets_path.open("r", encoding="utf-8") as handle:
             return json.load(handle)
@@ -269,7 +268,9 @@ def determine_scenario_name(stats_csv: Path) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Analyze Locust load test results")
-    parser.add_argument("--stats-csv", required=True, type=Path, help="Path to Locust stats CSV file")
+    parser.add_argument(
+        "--stats-csv", required=True, type=Path, help="Path to Locust stats CSV file"
+    )
     parser.add_argument(
         "--output",
         choices={"markdown", "json", "both"},
@@ -306,7 +307,7 @@ def main() -> None:
     bottlenecks = identify_bottlenecks(stats)
 
     baseline_stats: Optional[TestStats] = None
-    baseline_comparison: Optional[Dict[str, Any]] = None
+    baseline_comparison: Optional[dict[str, Any]] = None
     if args.baseline:
         baseline_stats = parse_locust_stats(args.baseline)
         baseline_comparison = compare_with_baseline(stats, baseline_stats)

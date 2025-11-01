@@ -5,7 +5,7 @@ import json
 import os
 import random
 from functools import lru_cache
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import httpx
 from faker import Faker
@@ -32,7 +32,7 @@ SEARCH_TERMS = [
 ]
 
 faker = Faker("de_DE")
-_company_pool: List[int] = []
+_company_pool: list[int] = []
 _token_cache: Optional[str] = None
 
 
@@ -59,17 +59,17 @@ def get_auth_token(client: httpx.Client, force_refresh: bool = False) -> str:
     return token
 
 
-def build_auth_headers(token: str) -> Dict[str, str]:
+def build_auth_headers(token: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
 
 def refresh_company_pool(
     client: httpx.Client,
-    headers: Dict[str, str],
+    headers: dict[str, str],
     pool_size: int = COMPANY_IDS_POOL_SIZE,
 ) -> None:
     """Populate the global company ID pool for random access."""
-    ids: List[int] = []
+    ids: list[int] = []
     page = 0
     while len(ids) < pool_size:
         response = client.get(
@@ -88,15 +88,17 @@ def refresh_company_pool(
     _company_pool = ids[:pool_size]
 
 
-def get_random_company_ids(count: int = 10) -> List[int]:
+def get_random_company_ids(count: int = 10) -> list[int]:
     if not _company_pool:
-        raise RuntimeError("Company pool has not been initialised. Call refresh_company_pool first.")
+        raise RuntimeError(
+            "Company pool has not been initialised. Call refresh_company_pool first."
+        )
     return random.sample(_company_pool, min(count, len(_company_pool)))
 
 
 def seed_test_data(
     client: httpx.Client,
-    headers: Dict[str, str],
+    headers: dict[str, str],
     count: int = 1000,
 ) -> None:
     """Create synthetic company data for load testing."""
@@ -118,7 +120,7 @@ def seed_test_data(
         response.raise_for_status()
 
 
-def generate_random_company_data() -> Dict[str, Any]:
+def generate_random_company_data() -> dict[str, Any]:
     company_name = faker.company()
     return {
         "name": company_name,
@@ -146,7 +148,7 @@ def generate_random_company_data() -> Dict[str, Any]:
     }
 
 
-def ensure_seed_data(client: httpx.Client, headers: Dict[str, str], count: int = 1000) -> None:
+def ensure_seed_data(client: httpx.Client, headers: dict[str, str], count: int = 1000) -> None:
     if not _company_pool:
         seed_test_data(client, headers, count=count)
         refresh_company_pool(client, headers)

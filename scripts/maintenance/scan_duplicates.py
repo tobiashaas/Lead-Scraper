@@ -164,7 +164,7 @@ def main():
         logger.info("Scan completed successfully")
         return 0
 
-    except Exception as exc:
+    except Exception:
         logger.exception("Scan failed", exc_info=True)
         return 1
 

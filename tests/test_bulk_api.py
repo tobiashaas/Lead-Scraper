@@ -2,9 +2,7 @@
 Tests für Bulk Operations API Endpoints
 """
 
-import pytest
 from fastapi import status
-from fastapi.testclient import TestClient
 
 
 def test_bulk_update_invalid_fields(client, auth_headers: dict):

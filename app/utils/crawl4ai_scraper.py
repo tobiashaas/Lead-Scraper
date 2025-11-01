@@ -9,7 +9,7 @@ import math
 import time
 from datetime import datetime
 from textwrap import dedent
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 try:
     from crawl4ai import WebCrawler
@@ -225,17 +225,19 @@ class Crawl4AIOllamaScraper:
         """Extrahiert strukturierte Daten mit Ollama."""
 
         model_to_use = model_name or self.model
-        prompt_entry: Dict[str, Any] | None = None
+        prompt_entry: dict[str, Any] | None = None
         prompt = self._build_extraction_prompt(content)
         if self.use_prompt_library and self.model_selector:
-            prompt_entry = self.model_selector.get_optimized_prompt("company_detailed", model_to_use)
+            prompt_entry = self.model_selector.get_optimized_prompt(
+                "company_detailed", model_to_use
+            )
             if isinstance(prompt_entry, dict):
                 prompt = prompt_entry.get("template", prompt)
             elif isinstance(prompt_entry, str):
                 prompt = prompt_entry
 
         system_message = None
-        prompt_parameters: Dict[str, Any] = {}
+        prompt_parameters: dict[str, Any] = {}
         if isinstance(prompt_entry, dict):
             system_message = prompt_entry.get("system_message")
             if isinstance(system_message, str) and system_message.strip():
@@ -247,7 +249,7 @@ class Crawl4AIOllamaScraper:
                 }
 
         try:
-            options: Dict[str, Any] = {}
+            options: dict[str, Any] = {}
             if self.model_selector:
                 options.update(self.model_selector.get_model_config(model_to_use))
             if prompt_parameters:
@@ -344,7 +346,7 @@ class Crawl4AIOllamaScraper:
         usage["count"] += 1
         usage["latency"].append(latency)
 
-    def get_benchmark_stats(self) -> Dict[str, Any]:
+    def get_benchmark_stats(self) -> dict[str, Any]:
         """Return collected benchmark statistics when enabled."""
 
         def percentile(values: list[float], pct: float) -> float:

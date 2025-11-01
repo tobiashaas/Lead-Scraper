@@ -10,11 +10,10 @@ import pytest
 from sqlalchemy.orm import sessionmaker
 
 from app.api import scraping as scraping_module
-from app.database.models import Company, ScrapingJob, Source
+from app.database.models import Company, ScrapingJob
 from app.scrapers.base import ScraperResult
 from app.workers import scraping_worker
 from tests.utils.test_helpers import wait_for_scraping_job_completion_async
-
 
 pytestmark = [pytest.mark.e2e, pytest.mark.asyncio]
 
@@ -62,7 +61,9 @@ async def run_worker(job: ScrapingJob, config: dict[str, Any]) -> dict[str, Any]
 
 
 class TestSmartScraperDecisions:
-    async def test_enrichment_mode_enriches_results(self, monkeypatch, db_session, create_job) -> None:
+    async def test_enrichment_mode_enriches_results(
+        self, monkeypatch, db_session, create_job
+    ) -> None:
         job = create_job()
         standard_results = [
             make_result("Test GmbH", "https://test.example"),
@@ -119,7 +120,9 @@ class TestSmartScraperDecisions:
         job_in_db = db_session.get(ScrapingJob, job.id)
         assert job_in_db.progress == pytest.approx(100.0)
 
-    async def test_fallback_mode_discovers_and_enriches_when_empty(self, monkeypatch, db_session, create_job) -> None:
+    async def test_fallback_mode_discovers_and_enriches_when_empty(
+        self, monkeypatch, db_session, create_job
+    ) -> None:
         job = create_job(city="Small Town", industry="Niche")
 
         monkeypatch.setattr(
@@ -172,7 +175,9 @@ class TestSmartScraperDecisions:
         companies = db_session.query(Company).order_by(Company.company_name).all()
         assert {company.company_name for company in companies} == {"Candidate One", "Candidate Two"}
 
-    async def test_fallback_skips_enrichment_when_standard_results_exist(self, monkeypatch, create_job) -> None:
+    async def test_fallback_skips_enrichment_when_standard_results_exist(
+        self, monkeypatch, create_job
+    ) -> None:
         job = create_job()
 
         standard_results = [make_result("Existing GmbH", "https://existing.example")]
@@ -250,7 +255,9 @@ class TestSmartScraperProgressAndResilience:
                 await progress_callback(1, 1)
             return results
 
-        monkeypatch.setattr(scraping_worker, "enrich_results_with_smart_scraper", AsyncMock(side_effect=fake_enrich))
+        monkeypatch.setattr(
+            scraping_worker, "enrich_results_with_smart_scraper", AsyncMock(side_effect=fake_enrich)
+        )
 
         config = {
             "source_name": "11880",
@@ -268,7 +275,9 @@ class TestSmartScraperProgressAndResilience:
         job_in_db = db_session.get(ScrapingJob, job.id)
         assert job_in_db.progress == pytest.approx(100.0)
 
-    async def test_enrichment_failure_does_not_fail_job(self, monkeypatch, db_session, create_job) -> None:
+    async def test_enrichment_failure_does_not_fail_job(
+        self, monkeypatch, db_session, create_job
+    ) -> None:
         job = create_job()
 
         monkeypatch.setattr(
@@ -308,13 +317,17 @@ class TestSmartScraperProgressAndResilience:
     async def test_site_limit_respected(self, monkeypatch, create_job) -> None:
         job = create_job()
 
-        results = [make_result(f"Company {idx}", f"https://company{idx}.example") for idx in range(5)]
+        results = [
+            make_result(f"Company {idx}", f"https://company{idx}.example") for idx in range(5)
+        ]
         monkeypatch.setattr(
             "app.scrapers.eleven_eighty.scrape_11880",
             AsyncMock(return_value=results),
         )
 
-        async def fake_enrich(results: list[ScraperResult], *, max_scrapes: int, **_: Any) -> list[ScraperResult]:
+        async def fake_enrich(
+            results: list[ScraperResult], *, max_scrapes: int, **_: Any
+        ) -> list[ScraperResult]:
             assert max_scrapes == 2
             return results
 

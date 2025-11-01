@@ -2,13 +2,12 @@
 Integration Tests für Authentication API Endpoints
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
 from app.core.security import create_access_token, get_password_hash
 from app.database.models import User, UserRole
-from app.core.config import settings
 
 pytestmark = pytest.mark.integration
 
@@ -153,7 +152,7 @@ class TestAuthenticationEndpoints:
             hashed_password=get_password_hash("locked123"),
             role=UserRole.USER,
             is_active=True,
-            locked_until=datetime.now(timezone.utc) + timedelta(hours=1),
+            locked_until=datetime.now(UTC) + timedelta(hours=1),
         )
         db_session.add(locked_user)
         db_session.commit()
@@ -173,7 +172,7 @@ class TestAuthenticationEndpoints:
             hashed_password=get_password_hash("locked123"),
             role=UserRole.USER,
             is_active=True,
-            locked_until=datetime.now(timezone.utc) - timedelta(minutes=5),
+            locked_until=datetime.now(UTC) - timedelta(minutes=5),
         )
         db_session.add(locked_user)
         db_session.commit()
@@ -190,8 +189,8 @@ class TestAuthenticationEndpoints:
         locked_until = locked_user.locked_until
         assert locked_until is not None
         if locked_until.tzinfo is None:
-            locked_until = locked_until.replace(tzinfo=timezone.utc)
-        assert locked_until <= datetime.now(timezone.utc)
+            locked_until = locked_until.replace(tzinfo=UTC)
+        assert locked_until <= datetime.now(UTC)
 
     def test_login_locked_user_with_naive_datetime(self, client, db_session):
         """Test: Naive locked_until datetimes are handled and converted."""
@@ -201,7 +200,7 @@ class TestAuthenticationEndpoints:
             hashed_password=get_password_hash("locked123"),
             role=UserRole.USER,
             is_active=True,
-            locked_until=(datetime.now(timezone.utc) + timedelta(minutes=30)).replace(tzinfo=None),
+            locked_until=(datetime.now(UTC) + timedelta(minutes=30)).replace(tzinfo=None),
         )
         db_session.add(locked_user)
         db_session.commit()
@@ -372,25 +371,22 @@ class TestAuthenticationEndpoints:
         # Create an expired refresh token
         expires_delta = timedelta(seconds=-1)  # Already expired
         refresh_token = create_access_token(
-            data={"sub": test_user.username, "type": "refresh"},
-            expires_delta=expires_delta
+            data={"sub": test_user.username, "type": "refresh"}, expires_delta=expires_delta
         )
 
         # Try to refresh with expired token
         response = client.post("/api/v1/auth/refresh", params={"refresh_token": refresh_token})
-        
+
         assert response.status_code == 401
         assert "invalid refresh token" in response.json()["detail"].lower()
 
     def test_refresh_token_wrong_type(self, client, test_user):
         """Test: Refresh should fail if token has wrong type"""
         # Create an access token (type=access) and try to use it as refresh token
-        access_token = create_access_token(
-            data={"sub": test_user.username, "type": "access"}
-        )
-        
+        access_token = create_access_token(data={"sub": test_user.username, "type": "access"})
+
         response = client.post("/api/v1/auth/refresh", params={"refresh_token": access_token})
-        
+
         assert response.status_code == 401
         assert "invalid refresh token" in response.json()["detail"].lower()
 
@@ -399,61 +395,61 @@ class TestAuthenticationEndpoints:
         # Initial failed attempts should be 0
         assert test_user.failed_login_attempts == 0
         assert test_user.locked_until is None
-        
+
         # Make 4 failed login attempts (not enough to lock)
         for _ in range(4):
             response = client.post(
-                "/api/v1/auth/login", 
-                json={"username": "testuser", "password": "wrongpassword"}
+                "/api/v1/auth/login", json={"username": "testuser", "password": "wrongpassword"}
             )
             assert response.status_code == 401
-        
+
         # Check that counter was incremented but account not locked yet
         db_session.refresh(test_user)
         assert test_user.failed_login_attempts == 4
         assert test_user.locked_until is None
-        
+
         # 5th failed attempt should lock the account
         response = client.post(
-            "/api/v1/auth/login", 
-            json={"username": "testuser", "password": "wrongpassword"}
+            "/api/v1/auth/login", json={"username": "testuser", "password": "wrongpassword"}
         )
         assert response.status_code == 401
-        
+
         # Check that account is now locked
         db_session.refresh(test_user)
         assert test_user.failed_login_attempts == 5
         assert test_user.locked_until is not None
         # Convert naive datetime to timezone-aware for comparison
-        locked_until_aware = test_user.locked_until.replace(tzinfo=timezone.utc) if test_user.locked_until.tzinfo is None else test_user.locked_until
-        assert locked_until_aware > datetime.now(timezone.utc)
-        
+        locked_until_aware = (
+            test_user.locked_until.replace(tzinfo=UTC)
+            if test_user.locked_until.tzinfo is None
+            else test_user.locked_until
+        )
+        assert locked_until_aware > datetime.now(UTC)
+
         # Unlock account manually for next test
         test_user.locked_until = None
         test_user.failed_login_attempts = 0
         db_session.commit()
-        
+
         # Successful login should reset counter
         response = client.post(
-            "/api/v1/auth/login", 
-            json={"username": "testuser", "password": "testpass123"}
+            "/api/v1/auth/login", json={"username": "testuser", "password": "testpass123"}
         )
         assert response.status_code == 200
-        
+
         db_session.refresh(test_user)
         assert test_user.failed_login_attempts == 0
 
     def test_last_login_updated_on_successful_login(self, client, test_user, db_session):
         """Test: Last login timestamp should be updated on successful login"""
         initial_last_login = test_user.last_login
-        
+
         # Login successfully
         response = client.post(
-            "/api/v1/auth/login", 
-            json={"username": "testuser", "password": "testpass123"}
+            "/api/v1/auth/login", json={"username": "testuser", "password": "testpass123"}
         )
         assert response.status_code == 200
-        
+
         # Check that last_login was updated
         db_session.refresh(test_user)
         assert test_user.last_login is not None
@@ -468,36 +464,33 @@ class TestAuthenticationEndpoints:
                 email=f"test_{i}@example.com",
                 hashed_password=get_password_hash("password"),
                 role=UserRole.USER,
-                is_active=True
+                is_active=True,
             )
             db_session.add(user)
         db_session.commit()
-        
+
         # Login as admin
         login_response = client.post(
-            "/api/v1/auth/login", 
-            json={"username": "admin", "password": "admin123"}
+            "/api/v1/auth/login", json={"username": "admin", "password": "admin123"}
         )
         token = login_response.json()["access_token"]
-        
+
         # Get first page (2 users)
         response = client.get(
-            "/api/v1/auth/users?skip=0&limit=2",
-            headers={"Authorization": f"Bearer {token}"}
+            "/api/v1/auth/users?skip=0&limit=2", headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == 200
         users_page1 = response.json()
         assert len(users_page1) == 2
-        
+
         # Get second page
         response = client.get(
-            "/api/v1/auth/users?skip=2&limit=2",
-            headers={"Authorization": f"Bearer {token}"}
+            "/api/v1/auth/users?skip=2&limit=2", headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == 200
         users_page2 = response.json()
         assert len(users_page2) == 2
-        
+
         # Verify users are different between pages
         user_ids_page1 = {user["id"] for user in users_page1}
         user_ids_page2 = {user["id"] for user in users_page2}

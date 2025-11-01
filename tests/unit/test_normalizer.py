@@ -1,6 +1,5 @@
 """Unit tests for DataNormalizer."""
 
-import pytest
 
 from app.processors.normalizer import DataNormalizer
 

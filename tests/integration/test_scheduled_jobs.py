@@ -2,14 +2,15 @@
 Integration tests for scheduled jobs
 """
 
+from datetime import UTC, datetime, timedelta
+
 import pytest
-from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 
 from app.database.models import Company, DuplicateCandidate
 from app.workers.scheduled_jobs import (
-    _scan_for_duplicates_async,
     _cleanup_old_duplicate_candidates_async,
+    _scan_for_duplicates_async,
 )
 
 
@@ -46,7 +47,7 @@ async def test_cleanup_old_candidates_job(db: Session):
     db.flush()
 
     # Create old rejected candidate
-    old_date = datetime.now(timezone.utc) - timedelta(days=100)
+    old_date = datetime.now(UTC) - timedelta(days=100)
     old_candidate = DuplicateCandidate(
         company_a_id=company_a.id,
         company_b_id=company_b.id,
@@ -77,7 +78,9 @@ async def test_cleanup_old_candidates_job(db: Session):
     assert remaining == 0
 
     # Verify recent candidate still exists
-    pending_count = db.query(DuplicateCandidate).filter(DuplicateCandidate.status == "pending").count()
+    pending_count = (
+        db.query(DuplicateCandidate).filter(DuplicateCandidate.status == "pending").count()
+    )
     assert pending_count == 1
 
 
@@ -108,7 +111,7 @@ async def test_cleanup_respects_retention_policy(db: Session):
     db.flush()
 
     # Create candidate within retention period
-    recent_date = datetime.now(timezone.utc) - timedelta(days=30)
+    recent_date = datetime.now(UTC) - timedelta(days=30)
     recent_rejected = DuplicateCandidate(
         company_a_id=company_a.id,
         company_b_id=company_b.id,

@@ -10,12 +10,11 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import os
-import statistics
 import time
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Optional
 
 from app.utils.model_selector import ModelSelector
 
@@ -54,14 +53,14 @@ class BenchmarkTestCase:
     id: str
     name: str
     html_content: str
-    expected_data: Dict[str, Any]
+    expected_data: dict[str, Any]
     complexity: str = "medium"
     content_type: str = "company_page"
     source: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "BenchmarkTestCase":
+    def from_dict(cls, data: dict[str, Any]) -> BenchmarkTestCase:
         required = {"id", "name", "html_content", "expected_data"}
         missing = required - set(data)
         if missing:
@@ -82,7 +81,7 @@ class BenchmarkTestCase:
         )
 
     @classmethod
-    def load_all(cls, path: Path = DEFAULT_TEST_CASES_FILE) -> List["BenchmarkTestCase"]:
+    def load_all(cls, path: Path = DEFAULT_TEST_CASES_FILE) -> list[BenchmarkTestCase]:
         if not path.exists():
             raise FileNotFoundError(f"Benchmark test cases file not found: {path}")
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -110,16 +109,16 @@ def _ensure_dir(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
 
-def _safe_json_loads(payload: str) -> Tuple[bool, Optional[Any]]:
+def _safe_json_loads(payload: str) -> tuple[bool, Optional[Any]]:
     try:
         return True, json.loads(payload)
     except json.JSONDecodeError:
         return False, None
 
 
-def _summarize_errors(results: Dict[str, List[ExtractionResult]]) -> Tuple[int, Dict[str, int]]:
+def _summarize_errors(results: dict[str, list[ExtractionResult]]) -> tuple[int, dict[str, int]]:
     total_errors = 0
-    per_case: Dict[str, int] = {}
+    per_case: dict[str, int] = {}
     for case_id, case_results in results.items():
         case_error_count = sum(1 for result in case_results if result.error)
         if case_error_count:
@@ -128,10 +127,10 @@ def _summarize_errors(results: Dict[str, List[ExtractionResult]]) -> Tuple[int, 
     return total_errors, per_case
 
 
-def _recommend_config(metrics: AggregatedMetrics) -> Dict[str, Any]:
+def _recommend_config(metrics: AggregatedMetrics) -> dict[str, Any]:
     """Derive a recommended Ollama configuration based on benchmark metrics."""
 
-    config: Dict[str, Any] = {
+    config: dict[str, Any] = {
         "temperature": 0.1,
         "top_p": 0.9,
         "num_predict": 1024,
@@ -162,7 +161,7 @@ class ExtractionResult:
     latency: float
     response: Any
     raw_response: str
-    quality_metrics: Dict[str, float]
+    quality_metrics: dict[str, float]
     json_valid: bool
     hallucination_rate: float
     tokens_per_second: float
@@ -197,18 +196,18 @@ class ModelBenchmark:
         self.scraper_factory = scraper_factory
         self.test_cases = test_cases
         self.iterations = max(1, iterations)
-        self._results: Dict[str, List[ExtractionResult]] = {}
+        self._results: dict[str, list[ExtractionResult]] = {}
 
     def run_full_benchmark(self) -> AggregatedMetrics:
-        latencies: List[float] = []
-        precisions: List[float] = []
-        recalls: List[float] = []
-        f1_scores: List[float] = []
-        completeness_scores: List[float] = []
-        json_valid_flags: List[bool] = []
-        hallucination_rates: List[float] = []
-        tokens_per_second: List[float] = []
-        memory_measurements: List[float] = []
+        latencies: list[float] = []
+        precisions: list[float] = []
+        recalls: list[float] = []
+        f1_scores: list[float] = []
+        completeness_scores: list[float] = []
+        json_valid_flags: list[bool] = []
+        hallucination_rates: list[float] = []
+        tokens_per_second: list[float] = []
+        memory_measurements: list[float] = []
 
         for test_case in self.test_cases:
             self._results[test_case.id] = self._run_test_iterations(test_case)
@@ -238,8 +237,8 @@ class ModelBenchmark:
             peak_memory_mb=max(memory_measurements) if memory_measurements else None,
         )
 
-    def _run_test_iterations(self, test_case: BenchmarkTestCase) -> List[ExtractionResult]:
-        results: List[ExtractionResult] = []
+    def _run_test_iterations(self, test_case: BenchmarkTestCase) -> list[ExtractionResult]:
+        results: list[ExtractionResult] = []
         scraper = self.scraper_factory(self.model_name)
 
         ai_web_scraper_cls = None
@@ -332,7 +331,9 @@ class ModelBenchmark:
                 json_valid, _ = _safe_json_loads(raw_response)
 
             quality = self.calculate_quality_metrics(parsed_payload, test_case.expected_data)
-            hallucination_rate = self._estimate_hallucination_rate(parsed_payload, test_case.expected_data)
+            hallucination_rate = self._estimate_hallucination_rate(
+                parsed_payload, test_case.expected_data
+            )
             tokens_per_second = self._estimate_tokens_per_second(response_payload, latency)
             memory_used_mb = self._memory_used(snapshot_before, snapshot_after)
 
@@ -353,7 +354,7 @@ class ModelBenchmark:
         return results
 
     @staticmethod
-    def calculate_quality_metrics(extracted: Any, expected: Dict[str, Any]) -> Dict[str, float]:
+    def calculate_quality_metrics(extracted: Any, expected: dict[str, Any]) -> dict[str, float]:
         if not isinstance(extracted, dict):
             return {"precision": 0.0, "recall": 0.0, "f1": 0.0, "completeness": 0.0}
 
@@ -371,12 +372,22 @@ class ModelBenchmark:
             else:
                 if extracted_value in (None, "", [], {}):
                     false_negative += 1
-                elif ModelBenchmark._normalize_value(extracted_value) == ModelBenchmark._normalize_value(expected_value):
+                elif ModelBenchmark._normalize_value(
+                    extracted_value
+                ) == ModelBenchmark._normalize_value(expected_value):
                     true_positive += 1
                 else:
                     false_positive += 1
-        precision = true_positive / (true_positive + false_positive) if (true_positive + false_positive) else 0.0
-        recall = true_positive / (true_positive + false_negative) if (true_positive + false_negative) else 0.0
+        precision = (
+            true_positive / (true_positive + false_positive)
+            if (true_positive + false_positive)
+            else 0.0
+        )
+        recall = (
+            true_positive / (true_positive + false_negative)
+            if (true_positive + false_negative)
+            else 0.0
+        )
         f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) else 0.0
         completeness = true_positive / total_expected if total_expected else 0.0
 
@@ -396,7 +407,7 @@ class ModelBenchmark:
         return value
 
     @staticmethod
-    def _estimate_hallucination_rate(extracted: Any, expected: Dict[str, Any]) -> float:
+    def _estimate_hallucination_rate(extracted: Any, expected: dict[str, Any]) -> float:
         if not isinstance(extracted, dict):
             return 1.0
         hallucinations = 0
@@ -407,7 +418,9 @@ class ModelBenchmark:
             if expected_value in (None, "", [], {}):
                 if value not in (None, "", [], {}):
                     hallucinations += 1
-            elif ModelBenchmark._normalize_value(value) != ModelBenchmark._normalize_value(expected_value):
+            elif ModelBenchmark._normalize_value(value) != ModelBenchmark._normalize_value(
+                expected_value
+            ):
                 hallucinations += 1
         return hallucinations / total if total else 0.0
 
@@ -415,7 +428,11 @@ class ModelBenchmark:
     def _estimate_tokens_per_second(response: Any, latency: float) -> float:
         if latency <= 0:
             return 0.0
-        text = json.dumps(response, ensure_ascii=False) if isinstance(response, (dict, list)) else str(response)
+        text = (
+            json.dumps(response, ensure_ascii=False)
+            if isinstance(response, (dict, list))
+            else str(response)
+        )
         rough_token_count = max(1, len(text) // 4)
         return rough_token_count / latency
 
@@ -429,7 +446,9 @@ class ModelBenchmark:
             return None
 
     @staticmethod
-    def _memory_used(before: Optional[psutil.Process], after: Optional[psutil.Process]) -> Optional[float]:
+    def _memory_used(
+        before: Optional[psutil.Process], after: Optional[psutil.Process]
+    ) -> Optional[float]:
         if before is None or after is None:
             return None
         try:
@@ -470,11 +489,11 @@ def run_benchmarks(
     test_cases: Sequence[BenchmarkTestCase],
     iterations: int,
     output_mode: str,
-) -> Dict[str, AggregatedMetrics]:
+) -> dict[str, AggregatedMetrics]:
     selector = ModelSelector()
     scraper_factory = _load_scraper(scraper_name, selector)
-    results: Dict[str, AggregatedMetrics] = {}
-    details: Dict[str, Any] = {}
+    results: dict[str, AggregatedMetrics] = {}
+    details: dict[str, Any] = {}
 
     for model in models:
         benchmark = ModelBenchmark(model, scraper_factory, test_cases, iterations=iterations)
@@ -510,7 +529,7 @@ def run_benchmarks(
     return results
 
 
-def _render_markdown_report(details: Dict[str, Any]) -> str:
+def _render_markdown_report(details: dict[str, Any]) -> str:
     headers = [
         "Model",
         "Precision",
@@ -540,7 +559,9 @@ def _render_markdown_report(details: Dict[str, Any]) -> str:
             f"{metrics['latency_p95']:.2f}",
             f"{metrics['latency_p99']:.2f}",
             f"{metrics['mean_tokens_per_second']:.2f}",
-            f"{metrics['peak_memory_mb']:.2f}" if metrics.get("peak_memory_mb") is not None else "N/A",
+            f"{metrics['peak_memory_mb']:.2f}"
+            if metrics.get("peak_memory_mb") is not None
+            else "N/A",
             str(metrics.get("error_count", 0)),
         ]
         table_lines.append("| " + " | ".join(row) + " |")
@@ -564,7 +585,9 @@ def _render_markdown_report(details: Dict[str, Any]) -> str:
 
 
 def parse_args(args: Optional[Sequence[str]] = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Benchmark Ollama models for scraping accuracy and performance.")
+    parser = argparse.ArgumentParser(
+        description="Benchmark Ollama models for scraping accuracy and performance."
+    )
     parser.add_argument(
         "--models",
         default="llama3.2,llama3.2:1b,mistral,qwen2.5,codellama",

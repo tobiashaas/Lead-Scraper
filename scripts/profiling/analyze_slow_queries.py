@@ -3,16 +3,20 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, List, Optional
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 
 from app.core.config import settings
 
-DEFAULT_DATABASE_URL = settings.database_url_psycopg3 if hasattr(settings, "database_url_psycopg3") else settings.database_url
+DEFAULT_DATABASE_URL = (
+    settings.database_url_psycopg3
+    if hasattr(settings, "database_url_psycopg3")
+    else settings.database_url
+)
 DEFAULT_OUTPUT = Path("data/profiling/slow_queries_report.md")
 
 
@@ -48,7 +52,7 @@ def enable_pg_stat_statements(engine: Engine) -> None:
         connection.commit()
 
 
-def fetch_slow_queries(engine: Engine, limit: int) -> List[QueryStats]:
+def fetch_slow_queries(engine: Engine, limit: int) -> list[QueryStats]:
     query = text(
         """
         SELECT
@@ -81,7 +85,7 @@ def fetch_slow_queries(engine: Engine, limit: int) -> List[QueryStats]:
     ]
 
 
-def explain_query(engine: Engine, query_text: str) -> List[str]:
+def explain_query(engine: Engine, query_text: str) -> list[str]:
     explain = text(f"EXPLAIN (ANALYZE, BUFFERS, VERBOSE) {query_text}")
     try:
         with engine.connect() as connection:
@@ -91,8 +95,8 @@ def explain_query(engine: Engine, query_text: str) -> List[str]:
         return [f"Failed to obtain EXPLAIN plan: {exc}"]
 
 
-def suggest_indexes(explain_plan: Iterable[str]) -> List[str]:
-    suggestions: List[str] = []
+def suggest_indexes(explain_plan: Iterable[str]) -> list[str]:
+    suggestions: list[str] = []
     plan_text = "\n".join(explain_plan)
     if "Seq Scan" in plan_text and "Index Scan" not in plan_text:
         suggestions.append("Consider adding an index to avoid sequential scans.")
@@ -103,8 +107,10 @@ def suggest_indexes(explain_plan: Iterable[str]) -> List[str]:
     return suggestions
 
 
-def generate_report(queries: List[QueryStats], plans: List[List[str]], suggestions: List[List[str]]) -> str:
-    lines: List[str] = []
+def generate_report(
+    queries: list[QueryStats], plans: list[list[str]], suggestions: list[list[str]]
+) -> str:
+    lines: list[str] = []
     lines.append("# Slow Query Analysis Report\n")
     lines.append(f"Total queries analyzed: {len(queries)}\n")
 
@@ -139,10 +145,14 @@ def generate_report(queries: List[QueryStats], plans: List[List[str]], suggestio
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Analyze PostgreSQL slow queries")
-    parser.add_argument("--database-url", default=DEFAULT_DATABASE_URL, help="PostgreSQL connection URL")
+    parser.add_argument(
+        "--database-url", default=DEFAULT_DATABASE_URL, help="PostgreSQL connection URL"
+    )
     parser.add_argument("--limit", type=int, default=20, help="Number of queries to analyze")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="Report output path")
-    parser.add_argument("--enable-extension", action="store_true", help="Enable pg_stat_statements before analysis")
+    parser.add_argument(
+        "--enable-extension", action="store_true", help="Enable pg_stat_statements before analysis"
+    )
 
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -153,8 +163,8 @@ def main() -> None:
         enable_pg_stat_statements(engine)
 
     queries = fetch_slow_queries(engine, args.limit)
-    plans: List[List[str]] = []
-    suggestions: List[List[str]] = []
+    plans: list[list[str]] = []
+    suggestions: list[list[str]] = []
 
     for stats in queries:
         plan = explain_query(engine, stats.query)

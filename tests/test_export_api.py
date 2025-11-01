@@ -4,7 +4,6 @@ Tests für Export API Endpoints
 
 from fastapi import status
 from fastapi.testclient import TestClient
-import pytest
 
 
 def test_export_companies_csv(client: TestClient, auth_headers: dict):

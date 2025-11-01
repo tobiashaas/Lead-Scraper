@@ -12,7 +12,6 @@ from app.database.models import ScrapingJob, Source
 from app.scrapers.base import ScraperResult
 from app.workers import scraping_worker
 
-
 pytestmark = pytest.mark.integration
 
 
@@ -163,7 +162,9 @@ class TestSmartScraperWorkerIntegration:
         create_job,
         scraper_result_factory,
     ) -> None:
-        mock_scrape.return_value = [scraper_result_factory("Existing GmbH", "https://existing.example")]
+        mock_scrape.return_value = [
+            scraper_result_factory("Existing GmbH", "https://existing.example")
+        ]
 
         job = create_job()
         config = {
@@ -189,7 +190,9 @@ class TestSmartScraperWorkerIntegration:
         scraper_result_factory,
         monkeypatch,
     ) -> None:
-        mock_scrape.return_value = [scraper_result_factory("Progress GmbH", "https://progress.example")]
+        mock_scrape.return_value = [
+            scraper_result_factory("Progress GmbH", "https://progress.example")
+        ]
 
         progress_updates: list[tuple[float, str | None]] = []
 
@@ -198,7 +201,11 @@ class TestSmartScraperWorkerIntegration:
 
         monkeypatch.setattr(scraping_worker, "update_job_progress", capture_progress)
 
-        async def enrichment(results: list[ScraperResult], progress_callback: Callable[[int, int], Awaitable[None]], **_: Any) -> list[ScraperResult]:
+        async def enrichment(
+            results: list[ScraperResult],
+            progress_callback: Callable[[int, int], Awaitable[None]],
+            **_: Any,
+        ) -> list[ScraperResult]:
             await progress_callback(0, 1)
             await progress_callback(1, 1)
             return results
@@ -227,7 +234,9 @@ class TestSmartScraperWorkerIntegration:
         create_job,
         scraper_result_factory,
     ) -> None:
-        mock_scrape.return_value = [scraper_result_factory("Resilient GmbH", "https://resilient.example")]
+        mock_scrape.return_value = [
+            scraper_result_factory("Resilient GmbH", "https://resilient.example")
+        ]
 
         mock_enrich.side_effect = RuntimeError("enrichment failed")
 
@@ -255,10 +264,13 @@ class TestSmartScraperWorkerIntegration:
         scraper_result_factory,
     ) -> None:
         mock_scrape.return_value = [
-            scraper_result_factory(f"Company {idx}", f"https://company{idx}.example") for idx in range(5)
+            scraper_result_factory(f"Company {idx}", f"https://company{idx}.example")
+            for idx in range(5)
         ]
 
-        async def enrichment(results: list[ScraperResult], max_scrapes: int, **_: Any) -> list[ScraperResult]:
+        async def enrichment(
+            results: list[ScraperResult], max_scrapes: int, **_: Any
+        ) -> list[ScraperResult]:
             assert max_scrapes == 2
             return results
 

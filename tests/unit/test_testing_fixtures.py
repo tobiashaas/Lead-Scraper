@@ -1,4 +1,3 @@
-import pytest
 from sqlalchemy import select
 
 from app.database.models import Company

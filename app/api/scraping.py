@@ -13,7 +13,12 @@ from app.api.schemas import ScrapingJobCreate, ScrapingJobList, ScrapingJobRespo
 from app.core.dependencies import get_current_active_user
 from app.database.database import get_db
 from app.database.models import ScrapingJob, Source, User
-from app.workers.queue import cancel_rq_job, enqueue_scraping_job, get_queue_stats, get_rq_job_status
+from app.workers.queue import (
+    cancel_rq_job,
+    enqueue_scraping_job,
+    get_queue_stats,
+    get_rq_job_status,
+)
 from app.workers.scraping_worker import process_scraping_job_async
 
 router = APIRouter()

@@ -4,8 +4,8 @@ Webhook Management für Event Notifications
 """
 
 import logging
-from datetime import datetime, timezone
-from typing import Any, Dict
+from datetime import UTC, datetime
+from typing import Any
 
 import httpx
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
@@ -161,7 +161,7 @@ async def get_webhook(
     }
 
 
-async def dispatch_webhook_event(event_name: str, payload: Dict[str, Any]) -> None:
+async def dispatch_webhook_event(event_name: str, payload: dict[str, Any]) -> None:
     """Send event payload to all active webhooks subscribed to the event."""
 
     matching_webhooks = [
@@ -182,7 +182,7 @@ async def dispatch_webhook_event(event_name: str, payload: Dict[str, Any]) -> No
                         "event": event_name,
                         "payload": payload,
                         "webhook_id": webhook["id"],
-                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "timestamp": datetime.now(UTC).isoformat(),
                     },
                     headers={"X-Webhook-Event": event_name},
                 )

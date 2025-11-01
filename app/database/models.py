@@ -4,7 +4,7 @@ Definiert die Datenbankstruktur für Lead-Scraping
 """
 
 import enum
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import (
     JSON,
@@ -36,7 +36,7 @@ company_sources = Table(
     Base.metadata,
     Column("company_id", Integer, ForeignKey("companies.id"), primary_key=True),
     Column("source_id", Integer, ForeignKey("sources.id"), primary_key=True),
-    Column("created_at", DateTime, default=lambda: datetime.now(timezone.utc)),
+    Column("created_at", DateTime, default=lambda: datetime.now(UTC)),
 )
 
 
@@ -124,8 +124,12 @@ class Company(Base):
     lead_score = Column(Float, default=0.0)  # 0-100
 
     # Metadaten
-    first_scraped_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
-    last_updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    first_scraped_at = Column(DateTime, default=lambda: datetime.now(UTC), nullable=False)
+    last_updated_at = Column(
+        DateTime,
+        default=lambda: datetime.now(UTC),
+        onupdate=lambda: datetime.now(UTC),
+    )
     last_contacted_at = Column(DateTime)
 
     # Flags
@@ -176,7 +180,7 @@ class Source(Base):
 
     # Metadaten
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     # Relationships
     companies = relationship("Company", secondary=company_sources, back_populates="sources")
@@ -228,7 +232,7 @@ class ScrapingJob(Base):
     error_message = Column(Text)
 
     # Metadaten
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC), index=True)
     created_by = Column(String(100))  # User/System
 
     # Zusätzliche Daten
@@ -260,9 +264,9 @@ class CompanyNote(Base):
     note_type = Column(String(50))  # "contact", "research", "general", etc.
 
     # Metadaten
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
     created_by = Column(String(100))
-    updated_at = Column(DateTime, onupdate=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, onupdate=lambda: datetime.now(UTC))
 
     # Relationship
     company = relationship("Company", back_populates="notes")
@@ -299,7 +303,7 @@ class DuplicateCandidate(Base):
     notes = Column(Text)
 
     # Metadaten
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
 
     # Relationships
     company_a = relationship("Company", foreign_keys=[company_a_id])
@@ -336,11 +340,11 @@ class User(Base):
     locked_until = Column(DateTime)
 
     # Metadaten
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
     updated_at = Column(
         DateTime,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(UTC),
+        onupdate=lambda: datetime.now(UTC),
     )
 
     def __repr__(self):

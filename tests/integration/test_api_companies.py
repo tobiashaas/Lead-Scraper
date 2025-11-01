@@ -1,13 +1,11 @@
 """Integration Tests für Companies API Endpoints."""
 
 
-import pytest
-from datetime import datetime, timedelta
 
-from fastapi.encoders import jsonable_encoder
+import pytest
 from sqlalchemy.orm import Session
 
-from app.database.models import Company, LeadQuality, LeadStatus, User
+from app.database.models import Company, LeadQuality, LeadStatus
 
 pytestmark = pytest.mark.integration
 
@@ -323,31 +321,33 @@ class TestCompaniesEndpoints:
                 industry="IT",
                 lead_status=LeadStatus.QUALIFIED,
                 lead_quality=LeadQuality.A,
-                is_active=True
-            ) for i in range(5)
+                is_active=True,
+            )
+            for i in range(5)
         ]
-        companies.append(Company(
-            company_name="Other Company",
-            city="Munich",  # Different city
-            industry="IT",
-            lead_status=LeadStatus.QUALIFIED,
-            is_active=True
-        ))
+        companies.append(
+            Company(
+                company_name="Other Company",
+                city="Munich",  # Different city
+                industry="IT",
+                lead_status=LeadStatus.QUALIFIED,
+                is_active=True,
+            )
+        )
         db_session.add_all(companies)
         db_session.commit()
 
         # Test combined filter
         response = client.get(
-            "/api/v1/companies/?city=Berlin&industry=IT&lead_status=qualified",
-            headers=auth_headers
+            "/api/v1/companies/?city=Berlin&industry=IT&lead_status=qualified", headers=auth_headers
         )
         assert response.status_code == 200
         data = response.json()
         assert len(data["items"]) == 5  # Only the Berlin IT companies
-        assert all(c["city"] == "Berlin" and 
-                  c["industry"] == "IT" and 
-                  c["lead_status"] == "qualified" 
-                  for c in data["items"])
+        assert all(
+            c["city"] == "Berlin" and c["industry"] == "IT" and c["lead_status"] == "qualified"
+            for c in data["items"]
+        )
 
     def test_search_case_insensitive(self, client, auth_headers, db_session: Session):
         """Test: Search is case insensitive and handles special chars"""
@@ -355,7 +355,7 @@ class TestCompaniesEndpoints:
             company_name="Test & Company GmbH",
             email="info@test-company.de",
             city="Berlin",
-            is_active=True
+            is_active=True,
         )
         db_session.add(company)
         db_session.commit()
@@ -369,7 +369,9 @@ class TestCompaniesEndpoints:
             assert any(query.lower() in c["company_name"].lower() for c in data["items"])
 
         # Test special characters
-        response = client.get("/api/v1/companies/?search=Test%20%26%20Company", headers=auth_headers)
+        response = client.get(
+            "/api/v1/companies/?search=Test%20%26%20Company", headers=auth_headers
+        )
         assert response.status_code == 200
         assert any("Test & Company" in c["company_name"] for c in response.json()["items"])
 
@@ -384,10 +386,7 @@ class TestCompaniesEndpoints:
         db_session.commit()
 
         # Request page beyond total
-        response = client.get(
-            "/api/v1/companies/?skip=100&limit=10",
-            headers=auth_headers
-        )
+        response = client.get("/api/v1/companies/?skip=100&limit=10", headers=auth_headers)
         assert response.status_code == 200
         data = response.json()
         assert data["total"] == 5
@@ -396,71 +395,65 @@ class TestCompaniesEndpoints:
     def test_partial_update(self, create_test_company, client, auth_headers, db_session: Session):
         """Test: Partial update of company fields"""
         company = create_test_company
-        
+
         # Store original values
         original_company_name = company.company_name
         original_email = company.email
         original_last_updated = company.last_updated_at
-        
+
         # Update only phone
         update_data = {"phone": "+49 30 12345678"}
         response = client.put(
-            f"/api/v1/companies/{company.id}",
-            json=update_data,
-            headers=auth_headers
+            f"/api/v1/companies/{company.id}", json=update_data, headers=auth_headers
         )
-        
+
         assert response.status_code == 200
         data = response.json()
-        
+
         # Check only phone was updated in response
         assert data["phone"] == update_data["phone"]
-        
+
         # Verify the update in the database
         db_session.refresh(company)
         assert company.phone == update_data["phone"]
         assert company.company_name == original_company_name  # Verify name wasn't changed
         assert company.email == original_email  # Verify email wasn't changed
-        
+
         # Verify last_updated_at was updated
         assert company.last_updated_at > original_last_updated
 
     def test_set_fields_to_null(self, create_test_company, client, auth_headers):
         """Test: Setting optional fields to null"""
         company = create_test_company
-        
+
         # Set optional fields to null
-        update_data = {
-            "phone": None,
-            "email": None,
-            "website": None
-        }
-        
+        update_data = {"phone": None, "email": None, "website": None}
+
         response = client.put(
-            f"/api/v1/companies/{company.id}",
-            json=update_data,
-            headers=auth_headers
+            f"/api/v1/companies/{company.id}", json=update_data, headers=auth_headers
         )
-        
+
         assert response.status_code == 200
         data = response.json()
-        
+
         assert data["phone"] is None
         assert data["email"] is None
         assert data["website"] is None
 
-    def test_idempotent_delete(self, create_test_company, client, auth_headers, db_session: Session):
+    def test_idempotent_delete(
+        self, create_test_company, client, auth_headers, db_session: Session
+    ):
         """Test: Deleting a company twice is idempotent"""
         company = create_test_company
-        
+
         # First delete
         response1 = client.delete(f"/api/v1/companies/{company.id}", headers=auth_headers)
         assert response1.status_code == 204
-        
+
         # Second delete should also succeed
         response2 = client.delete(f"/api/v1/companies/{company.id}", headers=auth_headers)
         assert response2.status_code == 204
-        
+
         # Verify company is still soft-deleted
         company = db_session.query(Company).filter(Company.id == company.id).first()
         assert not company.is_active
@@ -475,7 +468,7 @@ class TestCompaniesEndpoints:
             ("Company D", "Hamburg", "IT", LeadStatus.NEW, LeadQuality.A),
             ("Company E", "Berlin", "Finance", LeadStatus.QUALIFIED, LeadQuality.B),
         ]
-        
+
         for name, city, industry, status, quality in test_data:
             company = Company(
                 company_name=name,
@@ -483,25 +476,25 @@ class TestCompaniesEndpoints:
                 industry=industry,
                 lead_status=status,
                 lead_quality=quality,
-                is_active=True
+                is_active=True,
             )
             db_session.add(company)
         db_session.commit()
-        
+
         # Get stats
         response = client.get("/api/v1/companies/stats/overview", headers=auth_headers)
         assert response.status_code == 200
         data = response.json()
-        
+
         # Check basic structure
         assert "total_companies" in data
         assert "by_status" in data
         assert "by_quality" in data
         assert "top_cities" in data
-        
+
         # Check counts
         assert data["total_companies"] == 5
-        
+
         # The API returns enum values as strings (e.g., "LeadStatus.QUALIFIED")
         # We need to handle different possible formats
         by_status_normalized = {}
@@ -512,7 +505,7 @@ class TestCompaniesEndpoints:
             else:
                 normalized_key = str(key).lower()
             by_status_normalized[normalized_key] = value
-        
+
         by_quality_normalized = {}
         for key, value in data["by_quality"].items():
             # Extract the enum value (e.g., "a" from "LeadQuality.A" or just "a")
@@ -521,10 +514,10 @@ class TestCompaniesEndpoints:
             else:
                 normalized_key = str(key).lower()
             by_quality_normalized[normalized_key] = value
-        
+
         assert by_status_normalized["qualified"] == 3
         assert by_quality_normalized["a"] == 2
-        
+
         # Check top cities (limited to 10)
         assert len(data["top_cities"]) <= 10
         berlin = next((c for c in data["top_cities"] if c["city"] == "Berlin"), None)

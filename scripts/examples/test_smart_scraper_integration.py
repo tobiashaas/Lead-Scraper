@@ -7,11 +7,14 @@ and demonstrates the enrichment capabilities.
 
 import asyncio
 import json
-from pprint import pprint
 from datetime import datetime
 
 from app.scrapers.eleven_eighty import scrape_11880
-from app.utils.smart_scraper import enrich_results_with_smart_scraper, SmartWebScraper, ScrapingMethod
+from app.utils.smart_scraper import (
+    ScrapingMethod,
+    SmartWebScraper,
+    enrich_results_with_smart_scraper,
+)
 
 
 async def test_enrichment_mode():
@@ -62,12 +65,12 @@ async def test_enrichment_mode():
         print(f"   - Phone: {result.phone}")
 
         if result.extra_data and "website_data" in result.extra_data:
-            print(f"   - ✅ ENRICHED with website data:")
+            print("   - ✅ ENRICHED with website data:")
             website_data = result.extra_data["website_data"]
             for key, value in website_data.items():
                 print(f"     - {key}: {value}")
         else:
-            print(f"   - ❌ Not enriched")
+            print("   - ❌ Not enriched")
 
         # Show sources
         if result.extra_data and "sources" in result.extra_data:

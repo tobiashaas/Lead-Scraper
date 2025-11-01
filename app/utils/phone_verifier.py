@@ -5,12 +5,13 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+from collections.abc import Iterable
 from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Any, Iterable, Tuple
+from datetime import UTC, datetime
+from typing import Any
 
 import phonenumbers
-from phonenumbers import carrier, geocoder, NumberParseException, PhoneNumber
+from phonenumbers import NumberParseException, PhoneNumber, carrier, geocoder
 
 try:  # Optional dependencies for reachability lookups
     import httpx
@@ -20,7 +21,6 @@ except ImportError:  # pragma: no cover - optional dependency
 import redis.asyncio as redis
 
 from app.core.config import settings
-
 
 logger = logging.getLogger(__name__)
 
@@ -65,10 +65,10 @@ class PhoneVerificationResult:
         return json.dumps(payload)
 
     @classmethod
-    def from_serialized(cls, payload: str) -> "PhoneVerificationResult":
+    def from_serialized(cls, payload: str) -> PhoneVerificationResult:
         data = json.loads(payload)
         verified_at = (
-            datetime.fromisoformat(data["verified_at"]).astimezone(timezone.utc)
+            datetime.fromisoformat(data["verified_at"]).astimezone(UTC)
             if data.get("verified_at")
             else None
         )
@@ -217,11 +217,11 @@ class PhoneVerifier:
                 status="invalid_format",
                 message="Phone number could not be parsed.",
             )
-            result.verified_at = datetime.now(timezone.utc)
+            result.verified_at = datetime.now(UTC)
             return result
 
         result = self._base_verification(parsed, region)
-        result.verified_at = datetime.now(timezone.utc)
+        result.verified_at = datetime.now(UTC)
 
         # Optional reachability check via API (e.g., Twilio)
         if result.valid and self.api_provider and self.api_key:
@@ -320,7 +320,7 @@ class PhoneVerifier:
         concurrency = max_concurrent or settings.verification_max_concurrent or 5
         semaphore = asyncio.Semaphore(concurrency)
 
-        async def _verify(phone_number: str) -> Tuple[str, PhoneVerificationResult]:
+        async def _verify(phone_number: str) -> tuple[str, PhoneVerificationResult]:
             async with semaphore:
                 result = await self.verify_phone_enhanced(phone_number, country=region)
                 return phone_number, result

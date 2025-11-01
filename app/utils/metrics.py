@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Dict, Tuple
-
 from prometheus_client import Counter, Gauge, Histogram
 
 from app.database.database import get_pool_status
@@ -100,7 +98,7 @@ queue_jobs_total = Counter(
     ["queue_name", "status"],
 )
 
-_queue_previous_counts: Dict[Tuple[str, str], int] = {}
+_queue_previous_counts: dict[tuple[str, str], int] = {}
 
 db_query_duration_seconds = Histogram(
     "db_query_duration_seconds",
@@ -169,8 +167,12 @@ def record_scraping_job_metrics(job: ScrapingJob) -> None:
     if duration is not None:
         scraping_job_duration_seconds.labels(source=source).observe(duration)
 
-    scraping_results_total.labels(source=source, result_type="new_companies").inc(job.new_companies or 0)
-    scraping_results_total.labels(source=source, result_type="updated_companies").inc(job.updated_companies or 0)
+    scraping_results_total.labels(source=source, result_type="new_companies").inc(
+        job.new_companies or 0
+    )
+    scraping_results_total.labels(source=source, result_type="updated_companies").inc(
+        job.updated_companies or 0
+    )
     scraping_results_total.labels(source=source, result_type="errors").inc(job.errors_count or 0)
 
     stats = job.stats or {}
@@ -194,7 +196,9 @@ def record_scraping_job_metrics(job: ScrapingJob) -> None:
         verifications = stats["contact_verifications"]
         for contact_type, statuses in verifications.items():
             for status_label, count in statuses.items():
-                contact_verifications_total.labels(contact_type=contact_type, status=status_label).inc(count)
+                contact_verifications_total.labels(
+                    contact_type=contact_type, status=status_label
+                ).inc(count)
 
 
 def update_queue_metrics() -> None:
@@ -245,4 +249,3 @@ def record_cache_miss(prefix: str) -> None:
 
 def record_cache_write(prefix: str) -> None:
     cache_writes_total.labels(prefix=prefix).inc()
-

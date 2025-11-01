@@ -7,7 +7,6 @@ from httpx import AsyncClient
 from sqlalchemy.orm import Session
 
 from app.database.models import Company, DuplicateCandidate, User
-from app.main import app
 
 
 @pytest.mark.asyncio
@@ -212,7 +211,10 @@ async def test_get_stats(async_client: AsyncClient, auth_headers: dict, db: Sess
 
     # Create candidates with different statuses
     pending = DuplicateCandidate(
-        company_a_id=company_a.id, company_b_id=company_b.id, overall_similarity=0.85, status="pending"
+        company_a_id=company_a.id,
+        company_b_id=company_b.id,
+        overall_similarity=0.85,
+        status="pending",
     )
     db.add(pending)
     db.commit()

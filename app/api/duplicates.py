@@ -4,7 +4,7 @@ Manage duplicate detection and merging
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -126,7 +126,9 @@ async def list_candidates(
 
     total = query.count()
 
-    candidates = query.order_by(DuplicateCandidate.overall_similarity.desc()).offset(skip).limit(limit).all()
+    candidates = (
+        query.order_by(DuplicateCandidate.overall_similarity.desc()).offset(skip).limit(limit).all()
+    )
 
     items = []
     for candidate in candidates:
@@ -184,7 +186,9 @@ async def get_candidate(
     )
 
     if not candidate:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Duplicate candidate not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Duplicate candidate not found"
+        )
 
     return {
         "id": candidate.id,
@@ -233,7 +237,9 @@ async def merge_duplicate(
     candidate = db.query(DuplicateCandidate).filter(DuplicateCandidate.id == candidate_id).first()
 
     if not candidate:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Duplicate candidate not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Duplicate candidate not found"
+        )
 
     # Load companies
     primary = db.query(Company).filter(Company.id == merge_request.primary_id).first()
@@ -244,14 +250,19 @@ async def merge_duplicate(
 
     # Validate merge request
     if merge_request.primary_id == merge_request.duplicate_id:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot merge company with itself")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot merge company with itself"
+        )
 
     if not primary.is_active:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Primary company is not active")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Primary company is not active"
+        )
 
     if duplicate.is_duplicate:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="Duplicate company is already marked as duplicate"
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Duplicate company is already marked as duplicate",
         )
 
     # Perform merge
@@ -270,7 +281,7 @@ async def merge_duplicate(
         # Update candidate status
         candidate.status = "confirmed"
         candidate.reviewed_by = current_user.username
-        candidate.reviewed_at = datetime.now(timezone.utc)
+        candidate.reviewed_at = datetime.now(UTC)
         if merge_request.reason:
             candidate.notes = merge_request.reason
 
@@ -312,7 +323,9 @@ async def merge_duplicate(
     except Exception as exc:
         db.rollback()
         logger.exception("Merge failed", extra={"candidate_id": candidate_id, "error": str(exc)})
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Merge failed: {str(exc)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Merge failed: {str(exc)}"
+        )
 
 
 @router.post("/candidates/{candidate_id}/reject")
@@ -330,18 +343,24 @@ async def reject_duplicate(
     candidate = db.query(DuplicateCandidate).filter(DuplicateCandidate.id == candidate_id).first()
 
     if not candidate:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Duplicate candidate not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Duplicate candidate not found"
+        )
 
     candidate.status = "rejected"
     candidate.reviewed_by = current_user.username
-    candidate.reviewed_at = datetime.now(timezone.utc)
+    candidate.reviewed_at = datetime.now(UTC)
     candidate.notes = reject_request.reason
 
     db.commit()
 
     logger.info(
         "Duplicate rejected",
-        extra={"candidate_id": candidate_id, "user": current_user.username, "reason": reject_request.reason},
+        extra={
+            "candidate_id": candidate_id,
+            "user": current_user.username,
+            "reason": reject_request.reason,
+        },
     )
 
     return {"message": "Duplicate candidate rejected"}
@@ -362,14 +381,22 @@ async def trigger_manual_scan(
     try:
         job = maintenance_queue.enqueue(scan_for_duplicates_job, job_id="manual-duplicate-scan")
 
-        logger.info("Manual duplicate scan triggered", extra={"user": current_user.username, "job_id": job.id})
+        logger.info(
+            "Manual duplicate scan triggered",
+            extra={"user": current_user.username, "job_id": job.id},
+        )
 
-        return {"job_id": job.id, "status": "queued", "message": "Duplicate scan job queued successfully"}
+        return {
+            "job_id": job.id,
+            "status": "queued",
+            "message": "Duplicate scan job queued successfully",
+        }
 
     except Exception as exc:
         logger.exception("Failed to enqueue scan job", extra={"error": str(exc)})
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to enqueue scan: {str(exc)}"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to enqueue scan: {str(exc)}",
         )
 
 
@@ -384,9 +411,21 @@ async def get_stats(
     **Permissions:** Authenticated users
     """
     total = db.query(func.count(DuplicateCandidate.id)).scalar()
-    pending = db.query(func.count(DuplicateCandidate.id)).filter(DuplicateCandidate.status == "pending").scalar()
-    confirmed = db.query(func.count(DuplicateCandidate.id)).filter(DuplicateCandidate.status == "confirmed").scalar()
-    rejected = db.query(func.count(DuplicateCandidate.id)).filter(DuplicateCandidate.status == "rejected").scalar()
+    pending = (
+        db.query(func.count(DuplicateCandidate.id))
+        .filter(DuplicateCandidate.status == "pending")
+        .scalar()
+    )
+    confirmed = (
+        db.query(func.count(DuplicateCandidate.id))
+        .filter(DuplicateCandidate.status == "confirmed")
+        .scalar()
+    )
+    rejected = (
+        db.query(func.count(DuplicateCandidate.id))
+        .filter(DuplicateCandidate.status == "rejected")
+        .scalar()
+    )
 
     # Try to get auto-merge stats from recent jobs
     from app.database.models import ScrapingJob

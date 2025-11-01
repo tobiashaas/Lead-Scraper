@@ -7,7 +7,6 @@ from httpx import AsyncClient
 from sqlalchemy.orm import Session
 
 from app.database.models import Company, DuplicateCandidate, ScrapingJob, Source
-from app.workers.scraping_worker import process_scraping_job_async
 
 
 @pytest.mark.asyncio

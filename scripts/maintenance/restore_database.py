@@ -6,7 +6,7 @@ import logging
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -31,7 +31,9 @@ def list_available_backups(limit: int = 20) -> list[dict[str, Any]]:
                 "filename": backup.name,
                 "path": str(backup),
                 "size_mb": round(backup.stat().st_size / (1024 * 1024), 2),
-                "modified_at": datetime.fromtimestamp(backup.stat().st_mtime, tz=timezone.utc).isoformat(),
+                "modified_at": datetime.fromtimestamp(
+                    backup.stat().st_mtime, tz=UTC
+                ).isoformat(),
                 "type": _derive_backup_type(backup.name),
             }
         )
@@ -82,7 +84,7 @@ def restore_database(
 
 
 def test_restore(backup_file: Path) -> dict[str, Any]:
-    temp_db = f"test_restore_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
+    temp_db = f"test_restore_{datetime.now(UTC).strftime('%Y%m%d%H%M%S')}"
     result: dict[str, Any] = {}
 
     try:
@@ -100,10 +102,20 @@ def test_restore(backup_file: Path) -> dict[str, Any]:
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Restore PostgreSQL backups from Docker container")
     parser.add_argument("--backup-file", type=Path, help="Path to backup file")
-    parser.add_argument("--target-db", type=str, default=None, help="Target database to restore into")
-    parser.add_argument("--test-only", action="store_true", help="Test restore to temporary database")
-    parser.add_argument("--force", action="store_true", help="Skip confirmation prompts (dangerous)")
-    parser.add_argument("--no-stop-app", action="store_true", help="Do not stop application containers before restore")
+    parser.add_argument(
+        "--target-db", type=str, default=None, help="Target database to restore into"
+    )
+    parser.add_argument(
+        "--test-only", action="store_true", help="Test restore to temporary database"
+    )
+    parser.add_argument(
+        "--force", action="store_true", help="Skip confirmation prompts (dangerous)"
+    )
+    parser.add_argument(
+        "--no-stop-app",
+        action="store_true",
+        help="Do not stop application containers before restore",
+    )
     parser.add_argument("--verbose", action="store_true", help="Enable debug logging")
     return parser.parse_args(argv)
 
@@ -227,7 +239,9 @@ def _run_restore(backup_path: Path, database: str) -> None:
                 "--yes",
                 str(backup_path),
             ]
-            input_stream = subprocess.Popen(decrypt_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            input_stream = subprocess.Popen(
+                decrypt_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
             stdout = input_stream.stdout
         elif backup_path.suffix.endswith(".gz") or backup_path.name.endswith(".sql.gz"):
             gzip_process = subprocess.Popen(
@@ -243,7 +257,9 @@ def _run_restore(backup_path: Path, database: str) -> None:
         if stdout is None:
             raise RuntimeError("Failed to open backup stream")
 
-        with subprocess.Popen(restore_cmd, stdin=stdout, stderr=subprocess.PIPE, env=env) as restore_proc:
+        with subprocess.Popen(
+            restore_cmd, stdin=stdout, stderr=subprocess.PIPE, env=env
+        ) as restore_proc:
             stderr = restore_proc.stderr.read() if restore_proc.stderr else b""
             if restore_proc.wait() != 0:
                 raise RuntimeError(f"psql restore failed: {stderr.decode(errors='ignore')}")

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Callable
-
 import pytest
 
 from tests.utils.test_helpers import (
@@ -12,7 +10,6 @@ from tests.utils.test_helpers import (
     create_test_companies_bulk,
     simulate_concurrent_requests,
 )
-
 
 pytestmark = pytest.mark.integration
 
@@ -63,14 +60,14 @@ class TestConcurrentRequests:
             "/api/v1/companies",
             count=5,
             headers=auth_headers,
-            follow_redirects=True  # Follow redirects
+            follow_redirects=True,  # Follow redirects
         )
 
         for response in responses:
             assert hasattr(response, "status_code")
             # Check if we got a successful response (200) or a redirect (307)
             assert response.status_code in (200, 307)
-            
+
             # If it's a redirect, follow it and check the final status
             if response.status_code == 307:
                 redirect_url = response.headers.get("Location")

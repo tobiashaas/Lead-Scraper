@@ -11,15 +11,14 @@ import argparse
 import json
 import logging
 import os
+import secrets as secrets_module
+import string
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable
-
-import secrets as secrets_module
-import string
-
+from typing import Any
 
 LOGGER = logging.getLogger("scripts.secrets.rotate")
 MASK = "******"
@@ -55,6 +54,7 @@ class RotationContext:
 # Argument parsing
 # ---------------------------------------------------------------------------
 
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Rotate or roll back secrets for KR Lead Scraper",
@@ -69,7 +69,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--secret-name", help="Secret name/ARN for AWS Secrets Manager")
     parser.add_argument("--region", help="AWS region for the secret")
-    parser.add_argument("--vault-addr", help="Vault server address (e.g. https://vault.example.com)")
+    parser.add_argument(
+        "--vault-addr", help="Vault server address (e.g. https://vault.example.com)"
+    )
     parser.add_argument("--vault-token", help="Vault token with read/write permissions")
     parser.add_argument("--vault-path", help="Full Vault KV v2 path, e.g. secret/data/kr-scraper")
 
@@ -101,6 +103,7 @@ def build_parser() -> argparse.ArgumentParser:
 # Logging helpers
 # ---------------------------------------------------------------------------
 
+
 def configure_logging(verbose: bool) -> None:
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(level=level, format="%(asctime)s %(levelname)s %(message)s")
@@ -110,7 +113,9 @@ def mask_value(_: str) -> str:
     return MASK
 
 
-def masked_items(data: dict[str, Any], mask_func: Callable[[str], str] | None = None) -> dict[str, Any]:
+def masked_items(
+    data: dict[str, Any], mask_func: Callable[[str], str] | None = None
+) -> dict[str, Any]:
     mask = mask_func or mask_value
     return {key: (mask(key) if data.get(key) else "<unset>") for key in data}
 
@@ -118,6 +123,7 @@ def masked_items(data: dict[str, Any], mask_func: Callable[[str], str] | None = 
 # ---------------------------------------------------------------------------
 # Secret generation utilities
 # ---------------------------------------------------------------------------
+
 
 def generate_secret_key() -> str:
     return secrets_module.token_urlsafe(32)
@@ -143,6 +149,7 @@ def generate_password(length: int = 32) -> str:
 # ---------------------------------------------------------------------------
 # Provider operations
 # ---------------------------------------------------------------------------
+
 
 def load_current_secrets(options: ProviderOptions) -> dict[str, Any]:
     if options.provider == "aws":
@@ -209,7 +216,8 @@ def _load_vault_secret(options: ProviderOptions) -> dict[str, Any]:
 # Backups & rollback
 # ---------------------------------------------------------------------------
 
-def get_fernet() -> "Fernet":
+
+def get_fernet() -> Fernet:
     try:
         from cryptography.fernet import Fernet
     except ModuleNotFoundError as exc:  # pragma: no cover - dependency missing
@@ -308,6 +316,7 @@ def rotate_payload(existing: dict[str, Any]) -> dict[str, Any]:
 # Writes
 # ---------------------------------------------------------------------------
 
+
 def write_secrets(options: ProviderOptions, payload: dict[str, Any]) -> None:
     if options.provider == "aws":
         _write_aws_secret(options, payload)
@@ -356,6 +365,7 @@ def _write_vault_secret(options: ProviderOptions, payload: dict[str, Any]) -> No
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
+
 
 def validate_inputs(args: argparse.Namespace) -> ProviderOptions:
     provider = args.provider.lower()

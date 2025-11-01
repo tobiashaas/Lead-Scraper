@@ -11,7 +11,7 @@ import sys
 import tempfile
 import time
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Optional
 
 import httpx
 from memory_profiler import memory_usage
@@ -22,8 +22,7 @@ from app.core.config import settings
 
 DEFAULT_BASE_URL = os.getenv(
     "PROFILE_BASE_URL",
-    getattr(settings, "api_base_url", None)
-    or f"http://{settings.api_host}:{settings.api_port}",
+    getattr(settings, "api_base_url", None) or f"http://{settings.api_host}:{settings.api_port}",
 )
 DEFAULT_OUTPUT_DIR = Path("data/profiling")
 DEFAULT_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -34,12 +33,12 @@ async def _exercise_endpoint(
     method: str,
     iterations: int,
     base_url: str,
-    payload: Optional[Dict[str, Any]] = None,
-) -> List[float]:
+    payload: Optional[dict[str, Any]] = None,
+) -> list[float]:
     """Execute the endpoint multiple times and record response durations."""
 
     url = base_url.rstrip("/") + "/" + endpoint.lstrip("/")
-    durations: List[float] = []
+    durations: list[float] = []
     async with httpx.AsyncClient(timeout=30.0) as client:
         for _ in range(iterations):
             start = time.perf_counter()
@@ -60,7 +59,7 @@ def profile_endpoint_cpu(
     iterations: int,
     base_url: str,
     output_dir: Path,
-    payload: Optional[Dict[str, Any]] = None,
+    payload: Optional[dict[str, Any]] = None,
 ) -> Path:
     """Profile CPU usage using cProfile and save stats file."""
 
@@ -79,7 +78,9 @@ def profile_endpoint_cpu(
     readable_stats = io.StringIO()
     stats = cProfile.Stats(profiler, stream=readable_stats).sort_stats("cumulative")
     stats.print_stats(30)
-    (output_dir / f"{_safe_name(endpoint)}_cpu.txt").write_text(readable_stats.getvalue(), encoding="utf-8")
+    (output_dir / f"{_safe_name(endpoint)}_cpu.txt").write_text(
+        readable_stats.getvalue(), encoding="utf-8"
+    )
     return output_path
 
 
@@ -89,7 +90,7 @@ def profile_endpoint_memory(
     iterations: int,
     base_url: str,
     output_dir: Path,
-    payload: Optional[Dict[str, Any]] = None,
+    payload: Optional[dict[str, Any]] = None,
 ) -> Path:
     """Profile memory usage using memory_profiler."""
 
@@ -103,7 +104,7 @@ def profile_endpoint_memory(
     peak = max(usage) if usage else 0.0
     report_path = output_dir / f"{_safe_name(endpoint)}_memory.txt"
     report_path.write_text(
-        "Peak memory usage: {:.2f} MiB\nSamples: {}".format(peak, len(usage)),
+        f"Peak memory usage: {peak:.2f} MiB\nSamples: {len(usage)}",
         encoding="utf-8",
     )
     return report_path
@@ -115,7 +116,7 @@ def profile_with_pyspy(
     duration: int,
     base_url: str,
     output_dir: Path,
-    payload: Optional[Dict[str, Any]] = None,
+    payload: Optional[dict[str, Any]] = None,
 ) -> Optional[Path]:
     """Capture a flamegraph using py-spy by spawning a helper process."""
 
@@ -141,7 +142,7 @@ async def main():
 
 asyncio.run(main())
 """
-    
+
     with tempfile.NamedTemporaryFile(mode="w", suffix="_pyspy_runner.py", delete=False) as tmp:
         tmp.write(helper_script)
         helper_path = Path(tmp.name)
@@ -172,7 +173,7 @@ def _create_engine(database_url: Optional[str]) -> Engine:
     return create_engine(url)
 
 
-def _fetch_pg_stats(engine: Engine) -> Dict[str, Dict[str, float]]:
+def _fetch_pg_stats(engine: Engine) -> dict[str, dict[str, float]]:
     query = text(
         """
         SELECT query, calls, total_exec_time
@@ -180,7 +181,7 @@ def _fetch_pg_stats(engine: Engine) -> Dict[str, Dict[str, float]]:
         WHERE query NOT ILIKE 'COPY %'
         """
     )
-    stats: Dict[str, Dict[str, float]] = {}
+    stats: dict[str, dict[str, float]] = {}
     with engine.connect() as conn:
         for row in conn.execute(query):
             stats[row.query] = {
@@ -196,8 +197,8 @@ def analyze_database_queries(
     iterations: int,
     base_url: str,
     database_url: Optional[str],
-    payload: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Any]:
+    payload: Optional[dict[str, Any]] = None,
+) -> dict[str, Any]:
     """Compare pg_stat_statements before/after hitting the endpoint."""
 
     engine = _create_engine(database_url)
@@ -207,7 +208,7 @@ def analyze_database_queries(
 
     after = _fetch_pg_stats(engine)
 
-    deltas: List[Dict[str, Any]] = []
+    deltas: list[dict[str, Any]] = []
     for query, stats_after in after.items():
         stats_before = before.get(query, {"calls": 0.0, "total_exec_time": 0.0})
         calls_delta = stats_after["calls"] - stats_before["calls"]
@@ -229,7 +230,7 @@ def analyze_database_queries(
     }
 
 
-def parse_payload(raw: Optional[str]) -> Optional[Dict[str, Any]]:
+def parse_payload(raw: Optional[str]) -> Optional[dict[str, Any]]:
     if not raw:
         return None
     import json
@@ -242,7 +243,9 @@ def main() -> None:
     parser.add_argument("--endpoint", required=True, help="Endpoint path, e.g. /api/v1/companies")
     parser.add_argument("--method", default="GET", help="HTTP method (GET, POST, ...)")
     parser.add_argument("--iterations", type=int, default=50, help="Number of requests to send")
-    parser.add_argument("--duration", type=int, default=60, help="Duration in seconds for py-spy capture")
+    parser.add_argument(
+        "--duration", type=int, default=60, help="Duration in seconds for py-spy capture"
+    )
     parser.add_argument(
         "--profile-type",
         choices={"cpu", "memory", "pyspy", "queries", "all"},

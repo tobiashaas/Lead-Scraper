@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from contextlib import suppress
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from rq import get_current_job
 
@@ -50,7 +50,10 @@ async def _scan_for_duplicates_async() -> dict[str, object]:
 
         logger.info(
             "Scheduled duplicate scan started",
-            extra={"total_companies": total_companies, "batch_size": settings.deduplicator_scan_batch_size},
+            extra={
+                "total_companies": total_companies,
+                "batch_size": settings.deduplicator_scan_batch_size,
+            },
         )
 
         candidates_created = deduplicator.scan_for_duplicates(
@@ -63,7 +66,7 @@ async def _scan_for_duplicates_async() -> dict[str, object]:
         payload = {
             "candidates_created": candidates_created,
             "scanned_companies": total_companies,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
         with suppress(Exception):
@@ -99,7 +102,9 @@ async def _cleanup_old_duplicate_candidates_async() -> dict[str, object]:
 
     session = SessionLocal()
     try:
-        cutoff = datetime.now(timezone.utc) - timedelta(days=settings.deduplicator_candidate_retention_days)
+        cutoff = datetime.now(UTC) - timedelta(
+            days=settings.deduplicator_candidate_retention_days
+        )
 
         # Build filter based on policy
         status_filter = ["rejected"]

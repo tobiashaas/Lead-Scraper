@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 import redis
 from rq import Queue
@@ -123,7 +123,7 @@ def _sanitize_value(value: Any) -> Any:
     return str(value)
 
 
-def get_rq_job_status(rq_job_id: str) -> Dict[str, Any]:
+def get_rq_job_status(rq_job_id: str) -> dict[str, Any]:
     """Get RQ job status from Redis."""
     try:
         job = Job.fetch(rq_job_id, connection=redis_conn)
@@ -152,7 +152,7 @@ def cancel_rq_job(rq_job_id: str) -> bool:
         return False
 
 
-def get_queue_stats() -> Dict[str, Dict[str, int]]:
+def get_queue_stats() -> dict[str, dict[str, int]]:
     """Return queue statistics for monitoring."""
     return {
         "scraping": {

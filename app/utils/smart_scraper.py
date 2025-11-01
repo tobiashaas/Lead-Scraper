@@ -5,8 +5,9 @@ Kombiniert mehrere Scraping-Methoden mit intelligenten Fallbacks
 
 import asyncio
 import logging
+from collections.abc import Awaitable, Callable
 from enum import Enum
-from typing import Any, Awaitable, Callable
+from typing import Any
 
 from app.core.config import settings
 from app.scrapers.base import ScraperResult
@@ -109,9 +110,7 @@ class SmartWebScraper:
                     return result
 
             except asyncio.TimeoutError:
-                logger.warning(
-                    "Methode %s Timeout nach %s Sekunden", method.value, self.timeout
-                )
+                logger.warning("Methode %s Timeout nach %s Sekunden", method.value, self.timeout)
             except Exception as e:
                 logger.warning(f"Methode {method.value} fehlgeschlagen: {e}")
                 continue
@@ -349,9 +348,7 @@ async def enrich_results_with_smart_scraper(
         try:
             website_data = await scraper.scrape(result.website)
         except Exception as err:  # pragma: no cover - defensive logging
-            logger.warning(
-                "Smart Scraper Fehler für %s: %s", result.website, err, exc_info=True
-            )
+            logger.warning("Smart Scraper Fehler für %s: %s", result.website, err, exc_info=True)
             website_data = None
 
         if website_data:
@@ -380,9 +377,7 @@ async def enrich_results_with_smart_scraper(
     if progress_callback and total_to_scrape:
         await progress_callback(total_to_scrape, total_to_scrape)
 
-    logger.info(
-        "Smart Scraper abgeschlossen: %s Ziele, %s angereichert", total_to_scrape, enriched
-    )
+    logger.info("Smart Scraper abgeschlossen: %s Ziele, %s angereichert", total_to_scrape, enriched)
     logger.info(f"Smart Scraper Stats: {scraper.get_stats()}")
 
     return results

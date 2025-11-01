@@ -8,10 +8,11 @@ import logging
 import threading
 import time
 from abc import ABC, abstractmethod
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from email.message import EmailMessage
 from pathlib import Path
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Optional
 
 import httpx
 import redis.asyncio as redis
@@ -19,7 +20,6 @@ from aiosmtplib import SMTP, SMTPException
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound, select_autoescape
 
 from app.core.config import settings
-
 
 logger = logging.getLogger(__name__)
 
@@ -178,7 +178,7 @@ class SlackChannel(NotificationChannel):
             logger.debug("SlackChannel skipped send - webhook URL not configured")
             return False
 
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             "text": message or subject,
         }
 
@@ -312,7 +312,9 @@ class NotificationService:
         )
 
         if not self.channels:
-            logger.debug("NotificationService has no channels configured; skipping alert %s", alert_type)
+            logger.debug(
+                "NotificationService has no channels configured; skipping alert %s", alert_type
+            )
             return {}
 
         redis_client: redis.Redis | None = None
@@ -342,7 +344,9 @@ class NotificationService:
             try:
                 await redis_client.setex(dedup_key, 300, "1")
             except Exception:  # pragma: no cover - best effort caching
-                logger.debug("NotificationService failed to cache dedup key %s", dedup_key, exc_info=True)
+                logger.debug(
+                    "NotificationService failed to cache dedup key %s", dedup_key, exc_info=True
+                )
 
         return {name: status for name, status in results}
 
@@ -382,11 +386,14 @@ class NotificationService:
         context_with_defaults.setdefault("alert_type", template_name)
         context_with_defaults.setdefault("severity", "warning")
         context_with_defaults.setdefault("environment", settings.environment)
-        context_with_defaults.setdefault("timestamp", datetime.now(timezone.utc).isoformat())
+        context_with_defaults.setdefault("timestamp", datetime.now(UTC).isoformat())
 
         alert_type = context_with_defaults["alert_type"]
         severity = context_with_defaults.get("severity", "warning")
-        dedup_key = context_with_defaults.get("dedup_key") or f"alert:{template_name}:{context_with_defaults.get('job_id') or context_with_defaults.get('issue_type') or context_with_defaults.get('queue_name') or 'generic'}"
+        dedup_key = (
+            context_with_defaults.get("dedup_key")
+            or f"alert:{template_name}:{context_with_defaults.get('job_id') or context_with_defaults.get('issue_type') or context_with_defaults.get('queue_name') or 'generic'}"
+        )
         dedup_key = str(dedup_key)
 
         logger.info(

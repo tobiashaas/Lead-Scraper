@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from fastapi import status
@@ -27,7 +27,7 @@ class TestCompletePipeline11880:
         source = create_source(name="11880")
         html = html_fixture_loader("11880_stuttgart_it_service.html")
         mock_playwright_with_html(html)
-        
+
         # Create job
         response = await async_client.post(
             "/api/v1/scraping/jobs",
@@ -37,14 +37,14 @@ class TestCompletePipeline11880:
                 "industry": "IT-Service",
                 "max_pages": 1,
                 "use_tor": False,
-                "use_ai": False
+                "use_ai": False,
             },
-            headers=auth_headers
+            headers=auth_headers,
         )
         assert response.status_code == status.HTTP_201_CREATED
         job_data = response.json()
         job_id = job_data["id"]
-        
+
         # Wait for job completion
         job_data = await wait_for_scraping_job_completion_async(
             client=async_client,
@@ -59,21 +59,21 @@ class TestCompletePipeline11880:
         assert job_data["results_count"] == 3
         assert job_data["new_companies"] == 3
         assert job_data["updated_companies"] == 0
-        
+
         # Check database
         companies = db_session.query(Company).filter(Company.city == "Stuttgart").all()
         assert len(companies) == 3
-        
+
         # Validate company data
         company_names = {c.company_name for c in companies}
         assert "Technical Support" in company_names
         assert "NETPOLTE EDV Dienstleistungen" in company_names
         assert "IT Solutions GmbH" in company_names
-        
+
         # Validate one company in detail
-        tech_support = db_session.query(Company).filter(
-            Company.company_name == "Technical Support"
-        ).first()
+        tech_support = (
+            db_session.query(Company).filter(Company.company_name == "Technical Support").first()
+        )
         assert tech_support is not None
         assert tech_support.phone == "+497118829810"
         assert tech_support.postal_code == "70567"
@@ -92,7 +92,7 @@ class TestCompletePipeline11880:
         mock_playwright_with_html,
         mock_rate_limiter,
         mock_tor_proxy,
-        create_source
+        create_source,
     ):
         # Setup - create existing company
         source = create_source(name="11880")
@@ -100,16 +100,16 @@ class TestCompletePipeline11880:
             company_name="Technical Support",
             city="Stuttgart",
             phone="+49711000000",  # Old phone number
-            first_scraped_at=datetime.now(timezone.utc),
-            last_updated_at=datetime.now(timezone.utc)
+            first_scraped_at=datetime.now(UTC),
+            last_updated_at=datetime.now(UTC),
         )
         db_session.add(existing_company)
         db_session.commit()
-        
+
         # Load fixture and mock
         html = html_fixture_loader("11880_stuttgart_it_service.html")
         mock_playwright_with_html(html)
-        
+
         # Create job
         response = await async_client.post(
             "/api/v1/scraping/jobs",
@@ -119,9 +119,9 @@ class TestCompletePipeline11880:
                 "industry": "IT-Service",
                 "max_pages": 1,
                 "use_tor": False,
-                "use_ai": False
+                "use_ai": False,
             },
-            headers=auth_headers
+            headers=auth_headers,
         )
         assert response.status_code == status.HTTP_201_CREATED
         job_id = response.json()["id"]
@@ -139,11 +139,11 @@ class TestCompletePipeline11880:
         assert job_data["status"] == "completed"
         assert job_data["new_companies"] == 2  # 2 new, 1 updated
         assert job_data["updated_companies"] == 1
-        
+
         # Check company was updated
-        updated_company = db_session.query(Company).filter(
-            Company.company_name == "Technical Support"
-        ).first()
+        updated_company = (
+            db_session.query(Company).filter(Company.company_name == "Technical Support").first()
+        )
         assert updated_company.phone == "+497118829810"  # New phone number
         assert updated_company.last_updated_at > updated_company.first_scraped_at
 
@@ -156,13 +156,13 @@ class TestCompletePipeline11880:
         mock_playwright_with_html,
         mock_rate_limiter,
         mock_tor_proxy,
-        create_source
+        create_source,
     ):
         # Setup
         source = create_source(name="11880")
         html = html_fixture_loader("11880_empty_results.html")
         mock_playwright_with_html(html)
-        
+
         # Create job
         response = await async_client.post(
             "/api/v1/scraping/jobs",
@@ -172,9 +172,9 @@ class TestCompletePipeline11880:
                 "industry": "Nonexistent",
                 "max_pages": 1,
                 "use_tor": False,
-                "use_ai": False
+                "use_ai": False,
             },
-            headers=auth_headers
+            headers=auth_headers,
         )
         assert response.status_code == status.HTTP_201_CREATED
         job_id = response.json()["id"]
@@ -193,7 +193,7 @@ class TestCompletePipeline11880:
         assert job_data["results_count"] == 0
         assert job_data["new_companies"] == 0
         assert job_data["updated_companies"] == 0
-        
+
         # No companies should be created
         companies = db_session.query(Company).all()
         assert len(companies) == 0
@@ -337,9 +337,7 @@ class TestWebhookNotifications:
         async def failing_scrape(*args, **kwargs):
             raise RuntimeError("Playwright navigation timeout")
 
-        monkeypatch.setattr(
-            "app.scrapers.eleven_eighty.scrape_11880", failing_scrape
-        )
+        monkeypatch.setattr("app.scrapers.eleven_eighty.scrape_11880", failing_scrape)
 
         response_job = await async_client.post(
             "/api/v1/scraping/jobs",
@@ -384,13 +382,13 @@ class TestWebhookNotifications:
         mock_rate_limiter,
         mock_tor_proxy,
         create_source,
-        db_session: Session
+        db_session: Session,
     ):
         # Setup
         source = create_source(name="11880")
         html = html_fixture_loader("11880_stuttgart_it_service.html")
         mock_playwright_with_html(html)
-        
+
         # Create job
         response = await async_client.post(
             "/api/v1/scraping/jobs",
@@ -400,13 +398,13 @@ class TestWebhookNotifications:
                 "industry": "IT-Service",
                 "max_pages": 1,
                 "use_tor": False,
-                "use_ai": False
+                "use_ai": False,
             },
-            headers=auth_headers
+            headers=auth_headers,
         )
         assert response.status_code == status.HTTP_201_CREATED
         job_id = response.json()["id"]
-        
+
         # Wait for job completion
         job_data = await wait_for_scraping_job_completion_async(
             client=async_client,
@@ -415,11 +413,11 @@ class TestWebhookNotifications:
             timeout=30,
             poll_interval=0.5,
         )
-        
+
         # Get job from DB
         job = db_session.query(ScrapingJob).filter(ScrapingJob.id == job_id).first()
         assert job is not None
-        
+
         # Validate timing fields
         assert job.started_at is not None
         assert job.completed_at is not None
@@ -440,13 +438,13 @@ class TestCompletePipelineGelbeSeiten:
         mock_playwright_with_html,
         mock_rate_limiter,
         mock_tor_proxy,
-        create_source
+        create_source,
     ):
         # Setup
         source = create_source(name="gelbe_seiten")
         html = html_fixture_loader("gelbe_seiten_stuttgart_it_service.html")
         mock_playwright_with_html(html)
-        
+
         # Create job
         response = await async_client.post(
             "/api/v1/scraping/jobs",
@@ -456,9 +454,9 @@ class TestCompletePipelineGelbeSeiten:
                 "industry": "IT-Service",
                 "max_pages": 1,
                 "use_tor": False,
-                "use_ai": False
+                "use_ai": False,
             },
-            headers=auth_headers
+            headers=auth_headers,
         )
         assert response.status_code == status.HTTP_201_CREATED
         job_id = response.json()["id"]
@@ -471,25 +469,27 @@ class TestCompletePipelineGelbeSeiten:
             timeout=30,
             poll_interval=0.5,
         )
-        
+
         # Validate job status
         assert job_data["status"] == "completed"
         assert job_data["results_count"] == 3
-        
+
         # Check database
         companies = db_session.query(Company).filter(Company.city == "Stuttgart").all()
         assert len(companies) == 3
-        
+
         # Validate company data
         company_names = {c.company_name for c in companies}
         assert "Gelbe Seiten IT GmbH" in company_names
         assert "Stuttgart Software AG" in company_names
         assert "Tech Consulting" in company_names
-        
+
         # Validate one company with email
-        software_ag = db_session.query(Company).filter(
-            Company.company_name == "Stuttgart Software AG"
-        ).first()
+        software_ag = (
+            db_session.query(Company)
+            .filter(Company.company_name == "Stuttgart Software AG")
+            .first()
+        )
         assert software_ag is not None
         assert software_ag.email == "info@stuttgart-software.de"
         assert software_ag.website == "https://www.stuttgart-software.de"
@@ -578,9 +578,7 @@ class TestMultiSourcePipeline:
         assert len(companies) == 5
 
         tech_support = (
-            db_session.query(Company)
-            .filter(Company.company_name == "Technical Support")
-            .first()
+            db_session.query(Company).filter(Company.company_name == "Technical Support").first()
         )
         assert tech_support is not None
         assert tech_support.email == "service@techsupport.de"
@@ -597,9 +595,7 @@ class TestMultiSourcePipeline:
         assert stuttgart_software.website == "https://www.stuttgart-software.de"
 
         cloud_experts = (
-            db_session.query(Company)
-            .filter(Company.company_name == "Cloud Experts GmbH")
-            .first()
+            db_session.query(Company).filter(Company.company_name == "Cloud Experts GmbH").first()
         )
         assert cloud_experts is not None
 
@@ -622,9 +618,7 @@ class TestErrorHandlingPipeline:
         async def failing_scrape(*args, **kwargs):
             raise RuntimeError("Playwright navigation timeout")
 
-        monkeypatch.setattr(
-            "app.scrapers.eleven_eighty.scrape_11880", failing_scrape
-        )
+        monkeypatch.setattr("app.scrapers.eleven_eighty.scrape_11880", failing_scrape)
 
         response = await async_client.post(
             "/api/v1/scraping/jobs",

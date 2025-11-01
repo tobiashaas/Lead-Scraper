@@ -7,8 +7,9 @@ import asyncio
 import logging
 import random
 from abc import ABC, abstractmethod
+from collections.abc import Awaitable, Callable
 from datetime import datetime
-from typing import Any, AsyncGenerator, Awaitable, Callable, Iterable, Literal
+from typing import Any
 
 from app.core.config import settings
 from app.utils.browser_manager import PlaywrightBrowserManager

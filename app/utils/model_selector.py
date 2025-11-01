@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from app.core.config import settings
 from app.utils.logger import get_logger
@@ -24,7 +24,7 @@ _ALLOWED_OLLAMA_OPTIONS = {
 }
 
 
-def _load_json_file(path: Path) -> Dict[str, Any]:
+def _load_json_file(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
     try:
@@ -40,7 +40,7 @@ class ModelCharacteristics:
     speed: str
     accuracy: str
     resource_cost: str
-    metrics: Dict[str, Any]
+    metrics: dict[str, Any]
 
 
 class ModelSelector:
@@ -76,7 +76,7 @@ class ModelSelector:
             settings, "ollama_model_resource_efficient", "qwen2.5"
         )
 
-        self.model_configs: Dict[str, Dict[str, Any]] = {
+        self.model_configs: dict[str, dict[str, Any]] = {
             "llama3.2": {
                 "temperature": 0.15,
                 "top_p": 0.9,
@@ -110,8 +110,8 @@ class ModelSelector:
         }
         self.model_characteristics = self._build_characteristics()
 
-    def _build_characteristics(self) -> Dict[str, ModelCharacteristics]:
-        defaults: Dict[str, ModelCharacteristics] = {}
+    def _build_characteristics(self) -> dict[str, ModelCharacteristics]:
+        defaults: dict[str, ModelCharacteristics] = {}
         defaults["llama3.2"] = ModelCharacteristics(
             name="llama3.2",
             speed="medium",
@@ -177,14 +177,14 @@ class ModelSelector:
 
         return self.default_model
 
-    def get_model_config(self, model_name: str) -> Dict[str, Any]:
+    def get_model_config(self, model_name: str) -> dict[str, Any]:
         config = dict(self.model_configs.get(model_name, {}))
         benchmark_config = self.benchmark_results.get(model_name, {}).get("recommended_config")
         if isinstance(benchmark_config, dict):
             config.update({k: v for k, v in benchmark_config.items() if v is not None})
         return {k: v for k, v in config.items() if k in _ALLOWED_OLLAMA_OPTIONS}
 
-    def get_optimized_prompt(self, use_case: str, model_name: str) -> Optional[Dict[str, Any]]:
+    def get_optimized_prompt(self, use_case: str, model_name: str) -> Optional[dict[str, Any]]:
         prompts_for_case = self.prompt_library.get(use_case)
         if not isinstance(prompts_for_case, dict):
             return None
@@ -198,8 +198,8 @@ class ModelSelector:
             return {"template": default_prompt}
         return None
 
-    def get_benchmark_summary(self) -> Dict[str, Any]:
-        summary: Dict[str, Any] = {}
+    def get_benchmark_summary(self) -> dict[str, Any]:
+        summary: dict[str, Any] = {}
         for name, characteristics in self.model_characteristics.items():
             summary[name] = {
                 "speed": characteristics.speed,

@@ -14,13 +14,17 @@ async def test_eleven_eighty_parse_search_results_extracts_contact_details(html_
 
     assert len(results) == 3
 
-    technical_support = next(result for result in results if result.company_name == "Technical Support")
+    technical_support = next(
+        result for result in results if result.company_name == "Technical Support"
+    )
     assert technical_support.phone == "+497118829810"
     assert technical_support.postal_code == "70567"
     assert technical_support.city == "Stuttgart"
     assert technical_support.address.startswith("Musterstraße 123")
 
-    netpolte = next(result for result in results if result.company_name == "NETPOLTE EDV Dienstleistungen")
+    netpolte = next(
+        result for result in results if result.company_name == "NETPOLTE EDV Dienstleistungen"
+    )
     assert netpolte.phone == "+4971146051188"
     assert netpolte.email is None
 
@@ -35,11 +39,15 @@ async def test_gelbe_seiten_parse_results_normalizes_redirect_and_mailto_links(h
 
     assert len(results) == 3
 
-    stuttgart_software = next(result for result in results if result.company_name == "Stuttgart Software AG")
+    stuttgart_software = next(
+        result for result in results if result.company_name == "Stuttgart Software AG"
+    )
     assert stuttgart_software.email == "info@stuttgart-software.de"
     assert stuttgart_software.website == "https://www.stuttgart-software.de"
     assert stuttgart_software.postal_code == "70178"
 
-    technical_support = next(result for result in results if result.company_name == "Technical Support")
+    technical_support = next(
+        result for result in results if result.company_name == "Technical Support"
+    )
     assert technical_support.phone == "+497118829810"
     assert technical_support.email == "service@techsupport.de"

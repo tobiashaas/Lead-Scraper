@@ -4,8 +4,8 @@ KR Lead Scraper REST API
 """
 
 import logging
-from pathlib import Path
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -79,27 +79,27 @@ async def lifespan(app: FastAPI):
 def custom_openapi():
     """Custom OpenAPI schema with security schemes"""
     from fastapi.openapi.utils import get_openapi
-    
+
     if app.openapi_schema:
         return app.openapi_schema
-    
+
     openapi_schema = get_openapi(
         title=app.title,
         version=app.version,
         description=app.description,
         routes=app.routes,
     )
-    
+
     # Add security schemes
     openapi_schema["components"]["securitySchemes"] = {
         "BearerAuth": {
             "type": "http",
             "scheme": "bearer",
             "bearerFormat": "JWT",
-            "description": "JWT Bearer token obtained from /api/v1/auth/login endpoint. Format: Bearer {access_token}"
+            "description": "JWT Bearer token obtained from /api/v1/auth/login endpoint. Format: Bearer {access_token}",
         }
     }
-    
+
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
@@ -133,12 +133,9 @@ app = FastAPI(
     contact={
         "name": "Kunze & Ritter GmbH",
         "url": "https://kunze-ritter.de",
-        "email": "support@kunze-ritter.de"
+        "email": "support@kunze-ritter.de",
     },
-    license_info={
-        "name": "MIT",
-        "url": "https://opensource.org/licenses/MIT"
-    },
+    license_info={"name": "MIT", "url": "https://opensource.org/licenses/MIT"},
     openapi_tags=[
         {"name": "Authentication", "description": "User registration, login, and token management"},
         {"name": "Companies", "description": "CRUD operations for company/lead management"},
@@ -148,12 +145,12 @@ app = FastAPI(
         {"name": "Bulk Operations", "description": "Mass operations on multiple companies"},
         {"name": "Webhooks", "description": "Event notification webhooks"},
         {"name": "Duplicates", "description": "Duplicate detection and management"},
-        {"name": "Health", "description": "Health checks and metrics"}
+        {"name": "Health", "description": "Health checks and metrics"},
     ],
     servers=[
         {"url": "http://localhost:8000", "description": "Development server"},
         {"url": "https://staging.your-domain.com", "description": "Staging server"},
-        {"url": "https://api.your-domain.com", "description": "Production server"}
+        {"url": "https://api.your-domain.com", "description": "Production server"},
     ],
     docs_url="/docs",
     redoc_url="/redoc",

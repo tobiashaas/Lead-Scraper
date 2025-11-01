@@ -5,7 +5,8 @@ import asyncio
 import functools
 import hashlib
 import json
-from typing import Any, Awaitable, Callable, Optional, TypeVar
+from collections.abc import Awaitable, Callable
+from typing import Any, Optional, TypeVar
 
 import redis.asyncio as redis
 
@@ -112,7 +113,9 @@ def _normalize_for_cache(value: Any) -> Any:
     return value.__class__.__name__
 
 
-def _build_cache_key(prefix: str, func_name: str, args: tuple[Any, ...], kwargs: dict[str, Any]) -> str:
+def _build_cache_key(
+    prefix: str, func_name: str, args: tuple[Any, ...], kwargs: dict[str, Any]
+) -> str:
     normalized_args = _normalize_for_cache(args)
     normalized_kwargs = _normalize_for_cache(kwargs)
     hasher = hashlib.sha256()

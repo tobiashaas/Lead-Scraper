@@ -41,7 +41,9 @@ http_errors_total = Counter(
 )
 
 _numeric_param_pattern = re.compile(r"/(?:\d+|0x[0-9a-fA-F]+)")
-_uuid_param_pattern = re.compile(r"/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+_uuid_param_pattern = re.compile(
+    r"/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+)
 
 
 def _apply_cardinality_guard(value: str, fallback: str) -> str:
@@ -100,5 +102,3 @@ class MetricsMiddleware(BaseHTTPMiddleware):
             raise
         finally:
             http_requests_in_progress.labels(method=method_label, endpoint=endpoint_label).dec()
-
-

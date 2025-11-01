@@ -23,7 +23,7 @@ _engine_lock = threading.Lock()
 def _create_database_engine():
     """Create database engine with fallback to SQLite if Postgres unavailable."""
     db_url = settings.database_url_psycopg3
-    
+
     connect_args = {"connect_timeout": settings.db_connect_timeout}
     engine: object | None = None
 
@@ -41,7 +41,10 @@ def _create_database_engine():
         # Test connection
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
-        logger.info("Database connection established: %s", db_url.split("@")[-1] if "@" in db_url else db_url)
+        logger.info(
+            "Database connection established: %s",
+            db_url.split("@")[-1] if "@" in db_url else db_url,
+        )
         return engine
     except OperationalError as exc:
         logger.warning(
@@ -51,7 +54,7 @@ def _create_database_engine():
         # engine may be unset if create_engine raises before assignment
         if engine is not None:
             engine.dispose()
-        
+
         # Fallback to SQLite
         tmp_dir = tempfile.mkdtemp(prefix="app_fallback_db_")
         fallback_url = f"sqlite:///{os.path.join(tmp_dir, 'fallback.db')}"

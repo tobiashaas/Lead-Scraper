@@ -8,7 +8,7 @@ import os
 import subprocess
 import time
 from contextlib import suppress
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -79,7 +79,7 @@ async def _backup_database_async(backup_type: str) -> dict[str, Any]:
             "encrypted": encrypted,
             "cloud_synced": cloud_synced,
             "cleanup": cleanup_result,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
         with suppress(Exception):
@@ -105,7 +105,7 @@ async def _backup_database_async(backup_type: str) -> dict[str, Any]:
                 {
                     "backup_type": backup_type,
                     "error": str(exc),
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 },
             )
         raise
@@ -135,7 +135,7 @@ async def _verify_backup_async(backup_filename: str | None = None) -> dict[str, 
         logger.warning("No backup file found for verification")
         return {"skipped": True, "reason": "no_backup_found"}
 
-    temp_db_name = f"test_restore_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
+    temp_db_name = f"test_restore_{datetime.now(UTC).strftime('%Y%m%d%H%M%S')}"
     result: dict[str, Any] = {
         "valid": False,
         "backup_file": backup_path.name,
@@ -162,7 +162,7 @@ async def _verify_backup_async(backup_filename: str | None = None) -> dict[str, 
                 "valid": True,
                 "tables_count": int(float(tables_count or 0)),
                 "rows_count": int(float(rows_count or 0)),
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
             }
         )
 
@@ -188,7 +188,7 @@ async def _verify_backup_async(backup_filename: str | None = None) -> dict[str, 
                 {
                     "backup_file": backup_path.name,
                     "error": str(exc),
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 },
             )
         raise
@@ -253,7 +253,7 @@ def _ensure_backup_dir() -> Path:
 
 
 def _build_backup_stem(backup_type: str) -> str:
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     return f"backup_{backup_type}_{timestamp}"
 
 
@@ -279,7 +279,9 @@ def _run_pg_dump(output_path: Path) -> None:
         "--if-exists",
     ]
 
-    logger.debug("Running pg_dump command", extra={"cmd": " ".join(cmd), "output_path": str(output_path)})
+    logger.debug(
+        "Running pg_dump command", extra={"cmd": " ".join(cmd), "output_path": str(output_path)}
+    )
 
     with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env) as process:
         if process.stdout is None:
@@ -434,7 +436,9 @@ def _restore_backup_to_database(backup_path: Path, database: str) -> None:
         database,
     ]
 
-    logger.debug("Restoring backup", extra={"cmd": " ".join(restore_cmd), "backup": str(backup_path)})
+    logger.debug(
+        "Restoring backup", extra={"cmd": " ".join(restore_cmd), "backup": str(backup_path)}
+    )
 
     input_stream: subprocess.Popen[bytes] | None = None
     file_handle = None
@@ -447,7 +451,9 @@ def _restore_backup_to_database(backup_path: Path, database: str) -> None:
                 "--yes",
                 str(backup_path),
             ]
-            input_stream = subprocess.Popen(decrypt_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            input_stream = subprocess.Popen(
+                decrypt_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
             stdout = input_stream.stdout
         elif backup_path.suffix.endswith(".gz") or backup_path.name.endswith(".sql.gz"):
             gzip_process = subprocess.Popen(
@@ -464,7 +470,9 @@ def _restore_backup_to_database(backup_path: Path, database: str) -> None:
         if stdout is None:
             raise RuntimeError("Failed to open backup stream")
 
-        with subprocess.Popen(restore_cmd, stdin=stdout, stderr=subprocess.PIPE, env=env) as restore_proc:
+        with subprocess.Popen(
+            restore_cmd, stdin=stdout, stderr=subprocess.PIPE, env=env
+        ) as restore_proc:
             stderr = restore_proc.stderr.read() if restore_proc.stderr else b""
             if restore_proc.wait() != 0:
                 raise RuntimeError(f"psql restore failed: {stderr.decode(errors='ignore')}")
@@ -478,9 +486,7 @@ def _restore_backup_to_database(backup_path: Path, database: str) -> None:
         if input_stream is not None:
             return_code = input_stream.wait()
             if return_code != 0:
-                raise RuntimeError(
-                    f"Backup stream command failed with exit code {return_code}"
-                )
+                raise RuntimeError(f"Backup stream command failed with exit code {return_code}")
 
 
 def _drop_database(database: str) -> None:
@@ -496,4 +502,3 @@ def _drop_database(database: str) -> None:
         _run_psql_command("postgres", f"DROP DATABASE IF EXISTS {database};")
     except Exception as exc:  # pragma: no cover - best effort
         logger.warning("Failed to drop temporary database %s: %s", database, exc)
-*** End of File

@@ -9,8 +9,8 @@ import os
 import random
 import tempfile
 from collections.abc import Callable, Generator
-from datetime import datetime, timedelta, timezone
-from typing import Any, List
+from datetime import UTC, datetime, timedelta
+from typing import Any
 
 import pytest
 import pytest_asyncio
@@ -227,8 +227,6 @@ def reset_database(db_session):
         Source,
         User,
         company_sources,
-        LeadStatus,
-        LeadQuality,
     )
 
     try:
@@ -329,7 +327,7 @@ def test_companies(db_session):
     """Create test companies with various statuses and qualities"""
     industries = ["IT", "Consulting", "Manufacturing", "Finance", "Healthcare"]
     cities = ["Berlin", "Munich", "Hamburg", "Cologne", "Frankfurt", "Stuttgart"]
-    
+
     companies = []
     for i in range(10):
         company = Company(
@@ -343,11 +341,11 @@ def test_companies(db_session):
             industry=random.choice(industries),
             lead_status=random.choice(list(LeadStatus)),
             lead_quality=random.choice(list(LeadQuality)),
-            description=f"Test company {i+1} description"
+            description=f"Test company {i+1} description",
         )
         db_session.add(company)
         companies.append(company)
-    
+
     db_session.commit()
     return companies
 
@@ -365,7 +363,7 @@ def soft_deleted_company(db_session):
         city="Stuttgart",
         industry="IT",
         is_active=False,
-        deleted_at=datetime.now(timezone.utc)
+        deleted_at=datetime.now(UTC),
     )
     db_session.add(company)
     db_session.commit()
@@ -383,8 +381,8 @@ def locked_user(db_session):
         hashed_password=get_password_hash("testpass123"),
         role=UserRole.USER,
         is_active=True,
-        locked_until=datetime.now(timezone.utc) + timedelta(minutes=15),
-        failed_login_attempts=5
+        locked_until=datetime.now(UTC) + timedelta(minutes=15),
+        failed_login_attempts=5,
     )
     db_session.add(user)
     db_session.commit()
@@ -401,7 +399,7 @@ def inactive_user(db_session):
         full_name="Inactive User",
         hashed_password=get_password_hash("testpass123"),
         role=UserRole.USER,
-        is_active=False
+        is_active=False,
     )
     db_session.add(user)
     db_session.commit()
@@ -437,10 +435,10 @@ def second_auth_headers(second_auth_user):
 def reset_webhook_storage():
     """Reset webhook storage before each test"""
     from app.api import webhooks
-    
+
     original_webhooks = webhooks.WEBHOOKS.copy()
     original_counter = webhooks.WEBHOOK_ID_COUNTER
-    
+
     # Reset before test
     webhooks.WEBHOOKS.clear()
     webhooks.WEBHOOK_ID_COUNTER = 1
@@ -455,7 +453,9 @@ def reset_webhook_storage():
 @pytest.fixture
 def expired_token(auth_user):
     """Return an already expired JWT for auth edge-case testing."""
-    token = create_access_token(data={"sub": auth_user.username}, expires_delta=timedelta(seconds=-1))
+    token = create_access_token(
+        data={"sub": auth_user.username}, expires_delta=timedelta(seconds=-1)
+    )
     return {"Authorization": f"Bearer {token}"}
 
 
@@ -520,7 +520,7 @@ def large_dataset_companies(db_session, request):
     """Create a large dataset of companies for performance benchmarks."""
 
     batch_size = getattr(request, "param", 500)
-    created: List[Company] = []
+    created: list[Company] = []
     for index in range(batch_size):
         company = Company(
             company_name=f"Perf Company {index}",
@@ -555,7 +555,9 @@ async def concurrent_clients(db_session):
     app.dependency_overrides[get_db] = override_get_db
 
     transport = ASGITransport(app=app)
-    clients = [AsyncClient(transport=transport, base_url="http://test", timeout=30.0) for _ in range(3)]
+    clients = [
+        AsyncClient(transport=transport, base_url="http://test", timeout=30.0) for _ in range(3)
+    ]
 
     try:
         yield clients

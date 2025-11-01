@@ -9,7 +9,6 @@ from tests.load.config import (
     BASE_URL,
     build_auth_headers,
     create_http_client,
-    generate_random_company_data,
     get_auth_token,
     get_random_company_ids,
 )

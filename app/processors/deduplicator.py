@@ -325,7 +325,9 @@ class Deduplicator:
             db.flush()
 
             offset += batch_size
-            logger.info(f"Progress: {offset}/{total} companies scanned, {candidates_created} candidates created")
+            logger.info(
+                f"Progress: {offset}/{total} companies scanned, {candidates_created} candidates created"
+            )
 
         logger.info(f"✅ Scan completed: {candidates_created} duplicate candidates found")
 

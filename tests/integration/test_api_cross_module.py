@@ -3,16 +3,15 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import pytest
 
-from app.api import scraping as scraping_module, webhooks as webhooks_module
+from app.api import scraping as scraping_module
+from app.api import webhooks as webhooks_module
 from app.database.models import Company, LeadQuality, LeadStatus, ScrapingJob, Source
-
 from tests.utils.test_helpers import wait_for_scraping_job_completion
-
 
 pytestmark = pytest.mark.integration
 
@@ -129,7 +128,9 @@ class TestScrapingWithScoringAndWebhook:
 
         webhook_events: list[dict[str, Any]] = []
 
-        async def fake_send_webhook_event(url: str, payload: dict[str, Any], secret: str | None) -> None:
+        async def fake_send_webhook_event(
+            url: str, payload: dict[str, Any], secret: str | None
+        ) -> None:
             webhook_events.append({"url": url, "payload": payload, "secret": secret})
 
         async def fake_run_scraping_job(job_id: int, config: dict) -> None:
@@ -170,7 +171,7 @@ class TestScrapingWithScoringAndWebhook:
 
             job.status = "completed"
             job.results_count = len(fake_payloads)
-            job.completed_at = datetime.now(timezone.utc)
+            job.completed_at = datetime.now(UTC)
             job.new_companies = len(fake_payloads)
             job.updated_companies = 0
 
@@ -183,7 +184,11 @@ class TestScrapingWithScoringAndWebhook:
 
         hook_response = client.post(
             "/api/v1/webhooks/",
-            json={"url": "https://webhook.test/receiver", "events": ["job.completed"], "secret": None},
+            json={
+                "url": "https://webhook.test/receiver",
+                "events": ["job.completed"],
+                "secret": None,
+            },
             headers=auth_headers,
         )
         assert hook_response.status_code == 200

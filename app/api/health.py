@@ -1,14 +1,14 @@
 """Health and metrics endpoints for the API."""
 
-from datetime import datetime, timezone
 import asyncio
 import os
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Response, status
 from prometheus_client import (
-    CollectorRegistry,
     CONTENT_TYPE_LATEST,
     REGISTRY,
+    CollectorRegistry,
     generate_latest,
     multiprocess,
 )
@@ -31,7 +31,7 @@ async def health_check():
     """
     return {
         "status": "healthy",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "environment": settings.environment,
     }
 
@@ -76,7 +76,7 @@ async def detailed_health_check():
 
     response = {
         "status": "healthy" if overall_healthy else "degraded",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "checks": checks,
     }
 
@@ -89,11 +89,7 @@ async def detailed_health_check():
 async def _dispatch_dependency_alerts(checks: dict[str, str]) -> None:
     """Send notifications for failing dependencies with rate limiting."""
 
-    failing_components = {
-        name: status
-        for name, status in checks.items()
-        if status != "healthy"
-    }
+    failing_components = {name: status for name, status in checks.items() if status != "healthy"}
 
     if not failing_components:
         return
@@ -101,7 +97,7 @@ async def _dispatch_dependency_alerts(checks: dict[str, str]) -> None:
     notification_service = get_notification_service()
 
     redis_client = await notification_service.get_redis_client()
-    now_iso = datetime.now(timezone.utc).isoformat()
+    now_iso = datetime.now(UTC).isoformat()
 
     async def _should_send(component: str) -> bool:
         if not redis_client:
@@ -133,14 +129,12 @@ async def _dispatch_dependency_alerts(checks: dict[str, str]) -> None:
                 {
                     "database_url": settings.database_url,
                     "error_message": status,
-                    "health_check_url": "{}/health/detailed".format(settings.api_base_url)
+                    "health_check_url": f"{settings.api_base_url}/health/detailed"
                     if getattr(settings, "api_base_url", None)
                     else None,
                 }
             )
-            tasks.append(
-                notification_service.send_templated_alert("database_issue", context)
-            )
+            tasks.append(notification_service.send_templated_alert("database_issue", context))
         elif component == "redis":
             context.update(
                 {
@@ -191,7 +185,7 @@ async def readiness_check():
     if not db_ok:
         return {"status": "not_ready", "reason": "database_unavailable"}
 
-    return {"status": "ready", "timestamp": datetime.now(timezone.utc).isoformat()}
+    return {"status": "ready", "timestamp": datetime.now(UTC).isoformat()}
 
 
 @router.get("/health/live", status_code=status.HTTP_200_OK)
@@ -199,7 +193,7 @@ async def liveness_check():
     """
     Liveness check for Kubernetes
     """
-    return {"status": "alive", "timestamp": datetime.now(timezone.utc).isoformat()}
+    return {"status": "alive", "timestamp": datetime.now(UTC).isoformat()}
 
 
 @router.get("/metrics")

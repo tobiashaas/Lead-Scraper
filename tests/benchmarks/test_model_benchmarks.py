@@ -5,9 +5,9 @@ from types import MethodType
 
 import pytest
 
+from app.utils.model_selector import ModelSelector
 from scripts.benchmarks import benchmark_ollama_models as benchmarks
 from scripts.benchmarks import optimize_prompts
-from app.utils.model_selector import ModelSelector
 
 os.environ.setdefault("DATABASE_URL", "sqlite:///./benchmark_tests.db")
 
@@ -56,7 +56,9 @@ def _make_result(
 
 @pytest.mark.benchmark
 def test_benchmark_llama32_extraction_quality(sample_case: benchmarks.BenchmarkTestCase) -> None:
-    benchmark = benchmarks.ModelBenchmark("llama3.2", lambda _: object(), [sample_case], iterations=1)
+    benchmark = benchmarks.ModelBenchmark(
+        "llama3.2", lambda _: object(), [sample_case], iterations=1
+    )
     benchmark._run_test_iterations = MethodType(lambda self, _case: [_make_result()], benchmark)
     metrics = benchmark.run_full_benchmark()
     assert metrics.f1 == pytest.approx(1.0)
@@ -65,12 +67,16 @@ def test_benchmark_llama32_extraction_quality(sample_case: benchmarks.BenchmarkT
 
 @pytest.mark.benchmark
 def test_benchmark_mistral_vs_llama32(sample_case: benchmarks.BenchmarkTestCase) -> None:
-    fast_benchmark = benchmarks.ModelBenchmark("llama3.2", lambda _: object(), [sample_case], iterations=1)
+    fast_benchmark = benchmarks.ModelBenchmark(
+        "llama3.2", lambda _: object(), [sample_case], iterations=1
+    )
     fast_benchmark._run_test_iterations = MethodType(
         lambda self, _case: [_make_result(f1=0.65, precision=0.7, recall=0.6, completeness=0.6)],
         fast_benchmark,
     )
-    accurate_benchmark = benchmarks.ModelBenchmark("mistral", lambda _: object(), [sample_case], iterations=1)
+    accurate_benchmark = benchmarks.ModelBenchmark(
+        "mistral", lambda _: object(), [sample_case], iterations=1
+    )
     accurate_benchmark._run_test_iterations = MethodType(
         lambda self, _case: [_make_result(f1=0.82, precision=0.85, recall=0.8, completeness=0.8)],
         accurate_benchmark,
@@ -85,7 +91,9 @@ def test_benchmark_mistral_vs_llama32(sample_case: benchmarks.BenchmarkTestCase)
 
 @pytest.mark.benchmark
 def test_benchmark_response_times(sample_case: benchmarks.BenchmarkTestCase) -> None:
-    benchmark = benchmarks.ModelBenchmark("llama3.2:1b", lambda _: object(), [sample_case], iterations=1)
+    benchmark = benchmarks.ModelBenchmark(
+        "llama3.2:1b", lambda _: object(), [sample_case], iterations=1
+    )
     benchmark._run_test_iterations = MethodType(
         lambda self, _case: [_make_result(latency=0.12), _make_result(latency=0.25)],
         benchmark,
@@ -97,7 +105,9 @@ def test_benchmark_response_times(sample_case: benchmarks.BenchmarkTestCase) -> 
 
 @pytest.mark.benchmark
 def test_json_validity_rate(sample_case: benchmarks.BenchmarkTestCase) -> None:
-    benchmark = benchmarks.ModelBenchmark("mistral", lambda _: object(), [sample_case], iterations=1)
+    benchmark = benchmarks.ModelBenchmark(
+        "mistral", lambda _: object(), [sample_case], iterations=1
+    )
     benchmark._run_test_iterations = MethodType(
         lambda self, _case: [_make_result(json_valid=True), _make_result(json_valid=False)],
         benchmark,
@@ -108,9 +118,14 @@ def test_json_validity_rate(sample_case: benchmarks.BenchmarkTestCase) -> None:
 
 @pytest.mark.benchmark
 def test_hallucination_detection(sample_case: benchmarks.BenchmarkTestCase) -> None:
-    benchmark = benchmarks.ModelBenchmark("qwen2.5", lambda _: object(), [sample_case], iterations=1)
+    benchmark = benchmarks.ModelBenchmark(
+        "qwen2.5", lambda _: object(), [sample_case], iterations=1
+    )
     benchmark._run_test_iterations = MethodType(
-        lambda self, _case: [_make_result(hallucination_rate=0.2), _make_result(hallucination_rate=0.1)],
+        lambda self, _case: [
+            _make_result(hallucination_rate=0.2),
+            _make_result(hallucination_rate=0.1),
+        ],
         benchmark,
     )
     metrics = benchmark.run_full_benchmark()
@@ -164,7 +179,9 @@ def test_model_selector_use_case_mapping(tmp_path: Path) -> None:
 
 
 @pytest.mark.benchmark
-def test_optimized_prompts_improve_accuracy(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_optimized_prompts_improve_accuracy(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     scores_path = tmp_path / "prompt_scores.json"
     library_path = tmp_path / "optimized_prompts.json"
 
@@ -179,7 +196,9 @@ def test_optimized_prompts_improve_accuracy(monkeypatch: pytest.MonkeyPatch, tmp
             expected_data={"field": "value"},
         )
     ]
-    monkeypatch.setattr(benchmarks.BenchmarkTestCase, "load_all", staticmethod(lambda: sample_cases))
+    monkeypatch.setattr(
+        benchmarks.BenchmarkTestCase, "load_all", staticmethod(lambda: sample_cases)
+    )
 
     def fake_evaluate(variant, model, cases):
         del model, cases

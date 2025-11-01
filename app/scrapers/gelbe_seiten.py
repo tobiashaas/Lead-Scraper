@@ -5,8 +5,8 @@ Scraped Unternehmensdaten von gelbeseiten.de
 
 import logging
 import re
+from collections.abc import Awaitable, Callable
 from urllib.parse import quote_plus
-from typing import Any, AsyncGenerator, Awaitable, Callable
 
 from bs4 import BeautifulSoup
 

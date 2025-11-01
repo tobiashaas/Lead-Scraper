@@ -3,8 +3,8 @@ Authentication API Endpoints
 User registration, login, token refresh, etc.
 """
 
-from datetime import datetime, timedelta, timezone
 import html
+from datetime import UTC, datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -77,9 +77,9 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
             user.failed_login_attempts = (user.failed_login_attempts or 0) + 1
             # Lock account after 5 failed attempts for 1 hour
             if user.failed_login_attempts >= 5:
-                user.locked_until = datetime.now(timezone.utc) + timedelta(hours=1)
+                user.locked_until = datetime.now(UTC) + timedelta(hours=1)
             db.commit()
-            
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
@@ -93,15 +93,19 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     # Check if user is locked
     if user.locked_until:
         # Convert naive datetime to timezone-aware for comparison
-        locked_until_aware = user.locked_until.replace(tzinfo=timezone.utc) if user.locked_until.tzinfo is None else user.locked_until
-        if locked_until_aware > datetime.now(timezone.utc):
+        locked_until_aware = (
+            user.locked_until.replace(tzinfo=UTC)
+            if user.locked_until.tzinfo is None
+            else user.locked_until
+        )
+        if locked_until_aware > datetime.now(UTC):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Account locked until {user.locked_until}",
             )
 
     # Update last login
-    user.last_login = datetime.now(timezone.utc)
+    user.last_login = datetime.now(UTC)
     user.failed_login_attempts = 0
     db.commit()
 

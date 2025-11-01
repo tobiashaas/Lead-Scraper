@@ -2,15 +2,16 @@
 Unit tests for SmartWebScraper class
 """
 
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
 
+import pytest
+
+from app.scrapers.base import ScraperResult
 from app.utils.smart_scraper import (
-    SmartWebScraper,
     ScrapingMethod,
+    SmartWebScraper,
     enrich_results_with_smart_scraper,
 )
-from app.scrapers.base import ScraperResult
 
 
 @pytest.mark.unit
@@ -85,9 +86,7 @@ class TestSmartWebScraper:
 
     @patch("app.utils.smart_scraper.SmartWebScraper._scrape_trafilatura_ollama")
     @patch("app.utils.smart_scraper.SmartWebScraper._scrape_crawl4ai_ollama")
-    async def test_scrape_fallback_to_second_method(
-        self, mock_crawl4ai, mock_trafilatura
-    ):
+    async def test_scrape_fallback_to_second_method(self, mock_crawl4ai, mock_trafilatura):
         """Test fallback to second method when first fails"""
         mock_crawl4ai.side_effect = Exception("Crawl4AI failed")
         mock_trafilatura.return_value = {
@@ -169,9 +168,7 @@ class TestEnrichResultsWithSmartScraper:
             ),
         ]
 
-        enriched = await enrich_results_with_smart_scraper(
-            results, max_scrapes=2, use_ai=True
-        )
+        enriched = await enrich_results_with_smart_scraper(results, max_scrapes=2, use_ai=True)
 
         assert len(enriched) == 2
         assert enriched[0].extra_data["website_data"]["directors"] == ["John Doe"]
@@ -192,9 +189,7 @@ class TestEnrichResultsWithSmartScraper:
             for i in range(5)
         ]
 
-        enriched = await enrich_results_with_smart_scraper(
-            results, max_scrapes=2, use_ai=True
-        )
+        enriched = await enrich_results_with_smart_scraper(results, max_scrapes=2, use_ai=True)
 
         # Only first 2 should be enriched
         assert mock_scrape.call_count == 2
@@ -208,14 +203,16 @@ class TestEnrichResultsWithSmartScraper:
         mock_scrape.return_value = {"directors": ["John Doe"]}
 
         results = [
-            ScraperResult(company_name="With Website", website="https://example.com", city="Stuttgart"),
+            ScraperResult(
+                company_name="With Website", website="https://example.com", city="Stuttgart"
+            ),
             ScraperResult(company_name="No Website", website=None, city="Munich"),
-            ScraperResult(company_name="Another With Website", website="https://another.com", city="Berlin"),
+            ScraperResult(
+                company_name="Another With Website", website="https://another.com", city="Berlin"
+            ),
         ]
 
-        enriched = await enrich_results_with_smart_scraper(
-            results, max_scrapes=10, use_ai=True
-        )
+        enriched = await enrich_results_with_smart_scraper(results, max_scrapes=10, use_ai=True)
 
         # Should only scrape 2 (those with websites)
         assert mock_scrape.call_count == 2
@@ -241,9 +238,7 @@ class TestEnrichResultsWithSmartScraper:
             )
         ]
 
-        enriched = await enrich_results_with_smart_scraper(
-            results, max_scrapes=1, use_ai=True
-        )
+        enriched = await enrich_results_with_smart_scraper(results, max_scrapes=1, use_ai=True)
 
         assert enriched[0].email == "info@example.com"
         assert enriched[0].phone == "+49 123 456789"
@@ -266,9 +261,7 @@ class TestEnrichResultsWithSmartScraper:
             )
         ]
 
-        enriched = await enrich_results_with_smart_scraper(
-            results, max_scrapes=1, use_ai=True
-        )
+        enriched = await enrich_results_with_smart_scraper(results, max_scrapes=1, use_ai=True)
 
         # Should keep existing values
         assert enriched[0].email == "existing@example.com"
@@ -320,9 +313,7 @@ class TestEnrichResultsWithSmartScraper:
             for i in range(3)
         ]
 
-        enriched = await enrich_results_with_smart_scraper(
-            results, max_scrapes=3, use_ai=True
-        )
+        enriched = await enrich_results_with_smart_scraper(results, max_scrapes=3, use_ai=True)
 
         # First and third should be enriched, second should not
         assert "website_data" in enriched[0].extra_data
@@ -342,16 +333,12 @@ class TestEnrichResultsWithSmartScraper:
             )
         ]
 
-        enriched = await enrich_results_with_smart_scraper(
-            results, max_scrapes=1, use_ai=True
-        )
+        enriched = await enrich_results_with_smart_scraper(results, max_scrapes=1, use_ai=True)
 
         # Check that source was added
         sources = enriched[0].extra_data.get("sources", [])
         assert len(sources) > 0
-        smart_scraper_source = next(
-            (s for s in sources if s["name"] == "smart_scraper"), None
-        )
+        smart_scraper_source = next((s for s in sources if s["name"] == "smart_scraper"), None)
         assert smart_scraper_source is not None
         assert smart_scraper_source["url"] == "https://example.com"
         assert "website_data" in smart_scraper_source["fields"]

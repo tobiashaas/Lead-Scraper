@@ -169,10 +169,10 @@ class LeadScorer:
 
     def _score_contact_data(self, data: dict[str, Any]) -> tuple[int, dict[str, str]]:
         """Bewertet Kontaktdaten Vollständigkeit (0-30 Punkte)
-        
+
         Args:
             data: Dictionary mit Firmendaten
-            
+
         Returns:
             Tuple aus (Punktzahl, Breakdown-Dictionary)
             - Punktzahl: Integer zwischen 0 und 30
@@ -223,10 +223,10 @@ class LeadScorer:
 
     def _score_website(self, data: dict[str, Any]) -> tuple[int, dict[str, str | bool]]:
         """Bewertet die Qualität der Unternehmenswebsite
-        
+
         Args:
             data: Dictionary mit Firmendaten, das das 'website'-Feld enthalten kann
-            
+
         Returns:
             Tuple aus (Punktzahl, Breakdown-Dictionary)
             - Punktzahl: Integer zwischen 0 und 20
@@ -241,7 +241,7 @@ class LeadScorer:
             "present": False,
             "https": False,
             "own_domain": False,
-            "status": "missing"  # 'missing' oder 'present'
+            "status": "missing",  # 'missing' oder 'present'
         }
 
         website = data.get("website")
@@ -276,17 +276,17 @@ class LeadScorer:
 
     def _score_industry(self, data: dict[str, Any]) -> tuple[int, dict[str, str | bool]]:
         """Bewertet die Branchenzugehörigkeit des Unternehmens
-        
+
         Args:
             data: Dictionary mit Firmendaten, das das 'industry'-Feld enthalten kann
-            
+
         Returns:
             Tuple aus (Punktzahl, Breakdown-Dictionary)
             - Punktzahl: Integer zwischen 0 und 15
             - Breakdown: Dictionary mit Details zur Branchenbewertung, enthält:
                 - status: str - 'missing' oder 'present'
                 - high_value: bool - Ob die Branche als hochwertig eingestuft wird
-                
+
         Bewertungskriterien:
         - Vorhandene Branche: 5 Punkte
         - Hochwertige Branche: 10 zusätzliche Punkte
@@ -294,7 +294,7 @@ class LeadScorer:
         score = 0
         breakdown: dict[str, str | bool] = {
             "status": "missing",  # 'missing' oder 'present'
-            "high_value": False  # True wenn Branche in HIGH_VALUE_INDUSTRIES
+            "high_value": False,  # True wenn Branche in HIGH_VALUE_INDUSTRIES
         }
 
         industry = data.get("industry")
@@ -302,7 +302,7 @@ class LeadScorer:
             return 0, breakdown
 
         industry = industry.lower().strip()
-        
+
         # Industry vorhanden (5 Punkte)
         score += 5
         breakdown["status"] = "present"
@@ -310,10 +310,9 @@ class LeadScorer:
         # Hochwertige Branche (10 Punkte)
         industry_words = set(industry.split())
         breakdown["high_value"] = any(
-            keyword in industry_words 
-            for keyword in self.HIGH_VALUE_INDUSTRIES
+            keyword in industry_words for keyword in self.HIGH_VALUE_INDUSTRIES
         )
-        
+
         if breakdown["high_value"]:
             score += 10
 
@@ -321,10 +320,10 @@ class LeadScorer:
 
     def _score_company_size(self, data: dict[str, Any]) -> tuple[int, dict[str, str | int | None]]:
         """Bewertet die Firmengröße basierend auf der Teamgröße
-        
+
         Args:
             data: Dictionary mit Firmendaten, das das 'team_size'-Feld enthalten kann
-            
+
         Returns:
             Tuple aus (Punktzahl, Breakdown-Dictionary)
             - Punktzahl: Integer zwischen 0 und 15
@@ -333,7 +332,7 @@ class LeadScorer:
                 - value: Optional[int] - Die ursprüngliche Teamgröße
                 - size_category: Optional[str] - Kategorie der Firmengröße
                 - category: Optional[str] - Alias für size_category (kompatibilität)
-                
+
         Bewertungskriterien:
         - Keine Angabe: 5 Punkte (default)
         - Sehr klein (<10): 7 Punkte
@@ -346,7 +345,7 @@ class LeadScorer:
             "status": "missing",  # 'missing', 'unknown' oder 'present'
             "value": None,  # Die ursprüngliche Teamgröße
             "size_category": None,  # 'very_small', 'small', 'medium', 'large'
-            "category": None  # Alias für size_category (kompatibilität)
+            "category": None,  # Alias für size_category (kompatibilität)
         }
 
         team_size = data.get("team_size")
@@ -381,10 +380,10 @@ class LeadScorer:
 
     def _score_technologies(self, data: dict[str, Any]) -> tuple[int, dict[str, int | str]]:
         """Bewertet den Technologie-Stack des Unternehmens
-        
+
         Args:
             data: Dictionary mit Firmendaten, das ein 'technologies'-Feld enthalten kann
-            
+
         Returns:
             Tuple aus (Punktzahl, Breakdown-Dictionary)
             - Punktzahl: Integer zwischen 0 und 10
@@ -392,7 +391,7 @@ class LeadScorer:
                 - status: str - 'missing' oder 'present'
                 - count: int - Anzahl der Technologien
                 - modern_count: int - Anzahl der modernen Technologien
-                
+
         Bewertungskriterien:
         - Keine Technologien: 0 Punkte
         - Mindestens eine Technologie: 5 Punkte
@@ -402,7 +401,7 @@ class LeadScorer:
         breakdown: dict[str, int | str] = {
             "status": "missing",  # 'missing' oder 'present'
             "count": 0,  # Gesamtanzahl der Technologien
-            "modern_count": 0  # Anzahl der modernen Technologien
+            "modern_count": 0,  # Anzahl der modernen Technologien
         }
 
         technologies = data.get("technologies", [])
@@ -512,9 +511,9 @@ def score_company(company_data: dict[str, Any]) -> dict[str, Any]:
     """
     scorer = LeadScorer()
     result = scorer.score_lead(company_data)
-    
+
     # Zusätzliche Typvalidierung für das Ergebnis
-    if not all(key in result for key in ('score', 'quality', 'breakdown', 'recommendations')):
+    if not all(key in result for key in ("score", "quality", "breakdown", "recommendations")):
         raise ValueError("Ungültiges Ergebnisformat vom LeadScorer")
-        
+
     return result

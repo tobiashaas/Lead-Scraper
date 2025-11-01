@@ -1,9 +1,8 @@
 """Tests for scripts.load_testing.analyze_results."""
 from __future__ import annotations
 
-from pathlib import Path
-
 import csv
+from pathlib import Path
 
 import pytest
 

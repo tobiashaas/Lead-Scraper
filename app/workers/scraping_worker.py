@@ -4,28 +4,28 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from datetime import UTC, datetime
+from typing import Any
 from urllib.parse import urlparse
 
 from rq import get_current_job
 from sqlalchemy import inspect
 
+from app.api.webhooks import dispatch_webhook_event
 from app.core.config import settings
 from app.database.database import SessionLocal
 from app.database.models import Company, ScrapingJob
 from app.processors.deduplicator import Deduplicator
 from app.processors.normalizer import DataNormalizer
 from app.processors.validator import DataValidator
-from app.api.webhooks import dispatch_webhook_event
 from app.scrapers.base import ScraperResult
 from app.utils.google_search import GoogleSearcher
-from app.utils.smart_scraper import ScrapingMethod, enrich_results_with_smart_scraper
 from app.utils.metrics import (
     record_scraping_job_metrics,
     scraping_jobs_active,
 )
 from app.utils.notifications import get_notification_service
+from app.utils.smart_scraper import ScrapingMethod, enrich_results_with_smart_scraper
 
 logger = logging.getLogger(__name__)
 
@@ -75,11 +75,14 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
             logger.warning("Job %s not found; skipping", job_id)
             return {"status": "missing"}
 
-        logger.info("Starting scraping job", extra={"job_id": job_id, "source": job.source.name if job.source else None})
+        logger.info(
+            "Starting scraping job",
+            extra={"job_id": job_id, "source": job.source.name if job.source else None},
+        )
 
         job.status = "running"
         job.progress = 0.0
-        job.started_at = datetime.now(timezone.utc)
+        job.started_at = datetime.now(UTC)
         db.commit()
         db.refresh(job)
 
@@ -140,7 +143,9 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
 
         enable_smart_scraper = bool(config.get("enable_smart_scraper", False))
         global_smart_enabled = settings.smart_scraper_enabled
-        smart_scraper_mode = (config.get("smart_scraper_mode") or settings.smart_scraper_mode).lower()
+        smart_scraper_mode = (
+            config.get("smart_scraper_mode") or settings.smart_scraper_mode
+        ).lower()
         max_sites_override = config.get("smart_scraper_max_sites")
         max_sites = (
             max_sites_override
@@ -205,7 +210,9 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
 
             if fallback_candidates:
                 logger.info(
-                    "Discovered %s fallback candidates", len(fallback_candidates), extra={"job_id": job_id}
+                    "Discovered %s fallback candidates",
+                    len(fallback_candidates),
+                    extra={"job_id": job_id},
                 )
                 results = fallback_candidates
             else:
@@ -227,6 +234,7 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
             )
 
         if should_run_smart:
+
             async def smart_progress(current: int, total: int) -> None:
                 if total <= 0:
                     target_progress = 80.0
@@ -285,7 +293,9 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
         company_columns = {attr.key for attr in inspect(Company).mapper.column_attrs}
 
         deduplicator: Deduplicator | None = None
-        enable_realtime_dedup = settings.deduplicator_enabled and settings.deduplicator_realtime_enabled
+        enable_realtime_dedup = (
+            settings.deduplicator_enabled and settings.deduplicator_realtime_enabled
+        )
         if enable_realtime_dedup:
             deduplicator = Deduplicator(
                 name_threshold=settings.deduplicator_name_threshold,
@@ -303,7 +313,10 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
                 validated_data = DataValidator.validate_company_data(result_data)
             except ValueError as exc:  # pragma: no cover - validation guard
                 errors_count += 1
-                logger.warning("Skipping result due to validation error", extra={"job_id": job_id, "error": str(exc)})
+                logger.warning(
+                    "Skipping result due to validation error",
+                    extra={"job_id": job_id, "error": str(exc)},
+                )
                 continue
 
             processed_input = {**result_data, **validated_data}
@@ -316,13 +329,19 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
             normalized_company_name = normalized_data.get("company_name")
 
             company_name_value = next(
-                (name for name in (validated_company_name, raw_company_name, normalized_company_name) if name),
+                (
+                    name
+                    for name in (validated_company_name, raw_company_name, normalized_company_name)
+                    if name
+                ),
                 None,
             )
             if company_name_value:
                 processed_data["company_name"] = company_name_value
 
-            city_value = processed_data.get("city") or validated_data.get("city") or result_data.get("city")
+            city_value = (
+                processed_data.get("city") or validated_data.get("city") or result_data.get("city")
+            )
             if city_value:
                 processed_data["city"] = city_value
 
@@ -400,7 +419,9 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
                                 )
                                 break
                             elif similarity >= settings.deduplicator_candidate_threshold * 100:
-                                deduplicator.create_duplicate_candidate(db, company, duplicate_company)
+                                deduplicator.create_duplicate_candidate(
+                                    db, company, duplicate_company
+                                )
                                 duplicate_candidates_created += 1
                                 await dispatch_webhook_event(
                                     "duplicate.detected",
@@ -461,11 +482,11 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
 
         db.refresh(job)
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         started_at_aware = (
             job.started_at
             if job.started_at and job.started_at.tzinfo
-            else job.started_at.replace(tzinfo=timezone.utc)
+            else job.started_at.replace(tzinfo=UTC)
             if job.started_at
             else None
         )
@@ -577,7 +598,7 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
         if job:
             job.status = "failed"
             job.progress = 100.0
-            job.completed_at = datetime.now(timezone.utc)
+            job.completed_at = datetime.now(UTC)
             job.error_message = str(exc)
             db.commit()
             try:
@@ -589,17 +610,15 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
                 try:
                     notification_service = get_notification_service()
                     started_at = job.started_at or job.created_at
-                    finished_at = job.completed_at or datetime.now(timezone.utc)
+                    finished_at = job.completed_at or datetime.now(UTC)
                     duration_seconds: float | None = None
                     if started_at:
                         started_at_aware = (
                             started_at
                             if started_at.tzinfo
-                            else started_at.replace(tzinfo=timezone.utc)
+                            else started_at.replace(tzinfo=UTC)
                         )
-                        duration_seconds = (
-                            finished_at - started_at_aware
-                        ).total_seconds()
+                        duration_seconds = (finished_at - started_at_aware).total_seconds()
 
                     context = {
                         "alert_type": "scraping_failure",
@@ -624,7 +643,9 @@ async def process_scraping_job_async(job_id: int, config: dict[str, Any]) -> dic
                             "duplicate_candidates_created"
                         )
                     except Exception:  # pragma: no cover - defensive
-                        logger.debug("Failed to enrich alert context for job %s", job_id, exc_info=True)
+                        logger.debug(
+                            "Failed to enrich alert context for job %s", job_id, exc_info=True
+                        )
 
                     await notification_service.send_templated_alert(
                         template_name="scraping_failure",

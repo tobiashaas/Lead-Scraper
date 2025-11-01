@@ -90,9 +90,7 @@ class TestMultiSourceWorkflows:
         assert len(company_names) == len(set(company_names)), "duplicate companies persisted"
 
         tech_support = (
-            db_session.query(Company)
-            .filter(Company.company_name == "Technical Support")
-            .first()
+            db_session.query(Company).filter(Company.company_name == "Technical Support").first()
         )
         assert tech_support is not None
         assert tech_support.email == "service@techsupport.de"
@@ -164,9 +162,7 @@ class TestMultiSourceWorkflows:
         assert job_munich["new_companies"] == 3
 
         db_session.expire_all()
-        stuttgart_companies = (
-            db_session.query(Company).filter(Company.city == "Stuttgart").all()
-        )
+        stuttgart_companies = db_session.query(Company).filter(Company.city == "Stuttgart").all()
         munich_companies = db_session.query(Company).filter(Company.city == "München").all()
 
         assert len(stuttgart_companies) == 3
@@ -177,9 +173,7 @@ class TestMultiSourceWorkflows:
         assert stuttgart_names == munich_names
 
         duplicates = (
-            db_session.query(Company)
-            .filter(Company.company_name == "Technical Support")
-            .all()
+            db_session.query(Company).filter(Company.company_name == "Technical Support").all()
         )
         assert {company.city for company in duplicates} == {"Stuttgart", "München"}
 
@@ -248,9 +242,7 @@ class TestMultiSourceWorkflows:
 
         db_session.expire_all()
         job_records = (
-            db_session.query(ScrapingJob)
-            .filter(ScrapingJob.id.in_([job1_id, job2_id]))
-            .all()
+            db_session.query(ScrapingJob).filter(ScrapingJob.id.in_([job1_id, job2_id])).all()
         )
         assert len(job_records) == 2
         total_results = sum(job.results_count for job in job_records)

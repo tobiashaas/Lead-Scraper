@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import Callable
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import pytest
@@ -149,7 +149,7 @@ class TestScrapingAPI:
                 industry="IT",
                 max_pages=1,
                 status="pending",
-                created_at=datetime.now(timezone.utc) - timedelta(minutes=5),
+                created_at=datetime.now(UTC) - timedelta(minutes=5),
             ),
             ScrapingJob(
                 job_name="completed-job",
@@ -158,7 +158,7 @@ class TestScrapingAPI:
                 industry="Consulting",
                 max_pages=1,
                 status="completed",
-                created_at=datetime.now(timezone.utc) - timedelta(minutes=1),
+                created_at=datetime.now(UTC) - timedelta(minutes=1),
             ),
         ]
         db_session.add_all(jobs)

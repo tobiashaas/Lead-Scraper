@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Callable, Dict, Iterable
+from typing import Any
 
 import pytest
 
@@ -24,7 +24,7 @@ def _reset_metric(metric: Any) -> None:
             continue
 
 
-def _extract_metric(payload: str, metric_name: str, labels: Dict[str, str]) -> float:
+def _extract_metric(payload: str, metric_name: str, labels: dict[str, str]) -> float:
     if labels:
         ordered = ",".join(f'{key}="{labels[key]}"' for key in labels)
         pattern = rf"^{metric_name}{{{ordered}}} ([0-9eE+\-\.]+)$"
@@ -92,7 +92,7 @@ async def test_queue_metrics_delta_updates(async_client, monkeypatch):
     )
     last_snapshot = {"scraping": {"queued": 0, "started": 0, "finished": 0, "failed": 0}}
 
-    def fake_queue_stats() -> Dict[str, Dict[str, int]]:
+    def fake_queue_stats() -> dict[str, dict[str, int]]:
         nonlocal last_snapshot
         try:
             last_snapshot = next(snapshots)

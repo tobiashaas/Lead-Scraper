@@ -15,14 +15,15 @@ import argparse
 import json
 import re
 import sys
+from collections.abc import Iterable
 from copy import deepcopy
 from html import unescape
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Optional
 
 TEST_CASES_PATH = Path("data/benchmarks/test_cases.json")
 
-DEFAULT_EXPECTED_TEMPLATE: Dict[str, Any] = {
+DEFAULT_EXPECTED_TEMPLATE: dict[str, Any] = {
     "company_name": None,
     "address": None,
     "phone": None,
@@ -36,7 +37,7 @@ DEFAULT_EXPECTED_TEMPLATE: Dict[str, Any] = {
 }
 
 
-def load_test_cases(path: Path) -> List[Dict[str, Any]]:
+def load_test_cases(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
     try:
@@ -48,7 +49,7 @@ def load_test_cases(path: Path) -> List[Dict[str, Any]]:
     return data
 
 
-def save_test_cases(path: Path, cases: List[Dict[str, Any]]) -> None:
+def save_test_cases(path: Path, cases: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(cases, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
@@ -57,7 +58,7 @@ def _strip_tags(value: str) -> str:
     return re.sub(r"<[^>]+>", "", value)
 
 
-def extract_ground_truth_from_html(html_content: str) -> Dict[str, Any]:
+def extract_ground_truth_from_html(html_content: str) -> dict[str, Any]:
     html_content = unescape(html_content)
     text_lower = html_content.lower()
 
@@ -73,17 +74,25 @@ def extract_ground_truth_from_html(html_content: str) -> Dict[str, Any]:
 
     phone_match = re.search(r"tel:([+\d\s-]+)", text_lower)
     if not phone_match:
-        phone_match = re.search(r"(?:phone|telefon|tel)[:\s]*([+\d\s/()-]{6,})", html_content, re.IGNORECASE)
+        phone_match = re.search(
+            r"(?:phone|telefon|tel)[:\s]*([+\d\s/()-]{6,})", html_content, re.IGNORECASE
+        )
     phone = phone_match.group(1).strip() if phone_match else None
 
     website_match = re.search(r"https?://[\w./-]+", html_content)
     website = website_match.group(0) if website_match else None
 
-    address_match = re.search(r"(?:adresse|address)[:\s]*(.+?)</", html_content, flags=re.IGNORECASE)
+    address_match = re.search(
+        r"(?:adresse|address)[:\s]*(.+?)</", html_content, flags=re.IGNORECASE
+    )
     address = _strip_tags(address_match.group(1)).strip() if address_match else None
 
-    services: List[str] = []
-    services_block = re.search(r"<h2[^>]*>\s*services\s*</h2>\s*<ul>(.*?)</ul>", html_content, flags=re.IGNORECASE | re.DOTALL)
+    services: list[str] = []
+    services_block = re.search(
+        r"<h2[^>]*>\s*services\s*</h2>\s*<ul>(.*?)</ul>",
+        html_content,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
     if services_block:
         services = [
             _strip_tags(item).strip()
@@ -91,8 +100,10 @@ def extract_ground_truth_from_html(html_content: str) -> Dict[str, Any]:
             if _strip_tags(item).strip()
         ]
 
-    directors: List[Dict[str, Optional[str]]] = []
-    for match in re.findall(r"(?:director|ceo|cto|cfo|coo|lead|head)[:\s]+([^<]+)", html_content, flags=re.IGNORECASE):
+    directors: list[dict[str, Optional[str]]] = []
+    for match in re.findall(
+        r"(?:director|ceo|cto|cfo|coo|lead|head)[:\s]+([^<]+)", html_content, flags=re.IGNORECASE
+    ):
         name = match.strip()
         if name:
             directors.append({"name": name, "title": None})
@@ -119,7 +130,7 @@ def _prompt(message: str, default: Optional[str] = None) -> str:
 
 def _prompt_multiline() -> str:
     print("Paste HTML content. Enter a single line with 'EOF' to finish.")
-    lines: List[str] = []
+    lines: list[str] = []
     while True:
         line = input()
         if line.strip() == "EOF":
@@ -153,7 +164,9 @@ def create_test_case_interactive(test_cases_path: Path = TEST_CASES_PATH) -> Non
 
     name = _prompt("Descriptive name")
     complexity = _prompt("Complexity (simple/medium/complex/edge)", "medium")
-    content_type = _prompt("Content type (company_page/contact_page/services_page/team_page)", "company_page")
+    content_type = _prompt(
+        "Content type (company_page/contact_page/services_page/team_page)", "company_page"
+    )
 
     html_content = _load_html_from_user()
     auto_data = extract_ground_truth_from_html(html_content)
@@ -161,20 +174,26 @@ def create_test_case_interactive(test_cases_path: Path = TEST_CASES_PATH) -> Non
     expected_data.update({k: v for k, v in auto_data.items() if v})
 
     print("\nDetected values (press Enter to accept):")
-    expected_data["company_name"] = _prompt("Company name", expected_data.get("company_name") or "") or None
+    expected_data["company_name"] = (
+        _prompt("Company name", expected_data.get("company_name") or "") or None
+    )
     expected_data["address"] = _prompt("Address", expected_data.get("address") or "") or None
     expected_data["phone"] = _prompt("Phone", expected_data.get("phone") or "") or None
     expected_data["email"] = _prompt("Email", expected_data.get("email") or "") or None
     expected_data["website"] = _prompt("Website", expected_data.get("website") or "") or None
 
-    services_input = _prompt("Services (comma separated)", ", ".join(expected_data.get("services", [])) or "")
+    services_input = _prompt(
+        "Services (comma separated)", ", ".join(expected_data.get("services", [])) or ""
+    )
     expected_data["services"] = [item.strip() for item in services_input.split(",") if item.strip()]
 
     technologies_input = _prompt("Technologies (comma separated)")
-    expected_data["technologies"] = [item.strip() for item in technologies_input.split(",") if item.strip()]
+    expected_data["technologies"] = [
+        item.strip() for item in technologies_input.split(",") if item.strip()
+    ]
 
     directors_input = _prompt("Directors (format: Name:Title;Name:Title)")
-    directors: List[Dict[str, Optional[str]]] = []
+    directors: list[dict[str, Optional[str]]] = []
     for raw in directors_input.split(";"):
         if not raw.strip():
             continue
@@ -186,7 +205,7 @@ def create_test_case_interactive(test_cases_path: Path = TEST_CASES_PATH) -> Non
     expected_data["directors"] = directors
 
     social_input = _prompt("Social media (format: key=url,key=url)")
-    social_media: Dict[str, str] = {}
+    social_media: dict[str, str] = {}
     for pair in social_input.split(","):
         if not pair.strip():
             continue
@@ -266,7 +285,7 @@ def validate_test_cases(test_cases_file: str) -> bool:
     return success
 
 
-def generate_synthetic_test_case(complexity: str) -> Dict[str, Any]:
+def generate_synthetic_test_case(complexity: str) -> dict[str, Any]:
     complexity = complexity.lower()
     if complexity not in {"simple", "medium", "complex"}:
         raise ValueError("Complexity must be one of: simple, medium, complex")
@@ -295,7 +314,7 @@ def generate_synthetic_test_case(complexity: str) -> Dict[str, Any]:
         html_content = (
             "<html><body><h1>Synthetic Service Snapshot</h1><h2>Services</h2><ul>"
             "<li>Cloud Migration</li><li>Security Audit</li></ul>"
-            "<p>Contact us at <a href=\"mailto:services@example.com\">services@example.com</a>.</p>"
+            '<p>Contact us at <a href="mailto:services@example.com">services@example.com</a>.</p>'
             "</body></html>"
         )
         expected_data = {
@@ -347,10 +366,10 @@ def generate_synthetic_test_case(complexity: str) -> Dict[str, Any]:
     }
 
 
-def _generate_unique_ids(existing_ids: Iterable[str], count: int, prefix: str = "SYN") -> List[str]:
+def _generate_unique_ids(existing_ids: Iterable[str], count: int, prefix: str = "SYN") -> list[str]:
     taken = {identifier for identifier in existing_ids if identifier}
     next_index = 1
-    generated: List[str] = []
+    generated: list[str] = []
     while len(generated) < count:
         candidate = f"{prefix}{next_index:03d}"
         if candidate not in taken:
@@ -361,7 +380,7 @@ def _generate_unique_ids(existing_ids: Iterable[str], count: int, prefix: str = 
 
 def handle_generate_synthetic(count: int, complexity: str, test_cases_path: Path) -> None:
     cases = load_test_cases(test_cases_path)
-    new_cases: List[Dict[str, Any]] = []
+    new_cases: list[dict[str, Any]] = []
     ids = _generate_unique_ids((case.get("id") for case in cases), count)
 
     for identifier in ids:
@@ -393,7 +412,9 @@ def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
         help="Generate synthetic test cases and append to the dataset.",
     )
 
-    parser.add_argument("--count", type=int, default=1, help="Number of synthetic cases to generate.")
+    parser.add_argument(
+        "--count", type=int, default=1, help="Number of synthetic cases to generate."
+    )
     parser.add_argument(
         "--complexity",
         choices=["simple", "medium", "complex"],

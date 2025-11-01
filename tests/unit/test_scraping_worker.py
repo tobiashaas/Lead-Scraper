@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Iterable
 from types import SimpleNamespace
-from typing import Any, Iterable
+from typing import Any
 
 import pytest
 
@@ -24,17 +25,17 @@ class _FakeSession:
         def __init__(self, job: Any) -> None:
             self._job = job
 
-        def filter(self, *args: Any, **kwargs: Any) -> "_FakeSession._JobQuery":
+        def filter(self, *args: Any, **kwargs: Any) -> _FakeSession._JobQuery:
             return self
 
         def first(self) -> Any:
             return self._job
 
     class _CompanyQuery:
-        def __init__(self, session: "_FakeSession") -> None:
+        def __init__(self, session: _FakeSession) -> None:
             self._session = session
 
-        def filter(self, *args: Any, **kwargs: Any) -> "_FakeSession._CompanyQuery":
+        def filter(self, *args: Any, **kwargs: Any) -> _FakeSession._CompanyQuery:
             return self
 
         def first(self) -> Any:
@@ -46,7 +47,7 @@ class _FakeSession:
         def __init__(self, job: Any) -> None:
             self._job = job
 
-        def filter(self, *args: Any, **kwargs: Any) -> "_FakeSession._TupleQuery":
+        def filter(self, *args: Any, **kwargs: Any) -> _FakeSession._TupleQuery:
             return self
 
         def first(self) -> tuple[Any, Any]:
@@ -74,7 +75,6 @@ class _FakeSession:
 
     def close(self) -> None:
         self.closed = True
-
 
 
 class _CompanyModelStub(SimpleNamespace):
@@ -133,7 +133,9 @@ def stub_data_processors(monkeypatch: pytest.MonkeyPatch) -> None:
 def stub_inspect(monkeypatch: pytest.MonkeyPatch) -> None:
     class _Inspector:
         def __init__(self, columns: Iterable[str]):
-            self.mapper = SimpleNamespace(column_attrs=[SimpleNamespace(key=col) for col in columns])
+            self.mapper = SimpleNamespace(
+                column_attrs=[SimpleNamespace(key=col) for col in columns]
+            )
 
     monkeypatch.setattr(
         scraping_worker,
@@ -217,7 +219,9 @@ def test_process_scraping_job_async_unknown_source(monkeypatch: pytest.MonkeyPat
     )
     session = _FakeSession(job)
     monkeypatch.setattr(scraping_worker, "SessionLocal", lambda: session)
-    monkeypatch.setattr(scraping_worker, "dispatch_webhook_event", lambda *args, **kwargs: asyncio.sleep(0))
+    monkeypatch.setattr(
+        scraping_worker, "dispatch_webhook_event", lambda *args, **kwargs: asyncio.sleep(0)
+    )
 
     result = asyncio.run(scraping_worker.process_scraping_job_async(1, {"source_name": "unknown"}))
 
@@ -233,9 +237,11 @@ def test_process_scraping_job_async_success(monkeypatch: pytest.MonkeyPatch) -> 
         source=SimpleNamespace(name="11880"),
         city="Stuttgart",
         industry="IT",
-        config={}
+        config={},
     )
-    company_existing = _CompanyModelStub(id=1, company_name="Existing GmbH", city="Stuttgart", website="https://old")
+    company_existing = _CompanyModelStub(
+        id=1, company_name="Existing GmbH", city="Stuttgart", website="https://old"
+    )
 
     company_returns = [company_existing, None]
     session = _FakeSession(job, company_returns=company_returns)
@@ -263,12 +269,24 @@ def test_process_scraping_job_async_success(monkeypatch: pytest.MonkeyPatch) -> 
         return [DummyResult(), DummyNewResult()]
 
     monkeypatch.setattr(eleven_eighty, "scrape_11880", fake_scrape)
+
     async def fake_webhook(*args: Any, **kwargs: Any) -> None:
         return None
 
     monkeypatch.setattr(scraping_worker, "dispatch_webhook_event", fake_webhook)
 
-    result = asyncio.run(scraping_worker.process_scraping_job_async(1, {"source_name": "11880", "city": "Stuttgart", "industry": "IT", "max_pages": 1, "use_tor": False}))
+    result = asyncio.run(
+        scraping_worker.process_scraping_job_async(
+            1,
+            {
+                "source_name": "11880",
+                "city": "Stuttgart",
+                "industry": "IT",
+                "max_pages": 1,
+                "use_tor": False,
+            },
+        )
+    )
 
     assert result["status"] == "completed"
     assert result["results_count"] == 2
@@ -279,8 +297,17 @@ def test_process_scraping_job_async_success(monkeypatch: pytest.MonkeyPatch) -> 
     assert company_existing.website == "https://updated"
 
 
-def test_process_scraping_job_async_handles_validation_failure(monkeypatch: pytest.MonkeyPatch) -> None:
-    job = SimpleNamespace(id=1, status="pending", progress=0.0, source=SimpleNamespace(name="11880"), city="Stuttgart", industry="IT")
+def test_process_scraping_job_async_handles_validation_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    job = SimpleNamespace(
+        id=1,
+        status="pending",
+        progress=0.0,
+        source=SimpleNamespace(name="11880"),
+        city="Stuttgart",
+        industry="IT",
+    )
     session = _FakeSession(job)
     monkeypatch.setattr(scraping_worker, "SessionLocal", lambda: session)
 
@@ -292,9 +319,17 @@ def test_process_scraping_job_async_handles_validation_failure(monkeypatch: pyte
         return [DummyBadResult()]
 
     monkeypatch.setattr(eleven_eighty, "scrape_11880", fake_scrape)
-    monkeypatch.setattr(scraping_worker.DataValidator, "validate_company_data", staticmethod(lambda data: {"company_name": None}))
+    monkeypatch.setattr(
+        scraping_worker.DataValidator,
+        "validate_company_data",
+        staticmethod(lambda data: {"company_name": None}),
+    )
 
-    result = asyncio.run(scraping_worker.process_scraping_job_async(1, {"source_name": "11880", "city": "Stuttgart", "industry": "IT", "max_pages": 1}))
+    result = asyncio.run(
+        scraping_worker.process_scraping_job_async(
+            1, {"source_name": "11880", "city": "Stuttgart", "industry": "IT", "max_pages": 1}
+        )
+    )
 
     assert result["status"] == "failed"
     assert result["results_count"] == 0
@@ -303,7 +338,14 @@ def test_process_scraping_job_async_handles_validation_failure(monkeypatch: pyte
 
 
 def test_process_scraping_job_async_smart_scraper(monkeypatch: pytest.MonkeyPatch) -> None:
-    job = SimpleNamespace(id=1, status="pending", progress=0.0, source=SimpleNamespace(name="11880"), city="Stuttgart", industry="IT")
+    job = SimpleNamespace(
+        id=1,
+        status="pending",
+        progress=0.0,
+        source=SimpleNamespace(name="11880"),
+        city="Stuttgart",
+        industry="IT",
+    )
     existing = _CompanyModelStub(id=1, company_name="Existing GmbH", city="Stuttgart")
     session = _FakeSession(job, company_returns=[existing])
     monkeypatch.setattr(scraping_worker, "SessionLocal", lambda: session)

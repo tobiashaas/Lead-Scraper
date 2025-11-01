@@ -6,10 +6,11 @@ import asyncio
 import json
 import logging
 import time
+from collections.abc import Iterable
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Any, Iterable, Tuple
+from datetime import UTC, datetime
+from typing import Any
 
 import dns.exception
 import dns.resolver
@@ -18,7 +19,6 @@ import redis.asyncio as redis
 from aiosmtplib import SMTP, SMTPException
 
 from app.core.config import settings
-
 
 logger = logging.getLogger(__name__)
 
@@ -64,10 +64,10 @@ class EmailVerificationResult:
         return json.dumps(payload)
 
     @classmethod
-    def from_serialized(cls, payload: str) -> "EmailVerificationResult":
+    def from_serialized(cls, payload: str) -> EmailVerificationResult:
         data = json.loads(payload)
         verified_at = (
-            datetime.fromisoformat(data["verified_at"]).astimezone(timezone.utc)
+            datetime.fromisoformat(data["verified_at"]).astimezone(UTC)
             if data.get("verified_at")
             else None
         )
@@ -272,7 +272,9 @@ class EmailVerifier:
                     code, response = await client.rcpt(email)
                     await self._record_rate_limit(domain)
 
-                response_message = response.decode() if isinstance(response, bytes) else str(response)
+                response_message = (
+                    response.decode() if isinstance(response, bytes) else str(response)
+                )
                 message = response_message
 
                 if code == 250:
@@ -308,7 +310,9 @@ class EmailVerifier:
             message=message,
         )
 
-    async def verify_email_api(self, email: str, provider: str | None = None) -> EmailVerificationResult:
+    async def verify_email_api(
+        self, email: str, provider: str | None = None
+    ) -> EmailVerificationResult:
         provider_to_use = (provider or self.api_provider or "").lower()
         if not provider_to_use:
             return EmailVerificationResult(
@@ -433,7 +437,7 @@ class EmailVerifier:
                 message="No verification method executed.",
             )
 
-        verification_result.verified_at = datetime.now(timezone.utc)
+        verification_result.verified_at = datetime.now(UTC)
 
         if redis_client and (verification_result.status not in {"rate_limited", "not_attempted"}):
             try:
@@ -455,7 +459,7 @@ class EmailVerifier:
         concurrency = max_concurrent or self.max_concurrent or 5
         semaphore = asyncio.Semaphore(concurrency)
 
-        async def _verify(email_address: str) -> Tuple[str, EmailVerificationResult]:
+        async def _verify(email_address: str) -> tuple[str, EmailVerificationResult]:
             async with semaphore:
                 result = await self.verify_email(email_address)
                 return email_address, result

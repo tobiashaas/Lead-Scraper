@@ -11,16 +11,15 @@ import argparse
 import json
 import statistics
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Sequence
+from typing import Any, Optional
 
 from scripts.benchmarks.benchmark_ollama_models import (
-    BENCHMARK_DIR,
     BenchmarkTestCase,
     ModelBenchmark,
     _ensure_dir,
-    _safe_json_loads,
 )
 
 PROMPT_LIBRARY_PATH = Path("data/prompts/optimized_prompts.json")
@@ -35,13 +34,13 @@ class PromptVariant:
     system_message: Optional[str] = None
     temperature: Optional[float] = None
     format_instruction: Optional[str] = None
-    examples: Optional[List[Dict[str, Any]]] = None
+    examples: Optional[list[dict[str, Any]]] = None
 
     def render(self, content: str) -> str:
         return self.prompt_template.replace("{{content}}", content)
 
 
-def _load_baseline_prompts() -> Dict[str, str]:
+def _load_baseline_prompts() -> dict[str, str]:
     from app.utils.ai_web_scraper import AIWebScraper
 
     scraper = AIWebScraper(model="llama3.2", use_model_selector=False)
@@ -53,7 +52,7 @@ def _load_baseline_prompts() -> Dict[str, str]:
     }
 
 
-def _load_prompt_variants(use_case: str) -> List[PromptVariant]:
+def _load_prompt_variants(use_case: str) -> list[PromptVariant]:
     baseline_prompts = _load_baseline_prompts()
     baseline = baseline_prompts.get(use_case, "Extract data: {{content}}")
     return [
@@ -65,13 +64,13 @@ def _load_prompt_variants(use_case: str) -> List[PromptVariant]:
                 "facts from the content below and respond with valid JSON using the "
                 "fields defined.\n"
                 "Use this structure: {\n"
-                "  \"company_name\": string | null,\n"
-                "  \"address\": string | null,\n"
-                "  \"phone\": string | null,\n"
-                "  \"email\": string | null,\n"
-                "  \"website\": string | null,\n"
-                "  \"services\": [string],\n"
-                "  \"directors\": [{\"name\": string, \"title\": string | null}]\n"
+                '  "company_name": string | null,\n'
+                '  "address": string | null,\n'
+                '  "phone": string | null,\n'
+                '  "email": string | null,\n'
+                '  "website": string | null,\n'
+                '  "services": [string],\n'
+                '  "directors": [{"name": string, "title": string | null}]\n'
                 "}\n"
                 "Do not include inferred information. Content: {{content}}"
             ),
@@ -83,9 +82,9 @@ def _load_prompt_variants(use_case: str) -> List[PromptVariant]:
                 "You are an expert data extraction assistant. Follow the examples "
                 "closely and extract only the facts from the content.\n"
                 "Example 1 Input: <html><h1>Alpha GmbH</h1><p>Services: IT Consulting</p></html>\n"
-                "Example 1 Output: {\"company_name\": \"Alpha GmbH\", \"services\": [\"IT Consulting\"], \"directors\": []}\n"
+                'Example 1 Output: {"company_name": "Alpha GmbH", "services": ["IT Consulting"], "directors": []}\n'
                 "Example 2 Input: <html><h1>Beta AG</h1><p>CEO: Dr. Jane Doe</p></html>\n"
-                "Example 2 Output: {\"company_name\": \"Beta AG\", \"directors\": [{\"name\": \"Dr. Jane Doe\", \"title\": \"CEO\"}]}\n"
+                'Example 2 Output: {"company_name": "Beta AG", "directors": [{"name": "Dr. Jane Doe", "title": "CEO"}]}\n'
                 "Now extract from: {{content}}"
             ),
             format_instruction="Respond with valid JSON only.",
@@ -115,10 +114,10 @@ def evaluate_prompt_variant(
     variant: PromptVariant,
     model: str,
     test_cases: Sequence[BenchmarkTestCase],
-) -> Dict[str, float]:
-    latencies: List[float] = []
-    f1_scores: List[float] = []
-    hallucinations: List[float] = []
+) -> dict[str, float]:
+    latencies: list[float] = []
+    f1_scores: list[float] = []
+    hallucinations: list[float] = []
 
     from app.utils.ai_web_scraper import AIWebScraper
 
@@ -127,7 +126,7 @@ def evaluate_prompt_variant(
     for case in test_cases:
         prompt = variant.render(case.html_content)
         start = time.perf_counter()
-        prompt_parameters: Dict[str, Any] | None = None
+        prompt_parameters: dict[str, Any] | None = None
         if variant.temperature is not None:
             prompt_parameters = {"temperature": variant.temperature}
 
@@ -169,11 +168,11 @@ def run_prompt_optimization(
     model: str,
     iterations: int,
     output: str,
-) -> List[Dict[str, float]]:
+) -> list[dict[str, float]]:
     test_cases = BenchmarkTestCase.load_all()
     variants = _load_prompt_variants(use_case)
 
-    scores: List[Dict[str, float]] = []
+    scores: list[dict[str, float]] = []
     for variant in variants:
         variant_scores = []
         for _ in range(iterations):
@@ -193,22 +192,29 @@ def run_prompt_optimization(
     return scores
 
 
-def _persist_prompt_results(use_case: str, model: str, scores: List[Dict[str, float]], output: str, best: Dict[str, float], best_variant: PromptVariant) -> None:
+def _persist_prompt_results(
+    use_case: str,
+    model: str,
+    scores: list[dict[str, float]],
+    output: str,
+    best: dict[str, float],
+    best_variant: PromptVariant,
+) -> None:
     if output in {"json", "both"}:
         _ensure_dir(PROMPT_SCORES_PATH)
-        score_payload: Dict[str, Any] = {}
+        score_payload: dict[str, Any] = {}
         if PROMPT_SCORES_PATH.exists():
             score_payload = json.loads(PROMPT_SCORES_PATH.read_text(encoding="utf-8"))
         score_payload.setdefault(use_case, {})[model] = scores
         PROMPT_SCORES_PATH.write_text(json.dumps(score_payload, indent=2), encoding="utf-8")
 
         _ensure_dir(PROMPT_LIBRARY_PATH)
-        prompt_library: Dict[str, Any] = {}
+        prompt_library: dict[str, Any] = {}
         if PROMPT_LIBRARY_PATH.exists():
             prompt_library = json.loads(PROMPT_LIBRARY_PATH.read_text(encoding="utf-8"))
         use_case_library = prompt_library.setdefault(use_case, {})
         existing_entry = use_case_library.get(model)
-        entry: Dict[str, Any]
+        entry: dict[str, Any]
         if isinstance(existing_entry, dict):
             entry = dict(existing_entry)
         else:
@@ -219,7 +225,7 @@ def _persist_prompt_results(use_case: str, model: str, scores: List[Dict[str, fl
         if best_variant.system_message:
             entry["system_message"] = best_variant.system_message
 
-        parameters: Dict[str, Any] = dict(entry.get("parameters") or {})
+        parameters: dict[str, Any] = dict(entry.get("parameters") or {})
         if best_variant.temperature is not None:
             parameters["temperature"] = best_variant.temperature
         if parameters:
@@ -256,9 +262,13 @@ def _persist_prompt_results(use_case: str, model: str, scores: List[Dict[str, fl
 
 def parse_args(args: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Optimize scraping prompts via A/B testing.")
-    parser.add_argument("--use-case", default="company_basic", help="Use case to optimize prompts for.")
+    parser.add_argument(
+        "--use-case", default="company_basic", help="Use case to optimize prompts for."
+    )
     parser.add_argument("--model", default="llama3.2", help="Model to use for optimization runs.")
-    parser.add_argument("--iterations", type=int, default=1, help="Number of repetitions per prompt variant.")
+    parser.add_argument(
+        "--iterations", type=int, default=1, help="Number of repetitions per prompt variant."
+    )
     parser.add_argument(
         "--output",
         choices=["json", "markdown", "both", "none"],

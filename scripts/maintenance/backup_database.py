@@ -8,7 +8,7 @@ import os
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -28,7 +28,7 @@ def create_backup(
     output_dir: Path | None = None,
 ) -> dict[str, Any]:
     start = time.monotonic()
-    backup_dir = (output_dir or DEFAULT_BACKUP_DIR)
+    backup_dir = output_dir or DEFAULT_BACKUP_DIR
     backup_dir.mkdir(parents=True, exist_ok=True)
 
     stem = _build_backup_stem(backup_type)
@@ -82,7 +82,7 @@ def create_backup(
 
 
 def _build_backup_stem(backup_type: str) -> str:
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     return f"backup_{backup_type}_{timestamp}"
 
 
@@ -231,15 +231,46 @@ def _derive_backup_type(filename: str) -> str:
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Create PostgreSQL backups from Docker container")
-    parser.add_argument("--type", default="manual", choices=["manual", "daily", "weekly", "monthly"], help="Backup type label")
-    parser.add_argument("--compress", action=argparse.BooleanOptionalAction, default=True, help="Enable gzip compression")
-    parser.add_argument("--encrypt", action=argparse.BooleanOptionalAction, default=False, help="Enable GPG encryption")
-    parser.add_argument("--verify", action=argparse.BooleanOptionalAction, default=True, help="Verify backup after creation")
-    parser.add_argument("--cleanup", action=argparse.BooleanOptionalAction, default=False, help="Run retention cleanup after backup")
+    parser.add_argument(
+        "--type",
+        default="manual",
+        choices=["manual", "daily", "weekly", "monthly"],
+        help="Backup type label",
+    )
+    parser.add_argument(
+        "--compress",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Enable gzip compression",
+    )
+    parser.add_argument(
+        "--encrypt",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Enable GPG encryption",
+    )
+    parser.add_argument(
+        "--verify",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Verify backup after creation",
+    )
+    parser.add_argument(
+        "--cleanup",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Run retention cleanup after backup",
+    )
     parser.add_argument("--output-dir", type=Path, default=None, help="Custom backup directory")
     parser.add_argument("--verbose", action="store_true", help="Enable debug logging")
-    parser.add_argument("--verify-only", action="store_true", help="Only verify the latest backup without creating a new one")
-    parser.add_argument("--backup-file", type=Path, default=None, help="Specific backup file to verify")
+    parser.add_argument(
+        "--verify-only",
+        action="store_true",
+        help="Only verify the latest backup without creating a new one",
+    )
+    parser.add_argument(
+        "--backup-file", type=Path, default=None, help="Specific backup file to verify"
+    )
     return parser.parse_args(argv)
 
 

@@ -11,7 +11,6 @@ from tests.utils.test_helpers import (
     generate_xss_payloads,
 )
 
-
 pytestmark = pytest.mark.integration
 
 
@@ -69,7 +68,9 @@ class TestAuthenticationSecurity:
         assert protected_resp.status_code in {401, 403}
 
     def test_refresh_token_signature_validation(self, client, auth_user) -> None:
-        bogus_token = jwt.encode({"sub": auth_user.username, "type": "refresh"}, "wrong", algorithm="HS256")
+        bogus_token = jwt.encode(
+            {"sub": auth_user.username, "type": "refresh"}, "wrong", algorithm="HS256"
+        )
         response = client.post(
             "/api/v1/auth/refresh",
             json={"refresh_token": bogus_token},
@@ -132,7 +133,9 @@ class TestInputValidationSecurity:
 class TestAuthorizationSecurity:
     """Ensure users cannot cross boundaries or escalate privileges."""
 
-    def test_user_cannot_access_another_users_webhook(self, client, auth_headers, second_auth_user) -> None:
+    def test_user_cannot_access_another_users_webhook(
+        self, client, auth_headers, second_auth_user
+    ) -> None:
         create_resp = client.post(
             "/api/v1/webhooks/",
             json={"url": "https://forbidden.test", "events": ["job.completed"]},

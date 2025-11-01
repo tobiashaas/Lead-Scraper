@@ -1,7 +1,8 @@
+from unittest.mock import AsyncMock
+
 import pytest
 from fastapi import status
 from sqlalchemy.orm import Session
-from unittest.mock import AsyncMock
 
 from app.database.models import Company, ScrapingJob
 from tests.utils.test_helpers import wait_for_scraping_job_completion_async

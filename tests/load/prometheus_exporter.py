@@ -73,9 +73,7 @@ def _on_request(
     if response is not None:
         status = getattr(response, "status_code", status)
     locust_requests_total.labels(request_type, name, str(status)).inc()
-    locust_request_duration_seconds.labels(request_type, name).observe(
-        response_time / 1000.0
-    )
+    locust_request_duration_seconds.labels(request_type, name).observe(response_time / 1000.0)
     locust_response_size_bytes.labels(request_type, name).observe(response_length)
 
 
@@ -90,9 +88,7 @@ def _on_request_failure(
 ) -> None:
     """Record metrics for failed requests."""
     locust_failures_total.labels(request_type, name, exception.__class__.__name__).inc()
-    locust_request_duration_seconds.labels(request_type, name).observe(
-        response_time / 1000.0
-    )
+    locust_request_duration_seconds.labels(request_type, name).observe(response_time / 1000.0)
 
 
 @events.user_add.add_listener  # type: ignore[arg-type]

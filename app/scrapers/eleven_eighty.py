@@ -5,9 +5,9 @@ Scraped Unternehmensdaten von 11880.com (Deutsches Branchenbuch)
 
 import logging
 import re
+from collections.abc import Awaitable, Callable
 from urllib.parse import quote_plus
 
-from typing import Any, AsyncGenerator, Awaitable, Callable
 from bs4 import BeautifulSoup
 
 from app.scrapers.base import BaseScraper, ScraperResult

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Sequence
-from unittest.mock import MagicMock, create_autospec
+from collections.abc import Sequence
+from unittest.mock import MagicMock
 
 import pytest
 from fuzzywuzzy import fuzz
@@ -51,11 +51,18 @@ def company_b() -> Company:
     return company
 
 
-def test_calculate_similarity(monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company, company_b: Company) -> None:
+def test_calculate_similarity(
+    monkeypatch: pytest.MonkeyPatch,
+    deduplicator: Deduplicator,
+    company_a: Company,
+    company_b: Company,
+) -> None:
     monkeypatch.setattr(fuzz, "token_sort_ratio", lambda a, b: 90)
     monkeypatch.setattr(fuzz, "ratio", lambda a, b: 95)
 
-    name_sim, address_sim, phone_sim, website_sim, overall_sim = deduplicator.calculate_similarity(company_a, company_b)
+    name_sim, address_sim, phone_sim, website_sim, overall_sim = deduplicator.calculate_similarity(
+        company_a, company_b
+    )
 
     assert name_sim == 90
     assert address_sim == 90
@@ -64,19 +71,36 @@ def test_calculate_similarity(monkeypatch: pytest.MonkeyPatch, deduplicator: Ded
     assert overall_sim == pytest.approx(92.0)
 
 
-def test_is_duplicate_true(monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company, company_b: Company) -> None:
+def test_is_duplicate_true(
+    monkeypatch: pytest.MonkeyPatch,
+    deduplicator: Deduplicator,
+    company_a: Company,
+    company_b: Company,
+) -> None:
     monkeypatch.setattr(deduplicator, "calculate_similarity", lambda *_, **__: (90, 80, 90, 95, 88))
 
     assert deduplicator.is_duplicate(company_a, company_b) is True
 
 
-def test_is_duplicate_false(monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company, company_b: Company) -> None:
+def test_is_duplicate_false(
+    monkeypatch: pytest.MonkeyPatch,
+    deduplicator: Deduplicator,
+    company_a: Company,
+    company_b: Company,
+) -> None:
     monkeypatch.setattr(deduplicator, "calculate_similarity", lambda *_, **__: (70, 60, 50, 40, 55))
 
     assert deduplicator.is_duplicate(company_a, company_b) is False
 
 
-def _make_company(id_: int, name: str, city: str, address: str | None = None, phone: str | None = None, website: str | None = None) -> Company:
+def _make_company(
+    id_: int,
+    name: str,
+    city: str,
+    address: str | None = None,
+    phone: str | None = None,
+    website: str | None = None,
+) -> Company:
     company = Company(
         id=id_,
         company_name=name,
@@ -89,7 +113,9 @@ def _make_company(id_: int, name: str, city: str, address: str | None = None, ph
     return company
 
 
-def test_find_duplicates_filters_by_threshold(monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company) -> None:
+def test_find_duplicates_filters_by_threshold(
+    monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company
+) -> None:
     candidates = [
         _make_company(2, "Test Company GmbH", "Stuttgart"),
         _make_company(3, "Other Company", "Stuttgart"),
@@ -110,7 +136,9 @@ def test_find_duplicates_filters_by_threshold(monkeypatch: pytest.MonkeyPatch, d
     assert results[0][1] == 85
 
 
-def test_find_duplicates_limit(monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company) -> None:
+def test_find_duplicates_limit(
+    monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company
+) -> None:
     candidates = [_make_company(i, f"Candidate {i}", "Stuttgart") for i in range(2, 10)]
     db = MagicMock()
     db.query().filter().all.return_value = candidates
@@ -123,7 +151,9 @@ def test_find_duplicates_limit(monkeypatch: pytest.MonkeyPatch, deduplicator: De
     assert all(score == 90 for _, score in results)
 
 
-def test_create_duplicate_candidate_existing(deduplicator: Deduplicator, company_a: Company, company_b: Company) -> None:
+def test_create_duplicate_candidate_existing(
+    deduplicator: Deduplicator, company_a: Company, company_b: Company
+) -> None:
     existing = DuplicateCandidate(company_a_id=company_a.id, company_b_id=company_b.id)
 
     db = MagicMock()
@@ -136,11 +166,18 @@ def test_create_duplicate_candidate_existing(deduplicator: Deduplicator, company
     db.commit.assert_not_called()
 
 
-def test_create_duplicate_candidate_new(monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company, company_b: Company) -> None:
+def test_create_duplicate_candidate_new(
+    monkeypatch: pytest.MonkeyPatch,
+    deduplicator: Deduplicator,
+    company_a: Company,
+    company_b: Company,
+) -> None:
     db = MagicMock()
     db.query().filter().first.return_value = None
 
-    monkeypatch.setattr(deduplicator, "calculate_similarity", lambda *args, **kwargs: (90, 80, 70, 60, 85))
+    monkeypatch.setattr(
+        deduplicator, "calculate_similarity", lambda *args, **kwargs: (90, 80, 70, 60, 85)
+    )
 
     candidate = deduplicator.create_duplicate_candidate(db, company_a, company_b)
 
@@ -153,7 +190,8 @@ def test_create_duplicate_candidate_new(monkeypatch: pytest.MonkeyPatch, dedupli
 
 def test_merge_companies_prefers_primary(deduplicator: Deduplicator) -> None:
     primary = _make_company(1, "Primary", "Stuttgart", address="Main St", phone="123")
-    duplicate = _make_company(2, "Duplicate", "Stuttgart", address=""); duplicate.phone = ""
+    duplicate = _make_company(2, "Duplicate", "Stuttgart", address="")
+    duplicate.phone = ""
     duplicate.email = "dup@example.com"
     duplicate.extra_data = {"sources": ["dup"]}
 
@@ -192,13 +230,19 @@ def test_merge_companies_sets_inactive(deduplicator: Deduplicator) -> None:
     assert duplicate.is_duplicate is True
 
 
-def test_scan_for_duplicates_processes_all(monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator) -> None:
+def test_scan_for_duplicates_processes_all(
+    monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator
+) -> None:
     companies = [_make_company(i, f"Company {i}", "Stuttgart") for i in range(1, 4)]
 
     db = MagicMock()
     db.query().filter().all.return_value = companies
 
-    monkeypatch.setattr(deduplicator, "find_duplicates", lambda db, company, limit=5: [(company, 90)] if company.id == 1 else [])
+    monkeypatch.setattr(
+        deduplicator,
+        "find_duplicates",
+        lambda db, company, limit=5: [(company, 90)] if company.id == 1 else [],
+    )
     create_mock = MagicMock()
     monkeypatch.setattr(deduplicator, "create_duplicate_candidate", create_mock)
 
@@ -208,7 +252,9 @@ def test_scan_for_duplicates_processes_all(monkeypatch: pytest.MonkeyPatch, dedu
     create_mock.assert_called_once()
 
 
-def test_find_duplicates_filters_inactive(monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company) -> None:
+def test_find_duplicates_filters_inactive(
+    monkeypatch: pytest.MonkeyPatch, deduplicator: Deduplicator, company_a: Company
+) -> None:
     inactive = _make_company(3, "Inactive", "Stuttgart")
     inactive.is_active = False
     active = _make_company(4, "Active", "Stuttgart")
@@ -227,7 +273,9 @@ def test_find_duplicates_filters_inactive(monkeypatch: pytest.MonkeyPatch, dedup
     db = MagicMock()
     db.query.return_value = QueryMock([inactive, active])
 
-    monkeypatch.setattr(deduplicator, "calculate_similarity", lambda *args, **kwargs: (0, 0, 0, 0, 90))
+    monkeypatch.setattr(
+        deduplicator, "calculate_similarity", lambda *args, **kwargs: (0, 0, 0, 0, 90)
+    )
 
     results = deduplicator.find_duplicates(db, company_a)
 

@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import pytest
@@ -96,7 +95,9 @@ def notification_service_override(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.mark.asyncio
-async def test_health_check_triggers_slack_alert_on_failure(async_client: AsyncClient, dummy_slack: DummySlackClient) -> None:
+async def test_health_check_triggers_slack_alert_on_failure(
+    async_client: AsyncClient, dummy_slack: DummySlackClient
+) -> None:
     async def failing_healthcheck(*args: Any, **kwargs: Any) -> dict[str, Any]:
         raise RuntimeError("upstream failure")
 
@@ -117,7 +118,7 @@ async def test_health_check_triggers_slack_alert_on_failure(async_client: AsyncC
 async def test_notification_service_send_alert_integration(dummy_slack: DummySlackClient) -> None:
     service = get_notification_service()
 
-    timestamp = datetime.now(timezone.utc).isoformat()
+    timestamp = datetime.now(UTC).isoformat()
     await service.send_alert(
         alert_type="scraping_failure",
         severity="critical",

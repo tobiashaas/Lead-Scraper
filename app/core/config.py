@@ -22,14 +22,11 @@ from app.core.secrets_manager import (
     load_secrets_from_manager,
 )
 
-
 logger = logging.getLogger(__name__)
 
 DEFAULT_SECRET_KEY = "your-secret-key-change-in-production-min-32-chars"
 DEFAULT_POSTGRES_PASSWORD = "kr_password_change_in_production"
-DEFAULT_DATABASE_URL = (
-    f"postgresql://kr_user:{DEFAULT_POSTGRES_PASSWORD}@localhost:5432/kr_leads"
-)
+DEFAULT_DATABASE_URL = f"postgresql://kr_user:{DEFAULT_POSTGRES_PASSWORD}@localhost:5432/kr_leads"
 DEFAULT_REDIS_URL = "redis://localhost:6379"
 
 
@@ -218,17 +215,16 @@ class Settings(BaseSettings):
     api_host: str = Field(default="0.0.0.0", description="API Host")
     api_port: int = Field(default=8000, description="API Port")
     api_reload: bool = Field(default=True, description="Enable auto-reload")
-    
+
     # API Configuration
     api_version: str = Field(default="1.0.0", description="API version (semantic versioning)")
     api_version_prefix: str = Field(default="/api/v1", description="API version URL prefix")
     api_deprecation_policy_url: str = Field(
         default="https://docs.your-domain.com/api/deprecation",
-        description="URL to API deprecation policy"
+        description="URL to API deprecation policy",
     )
     api_base_url: str = Field(
-        default="http://localhost:8000",
-        description="Base URL for API (used in docs and webhooks)"
+        default="http://localhost:8000", description="Base URL for API (used in docs and webhooks)"
     )
 
     # CORS Configuration
@@ -615,7 +611,7 @@ class Settings(BaseSettings):
         return default
 
     @model_validator(mode="after")
-    def _apply_secrets(self) -> "Settings":
+    def _apply_secrets(self) -> Settings:
         """Populate secret-backed settings and validate provider configuration."""
 
         self.__class__._initialize_secrets_provider()
@@ -693,9 +689,7 @@ class Settings(BaseSettings):
                 default="kr_leads",
             )
 
-            self.database_url = (
-                f"postgresql://{db_user}:{quote_plus(str(db_password))}@{db_host}:{db_port}/{db_name}"
-            )
+            self.database_url = f"postgresql://{db_user}:{quote_plus(str(db_password))}@{db_host}:{db_port}/{db_name}"
 
         self.redis_url = self.__class__._get_secret_value(
             secret_key="redis_url",

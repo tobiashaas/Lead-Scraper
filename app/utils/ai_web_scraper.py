@@ -6,7 +6,7 @@ import json
 import math
 import time
 from textwrap import dedent
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import ollama
 import trafilatura
@@ -161,7 +161,7 @@ class AIWebScraper:
         self.use_prompt_library = bool(
             self.model_selector and getattr(settings, "ollama_prompt_optimization_enabled", False)
         )
-        self._stats: Dict[str, Any] = {
+        self._stats: dict[str, Any] = {
             "requests": 0,
             "model_usage": {},
             "latencies": [],
@@ -210,8 +210,8 @@ class AIWebScraper:
 
     def _resolve_prompt(
         self, use_case: str, model_name: str, default_prompt: str
-    ) -> Dict[str, Any]:
-        resolved: Dict[str, Any] = {"template": default_prompt}
+    ) -> dict[str, Any]:
+        resolved: dict[str, Any] = {"template": default_prompt}
         if self.use_prompt_library and self.model_selector:
             prompt_entry = self.model_selector.get_optimized_prompt(use_case, model_name)
             if isinstance(prompt_entry, dict):
@@ -248,9 +248,9 @@ class AIWebScraper:
         return messages
 
     def _ollama_options(
-        self, model_name: str, prompt_parameters: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
-        options: Dict[str, Any] = {}
+        self, model_name: str, prompt_parameters: Optional[dict[str, Any]] = None
+    ) -> dict[str, Any]:
+        options: dict[str, Any] = {}
         if self.model_selector:
             model_config = self.model_selector.get_model_config(model_name)
             options.update(model_config)
@@ -262,7 +262,7 @@ class AIWebScraper:
             options["temperature"] = self.temperature
         return {k: v for k, v in options.items() if k in ALLOWED_OLLAMA_OPTIONS and v is not None}
 
-    def _parse_json_response(self, text: str) -> Dict[str, Any]:
+    def _parse_json_response(self, text: str) -> dict[str, Any]:
         start = text.find("{")
         end = text.rfind("}") + 1
         if start >= 0 and end > start:
@@ -291,7 +291,7 @@ class AIWebScraper:
         model_name: Optional[str] = None,
         *,
         system_message: Optional[str] = None,
-        prompt_parameters: Optional[Dict[str, Any]] = None,
+        prompt_parameters: Optional[dict[str, Any]] = None,
     ) -> dict[str, Any]:
         """Query Ollama with prompt and content"""
         model_to_use = model_name or self.model
@@ -524,7 +524,7 @@ class AIWebScraper:
             logger.error(f"Error extracting custom data from {url}: {e}")
             return {"error": str(e)}
 
-    def get_benchmark_stats(self) -> Dict[str, Any]:
+    def get_benchmark_stats(self) -> dict[str, Any]:
         """Return aggregated statistics recorded during runtime."""
 
         latencies = self._stats.get("latencies", [])

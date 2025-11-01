@@ -1,6 +1,5 @@
 """Integration tests for Webhook API endpoints."""
 
-from collections.abc import Callable
 from typing import Any
 
 import httpx
@@ -8,8 +7,8 @@ import pytest
 
 from app.api import webhooks as webhooks_module
 
-
 pytestmark = pytest.mark.integration
+
 
 class TestWebhookHelpers:
     """Direct tests for helper functions handling network I/O."""
@@ -154,6 +153,7 @@ class TestWebhookHelpers:
 
         await webhooks_module.trigger_webhook_event("job.failed", {"job_id": 42})
 
+
 @pytest.fixture
 def create_webhook_payload() -> dict[str, Any]:
     return {
@@ -248,7 +248,9 @@ class TestWebhookEndpoints:
         assert data["active"] is False
         assert data["events"] == ["job.failed"]
 
-    def test_update_webhook_toggle_active_only(self, client, auth_headers, create_webhook_payload) -> None:
+    def test_update_webhook_toggle_active_only(
+        self, client, auth_headers, create_webhook_payload
+    ) -> None:
         create_resp = client.post(
             "/api/v1/webhooks/", json=create_webhook_payload, headers=auth_headers
         )
@@ -263,7 +265,9 @@ class TestWebhookEndpoints:
         assert response.status_code == 200
         assert response.json()["active"] is False
 
-    def test_update_webhook_update_events_only(self, client, auth_headers, create_webhook_payload) -> None:
+    def test_update_webhook_update_events_only(
+        self, client, auth_headers, create_webhook_payload
+    ) -> None:
         create_resp = client.post(
             "/api/v1/webhooks/", json=create_webhook_payload, headers=auth_headers
         )

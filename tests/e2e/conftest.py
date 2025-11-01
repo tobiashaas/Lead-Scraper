@@ -1,25 +1,24 @@
 import asyncio
-from collections import defaultdict
 from pathlib import Path
-from typing import Callable, Optional
-from unittest.mock import AsyncMock, MagicMock
+from typing import Optional
+from unittest.mock import AsyncMock
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 from app.database.models import Source
 from app.utils.browser_manager import PlaywrightBrowserManager
-from app.utils.rate_limiter import rate_limiter
 from app.utils.proxy_manager import tor_proxy_manager
+from app.utils.rate_limiter import rate_limiter
 
 
 @pytest.fixture(scope="function", autouse=True)
 def inline_rq_worker(monkeypatch: MonkeyPatch):
     """Execute scraping jobs inline for E2E tests without external RQ worker."""
 
+    from app.api import scraping as scraping_module
     from app.workers import queue as queue_module
     from app.workers import scraping_worker
-    from app.api import scraping as scraping_module
 
     job_status: dict[str, str] = {}
 

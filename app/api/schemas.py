@@ -3,9 +3,9 @@ Pydantic Schemas for API
 Request/Response models
 """
 
+import warnings
 from datetime import datetime
 from typing import Any
-import warnings
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, model_validator
 
@@ -133,9 +133,7 @@ class ScrapingJobCreate(BaseModel):
             return value
         allowed = {"enrichment", "fallback"}
         if value not in allowed:
-            raise ValueError(
-                "smart_scraper_mode must be one of 'enrichment', 'fallback', or None"
-            )
+            raise ValueError("smart_scraper_mode must be one of 'enrichment', 'fallback', or None")
         return value
 
     @model_validator(mode="after")
