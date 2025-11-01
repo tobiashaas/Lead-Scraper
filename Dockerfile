@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     git \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Python Dependencies
@@ -49,6 +50,8 @@ RUN apt-get update && apt-get install -y \
     # Additional Tools
     curl \
     ca-certificates \
+    libpq5 \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Create app user (security)
@@ -73,7 +76,9 @@ ENV PATH=/home/scraper/.local/bin:$PATH
 ENV PYTHONPATH=/app
 
 # Install Playwright browsers (as scraper user)
-RUN python -m playwright install chromium
+# Skip during build if PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD is set
+# Can be installed at runtime or in environments with internet access
+RUN python -m playwright install chromium || echo "Playwright browser installation skipped"
 
 # Expose API port
 EXPOSE 8000

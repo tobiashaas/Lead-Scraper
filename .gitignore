@@ -30,6 +30,7 @@ ENV/
 .env
 .env.local
 .env.production
+.env.staging
 
 # IDE
 .vscode/
@@ -45,9 +46,26 @@ logs/*.log
 
 # Data
 data/*.csv
-data/*.json
 data/*.db
 data/*.sqlite
+data/benchmarks/benchmark_report.md
+data/benchmarks/benchmark_details.json
+data/benchmarks/ollama_results.json
+data/benchmarks/prompt_optimization_report.md
+data/benchmarks/prompt_scores.json
+!data/prompts/optimized_prompts.json
+!data/benchmarks/test_cases.json
+
+# Load Testing & Profiling artifacts
+data/load_tests/*.html
+data/load_tests/*.csv
+data/load_tests/*_stats.csv
+data/load_tests/*_failures.csv
+data/load_tests/*_exceptions.csv
+!data/load_tests/baseline.json
+data/profiling/*.prof
+data/profiling/*.svg
+data/profiling/*.txt
 
 # Database
 *.db
@@ -82,6 +100,32 @@ tmp/
 # Docker
 docker-compose.override.yml
 
+# Deployment
+.env.staging
+.env.production
+deploy_key
+deploy_key.pub
+deployment.log
+health_report_*.json
+incident_report_*.json
+backups/db_backup_*.sql
+backups/env_backup_*
+backups/compose_backup_*.yml
+backups/
+*.sql
+*.sql.gz
+*.sql.gpg
+*.sql.gz.gpg
+logs/deployment.log
+logs/rollback.log
+logs/health_check.log
+
+# Monitoring
+/tmp/prometheus_multiproc/
+monitoring/prometheus/data/
+monitoring/grafana/data/
+*.db
+
 # macOS
 .DS_Store
 .AppleDouble
@@ -91,3 +135,10 @@ docker-compose.override.yml
 *.pem
 *.key
 secrets/
+!scripts/secrets/
+!scripts/secrets/**
+
+# Postman
+postman/*.backup.json
+postman/*_backup.json
+# Keep collection and environments (committed)

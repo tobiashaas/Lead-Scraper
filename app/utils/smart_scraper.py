@@ -3,9 +3,10 @@ Smart Hybrid Web Scraper
 Kombiniert mehrere Scraping-Methoden mit intelligenten Fallbacks
 """
 
+import asyncio
 import logging
 from enum import Enum
-from typing import Any
+from typing import Any, Awaitable, Callable
 
 from app.core.config import settings
 from app.scrapers.base import ScraperResult
@@ -39,6 +40,8 @@ class SmartWebScraper:
         preferred_method: ScrapingMethod = ScrapingMethod.CRAWL4AI_OLLAMA,
         use_ai: bool = True,
         max_retries: int = 3,
+        progress_callback: Callable[[int, int], Awaitable[None]] | None = None,
+        timeout: int = 30,
     ):
         """
         Initialisiert Smart Scraper
@@ -47,10 +50,14 @@ class SmartWebScraper:
             preferred_method: Bevorzugte Scraping-Methode
             use_ai: AI-Extraktion nutzen (Ollama)
             max_retries: Max Versuche pro Methode
+            progress_callback: Fortschritts-Callback (optional)
+            timeout: Timeout pro Website (Sekunden)
         """
         self.preferred_method = preferred_method
         self.use_ai = use_ai
         self.max_retries = max_retries
+        self.progress_callback = progress_callback
+        self.timeout = timeout
 
         # Scraper initialisieren
         self.crawl4ai_scraper = Crawl4AIOllamaScraper()
@@ -91,7 +98,9 @@ class SmartWebScraper:
             try:
                 logger.info(f"Versuche Methode: {method.value}")
 
-                result = await self._scrape_with_method(url, method)
+                result = await asyncio.wait_for(
+                    self._scrape_with_method(url, method), timeout=self.timeout
+                )
 
                 if result:
                     self.stats["successes"] += 1
@@ -99,6 +108,10 @@ class SmartWebScraper:
                     logger.info(f"✅ Erfolgreich mit {method.value}")
                     return result
 
+            except asyncio.TimeoutError:
+                logger.warning(
+                    "Methode %s Timeout nach %s Sekunden", method.value, self.timeout
+                )
             except Exception as e:
                 logger.warning(f"Methode {method.value} fehlgeschlagen: {e}")
                 continue
@@ -125,8 +138,8 @@ class SmartWebScraper:
         chain = [
             ScrapingMethod.CRAWL4AI_OLLAMA,
             ScrapingMethod.TRAFILATURA_OLLAMA,
-            ScrapingMethod.HTTPX_BS4,
             ScrapingMethod.PLAYWRIGHT_BS4,
+            ScrapingMethod.HTTPX_BS4,
         ]
 
         # Bevorzugte Methode an erste Stelle
@@ -260,7 +273,12 @@ Return JSON with: company_name, directors, legal_form, services, contact_email, 
 
 
 async def enrich_results_with_smart_scraper(
-    results: list[ScraperResult], max_scrapes: int = 10, use_ai: bool = True
+    results: list[ScraperResult],
+    max_scrapes: int = 10,
+    use_ai: bool = True,
+    progress_callback: Callable[[int, int], Awaitable[None]] | None = None,
+    preferred_method: ScrapingMethod | str | None = None,
+    timeout: int = 30,
 ) -> list[ScraperResult]:
     """
     Reichert ScraperResults mit Smart Scraper an
@@ -269,47 +287,102 @@ async def enrich_results_with_smart_scraper(
         results: Liste von ScraperResult-Objekten
         max_scrapes: Maximale Anzahl zu scrapender Websites
         use_ai: AI-Extraktion nutzen
+        progress_callback: Optionaler Fortschritts-Callback
+        preferred_method: Bevorzugte Scraping-Methode
+        timeout: Timeout pro Website
 
     Returns:
         Angereicherte Results
     """
-    scraper = SmartWebScraper(use_ai=use_ai)
+    resolved_preferred: ScrapingMethod | None
+    if isinstance(preferred_method, ScrapingMethod):
+        resolved_preferred = preferred_method
+    elif isinstance(preferred_method, str):
+        try:
+            resolved_preferred = ScrapingMethod(preferred_method)
+        except ValueError:
+            logger.warning(
+                "Unbekannte Smart-Scraper-Methode '%s', fallback auf Voreinstellung",
+                preferred_method,
+            )
+            resolved_preferred = None
+    else:
+        resolved_preferred = None
 
-    scraped_count = 0
+    if resolved_preferred is None:
+        try:
+            resolved_preferred = ScrapingMethod(settings.smart_scraper_preferred_method)
+        except ValueError:
+            logger.warning(
+                "Ungültige bevorzugte Methode aus Settings '%s', verwende Standard",
+                settings.smart_scraper_preferred_method,
+            )
+            resolved_preferred = ScrapingMethod.CRAWL4AI_OLLAMA
+
+    scraper = SmartWebScraper(
+        preferred_method=resolved_preferred,
+        use_ai=use_ai,
+        progress_callback=progress_callback,
+        timeout=timeout,
+    )
+
+    candidates = [result for result in results if getattr(result, "website", None)]
+    total_to_scrape = min(len(candidates), max_scrapes)
+    attempts = 0
+    enriched = 0
+
+    if progress_callback and total_to_scrape:
+        await progress_callback(0, total_to_scrape)
 
     for result in results:
-        if scraped_count >= max_scrapes:
+        if attempts >= max_scrapes:
             break
 
         if not result.website:
             continue
 
+        if result.extra_data is None:
+            result.extra_data = {}
+
         logger.info(f"Scrape Website: {result.company_name} - {result.website}")
 
-        # Scrape Website
-        website_data = await scraper.scrape(result.website)
+        try:
+            website_data = await scraper.scrape(result.website)
+        except Exception as err:  # pragma: no cover - defensive logging
+            logger.warning(
+                "Smart Scraper Fehler für %s: %s", result.website, err, exc_info=True
+            )
+            website_data = None
 
         if website_data:
-            # Füge zu extra_data hinzu
             result.extra_data["website_data"] = website_data
 
-            # Update Felder wenn gefunden
             if website_data.get("contact_email") and not result.email:
                 result.email = website_data["contact_email"]
 
             if website_data.get("contact_phone") and not result.phone:
                 result.phone = website_data["contact_phone"]
 
-            # Füge Source hinzu
             result.add_source(
                 source_name="smart_scraper",
                 url=result.website,
                 data_fields=["website_data", "directors", "services"],
             )
 
-            scraped_count += 1
-            logger.info(f"✅ Website gescraped ({scraped_count}/{max_scrapes})")
+            enriched += 1
+            logger.info(f"✅ Website gescraped ({enriched}/{max_scrapes})")
 
+        attempts += 1
+
+        if progress_callback and total_to_scrape:
+            await progress_callback(attempts, total_to_scrape)
+
+    if progress_callback and total_to_scrape:
+        await progress_callback(total_to_scrape, total_to_scrape)
+
+    logger.info(
+        "Smart Scraper abgeschlossen: %s Ziele, %s angereichert", total_to_scrape, enriched
+    )
     logger.info(f"Smart Scraper Stats: {scraper.get_stats()}")
 
     return results

@@ -3,21 +3,26 @@ Scraping API Endpoints
 Start and manage scraping jobs
 """
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
+import logging
+from typing import Any
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.api.schemas import ScrapingJobCreate, ScrapingJobList, ScrapingJobResponse
 from app.core.dependencies import get_current_active_user
 from app.database.database import get_db
 from app.database.models import ScrapingJob, Source, User
+from app.workers.queue import cancel_rq_job, enqueue_scraping_job, get_queue_stats, get_rq_job_status
+from app.workers.scraping_worker import process_scraping_job_async
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 @router.post("/jobs", response_model=ScrapingJobResponse, status_code=status.HTTP_201_CREATED)
 async def create_scraping_job(
     job: ScrapingJobCreate,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -47,8 +52,19 @@ async def create_scraping_job(
     db.commit()
     db.refresh(db_job)
 
-    # Start job in background
-    background_tasks.add_task(run_scraping_job, db_job.id, job.model_dump())
+    # Enqueue job via RQ
+    rq_job_id = enqueue_scraping_job(
+        job_id=db_job.id,
+        config=job.model_dump(),
+        priority="normal",
+    )
+
+    # Persist RQ job ID in config for tracking
+    config_payload = dict(db_job.config or {})
+    config_payload["rq_job_id"] = rq_job_id
+    db_job.config = config_payload
+    db.commit()
+    db.refresh(db_job)
 
     return db_job
 
@@ -91,7 +107,15 @@ async def get_scraping_job(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Scraping job with id {job_id} not found"
         )
 
-    return job
+    queue_info: dict[str, Any] | None = None
+    if job.config and isinstance(job.config, dict) and job.config.get("rq_job_id"):
+        queue_info = get_rq_job_status(job.config["rq_job_id"])
+
+    response_data = ScrapingJobResponse.model_validate(job).model_dump()
+    if queue_info is not None:
+        response_data["queue"] = queue_info
+
+    return response_data
 
 
 @router.delete("/jobs/{job_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -119,6 +143,11 @@ async def cancel_scraping_job(
     job.status = "cancelled"
     db.commit()
 
+    if job.config and isinstance(job.config, dict) and job.config.get("rq_job_id"):
+        cancelled = cancel_rq_job(job.config["rq_job_id"])
+        if cancelled:
+            logger.info("Cancelled RQ job %s", job.config["rq_job_id"])
+
     return None
 
 
@@ -126,103 +155,15 @@ async def run_scraping_job(job_id: int, config: dict):
     """
     Background task to run scraping job
 
-    Args:
-        job_id: Scraping job ID
-        config: Job configuration
+    DEPRECATED: Use app.workers.scraping_worker.process_scraping_job instead.
+    Maintained for backward compatibility with tests.
     """
-    from datetime import datetime, timezone
+    await process_scraping_job_async(job_id, config)
 
-    from app.database.database import SessionLocal
 
-    db = SessionLocal()
-    job = None
-
-    try:
-        # Get job
-        job = db.query(ScrapingJob).filter(ScrapingJob.id == job_id).first()
-
-        if not job:
-            return
-
-        # Update status
-        job.status = "running"
-        job.started_at = datetime.now(timezone.utc)
-        db.commit()
-
-        # Import scraper based on source
-        source_name = config.get("source_name")
-
-        if source_name == "11880":
-            from app.scrapers.eleven_eighty import scrape_11880
-
-            results = await scrape_11880(
-                city=config["city"],
-                industry=config["industry"],
-                max_pages=config["max_pages"],
-                use_tor=config.get("use_tor", True),
-            )
-        elif source_name == "gelbe_seiten":
-            from app.scrapers.gelbe_seiten import scrape_gelbe_seiten
-
-            results = await scrape_gelbe_seiten(
-                city=config["city"],
-                industry=config["industry"],
-                max_pages=config["max_pages"],
-                use_tor=config.get("use_tor", True),
-            )
-        else:
-            raise ValueError(f"Unknown source: {source_name}")
-
-        # Save results to database
-        from app.database.models import Company
-
-        new_count = 0
-        updated_count = 0
-
-        for result in results:
-            # Check if company exists
-            existing = (
-                db.query(Company)
-                .filter(Company.company_name == result.company_name, Company.city == result.city)
-                .first()
-            )
-
-            if existing:
-                # Update existing
-                for key, value in result.to_dict().items():
-                    if value and key not in ["scraped_at"]:
-                        setattr(existing, key, value)
-                updated_count += 1
-            else:
-                # Create new
-                company = Company(**result.to_dict())
-                db.add(company)
-                new_count += 1
-
-        db.commit()
-
-        # Update job
-        job.status = "completed"
-        job.completed_at = datetime.now(timezone.utc)
-        # Convert naive datetime to timezone-aware for subtraction
-        started_at_aware = job.started_at.replace(tzinfo=timezone.utc) if job.started_at.tzinfo is None else job.started_at
-        job.duration_seconds = (job.completed_at - started_at_aware).total_seconds()
-        job.results_count = len(results)
-        job.new_companies = new_count
-        job.updated_companies = updated_count
-        db.commit()
-
-    except Exception as e:
-        # Update job with error (if job available)
-        if job is not None:
-            job.status = "failed"
-            job.error_message = str(e)
-            job.completed_at = datetime.now(timezone.utc)
-            if job.started_at:
-                # Convert naive datetime to timezone-aware for subtraction
-                started_at_aware = job.started_at.replace(tzinfo=timezone.utc) if job.started_at.tzinfo is None else job.started_at
-                job.duration_seconds = (job.completed_at - started_at_aware).total_seconds()
-            db.commit()
-
-    finally:
-        db.close()
+@router.get("/jobs/stats")
+async def get_queue_statistics(
+    current_user: User = Depends(get_current_active_user),
+) -> dict:
+    """Return basic queue statistics."""
+    return get_queue_stats()

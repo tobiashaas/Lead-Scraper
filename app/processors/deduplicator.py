@@ -208,8 +208,7 @@ class Deduplicator:
         )
 
         db.add(candidate)
-        db.commit()
-        db.refresh(candidate)
+        db.flush()
 
         logger.info(
             f"Created duplicate candidate: {company_a.company_name} <-> "
@@ -271,8 +270,7 @@ class Deduplicator:
         duplicate.is_duplicate = True
         duplicate.duplicate_of_id = primary.id
 
-        db.commit()
-        db.refresh(primary)
+        db.flush()
 
         logger.info("✅ Merge completed")
 
@@ -280,7 +278,7 @@ class Deduplicator:
 
     def scan_for_duplicates(self, db: Session, batch_size: int = 100) -> int:
         """
-        Scan all companies for duplicates
+        Scan all companies for duplicates using batched processing
 
         Args:
             db: Database session
@@ -291,26 +289,43 @@ class Deduplicator:
         """
         logger.info("Starting duplicate scan...")
 
-        # Get all active companies
-        companies = db.query(Company).filter(Company.is_active).all()
-
-        total = len(companies)
+        # Get total count
+        total = db.query(Company).filter(Company.is_active).count()
         candidates_created = 0
+        offset = 0
 
-        logger.info(f"Scanning {total} companies...")
+        logger.info(f"Scanning {total} companies in batches of {batch_size}...")
 
-        # Compare each company with others
-        for i, company in enumerate(companies):
-            if i % 10 == 0:
-                logger.info(f"Progress: {i}/{total}")
+        # Process in batches using offset/limit
+        while offset < total:
+            # Fetch batch
+            batch = (
+                db.query(Company)
+                .filter(Company.is_active)
+                .order_by(Company.id)
+                .limit(batch_size)
+                .offset(offset)
+                .all()
+            )
 
-            # Find duplicates
-            duplicates = self.find_duplicates(db, company, limit=5)
+            if not batch:
+                break
 
-            # Create candidates
-            for duplicate, _similarity in duplicates:
-                self.create_duplicate_candidate(db, company, duplicate)
-                candidates_created += 1
+            # Process each company in batch
+            for company in batch:
+                # Find duplicates
+                duplicates = self.find_duplicates(db, company, limit=5)
+
+                # Create candidates
+                for duplicate, _similarity in duplicates:
+                    self.create_duplicate_candidate(db, company, duplicate)
+                    candidates_created += 1
+
+            # Flush after each batch
+            db.flush()
+
+            offset += batch_size
+            logger.info(f"Progress: {offset}/{total} companies scanned, {candidates_created} candidates created")
 
         logger.info(f"✅ Scan completed: {candidates_created} duplicate candidates found")
 

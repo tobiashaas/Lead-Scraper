@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>[{{ environment|upper }}] Scraping Job Failed - {{ source }} ({{ city or "Unknown" }})</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background-color: #f6f7fb;
+        color: #1f2933;
+      }
+      .container {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      .card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(31, 35, 41, 0.08);
+        overflow: hidden;
+      }
+      .header {
+        background: linear-gradient(135deg, #d91e36, #8b0000);
+        padding: 24px 28px;
+        color: #ffffff;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .badge {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 4px 12px;
+        background-color: rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .section {
+        padding: 28px;
+        border-bottom: 1px solid #edf1f7;
+      }
+      .section:last-child {
+        border-bottom: none;
+      }
+      .section h2 {
+        margin: 0 0 16px;
+        font-size: 18px;
+        color: #111928;
+      }
+      .details-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .details-table td {
+        padding: 8px 0;
+        vertical-align: top;
+        font-size: 14px;
+      }
+      .details-table td:first-child {
+        font-weight: 600;
+        color: #4b5563;
+        width: 160px;
+      }
+      .error-box {
+        background-color: #fff5f5;
+        border: 1px solid #fca5a5;
+        border-radius: 8px;
+        padding: 16px 20px;
+        color: #7f1d1d;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 13px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        background-color: #1d4ed8;
+        color: #ffffff;
+      }
+      .button.secondary {
+        background-color: #64748b;
+      }
+      .footer {
+        padding: 20px 28px 32px;
+        font-size: 12px;
+        color: #6b7280;
+        background-color: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 12px;
+        }
+        .section,
+        .header,
+        .footer {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="header">
+          <h1>🚨 Scraping Job Failed</h1>
+          <div class="badge">{{ environment|upper }} • {{ severity|default("critical")|upper }}</div>
+        </div>
+
+        <div class="section">
+          <h2>Summary</h2>
+          <table class="details-table">
+            <tr>
+              <td>Job ID</td>
+              <td>{{ job_id }}</td>
+            </tr>
+            <tr>
+              <td>Source</td>
+              <td>{{ source }}</td>
+            </tr>
+            <tr>
+              <td>City</td>
+              <td>{{ city or "n/a" }}</td>
+            </tr>
+            <tr>
+              <td>Industry</td>
+              <td>{{ industry or "n/a" }}</td>
+            </tr>
+            <tr>
+              <td>Duration</td>
+              <td>{{ duration_seconds|default(0, true) }} seconds</td>
+            </tr>
+            <tr>
+              <td>Timestamp</td>
+              <td>{{ timestamp }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="section">
+          <h2>Error Details</h2>
+          <div class="error-box">
+            {{ error_message or "No error message provided." }}
+            {% if stacktrace %}
+
+            ---
+            {{ stacktrace }}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Metrics</h2>
+          <table class="details-table">
+            <tr>
+              <td>Results Count</td>
+              <td>{{ results_count|default('unknown') }}</td>
+            </tr>
+            <tr>
+              <td>Errors Count</td>
+              <td>{{ errors_count|default('unknown') }}</td>
+            </tr>
+            <tr>
+              <td>Auto-Merged Duplicates</td>
+              <td>{{ auto_merged_duplicates|default('unknown') }}</td>
+            </tr>
+            <tr>
+              <td>Queue Age</td>
+              <td>{{ oldest_queue_age|default('unknown') }} minutes</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="section">
+          <h2>Next Actions</h2>
+          <p style="margin: 0 0 12px; color: #374151">
+            Investigate using the quick links below. Resolve the root cause before retrying the job.
+          </p>
+          <div class="actions">
+            {% if dashboard_url %}
+            <a href="{{ dashboard_url }}" class="button">View Grafana Dashboard</a>
+            {% endif %} {% if sentry_url %}
+            <a href="{{ sentry_url }}" class="button secondary">Open Sentry Issue</a>
+            {% endif %} {% if logs_url %}
+            <a href="{{ logs_url }}" class="button secondary">Review Logs</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="footer">
+          <div>Environment: {{ environment }} | Severity: {{ severity|default("critical") }}</div>
+          <div>Generated at {{ timestamp }}</div>
+          {% if runbook_url %}
+          <div>Runbook: <a href="{{ runbook_url }}">{{ runbook_url }}</a></div>
+          {% endif %}
+          <div style="margin-top: 8px;">
+            You are receiving this alert because you are subscribed to KR Lead Scraper incident notifications.
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

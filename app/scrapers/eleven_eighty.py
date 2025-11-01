@@ -7,6 +7,7 @@ import logging
 import re
 from urllib.parse import quote_plus
 
+from typing import Any, AsyncGenerator, Awaitable, Callable
 from bs4 import BeautifulSoup
 
 from app.scrapers.base import BaseScraper, ScraperResult
@@ -237,7 +238,11 @@ class ElevenEightyScaper(BaseScraper):
 
 # Convenience Function
 async def scrape_11880(
-    city: str, industry: str, max_pages: int = 5, use_tor: bool = True
+    city: str,
+    industry: str,
+    max_pages: int = 5,
+    use_tor: bool = True,
+    progress_callback: Callable[[int, int], Awaitable[None]] | None = None,
 ) -> list[ScraperResult]:
     """
     Scraped 11880.com
@@ -252,4 +257,5 @@ async def scrape_11880(
         Liste von Ergebnissen
     """
     scraper = ElevenEightyScaper(use_tor=use_tor)
+    scraper.progress_callback = progress_callback
     return await scraper.scrape(city=city, industry=industry, max_pages=max_pages)

@@ -1,0 +1,200 @@
+name: Staging Deployment
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+env:
+  DOCKER_REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME_LOWER: ""
+  ENVIRONMENT: staging
+
+jobs:
+  build-staging:
+    name: Build Staging Image
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.tag.outputs.image_tag }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set lowercase image name
+        run: |
+          echo "IMAGE_NAME_LOWER=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+
+      - name: Set staging image tag
+        id: tag
+        run: |
+          IMAGE_TAG="staging-${GITHUB_SHA}"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_ENV"
+          echo "image_tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push staging image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          cache-from: type=gha,mode=max
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+          tags: |
+            ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:${{ steps.tag.outputs.image_tag }}
+            ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:staging-latest
+
+      - name: Quick vulnerability scan (non-blocking)
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:${{ steps.tag.outputs.image_tag }}
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+          vuln-type: 'os,library'
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-staging
+    environment:
+      name: staging
+      url: https://staging.your-domain.com
+    env:
+      IMAGE_TAG: ${{ needs.build-staging.outputs.image_tag }}
+      HEALTH_CHECK_RETRIES: 5
+      HEALTH_CHECK_INTERVAL: 30
+      DEPLOYMENT_TIMEOUT: 180
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Add staging host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "${{ secrets.STAGING_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Login to GHCR on remote server
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.STAGING_HOST }} "echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u ${{ github.actor }} --password-stdin"
+
+      - name: Copy deployment files
+        run: |
+          scp docker-compose.staging.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.STAGING_HOST }}:/opt/kr-scraper-staging/
+          scp scripts/deployment/deploy.sh ${{ secrets.DEPLOY_USER }}@${{ secrets.STAGING_HOST }}:/opt/kr-scraper-staging/
+          scp scripts/deployment/health_check.sh ${{ secrets.DEPLOY_USER }}@${{ secrets.STAGING_HOST }}:/opt/kr-scraper-staging/
+          scp scripts/deployment/rollback.sh ${{ secrets.DEPLOY_USER }}@${{ secrets.STAGING_HOST }}:/opt/kr-scraper-staging/
+
+      - name: Execute staging deployment
+        env:
+          IMAGE_NAME_LOWER: ${{ env.IMAGE_NAME_LOWER }}
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.STAGING_HOST }} 'cd /opt/kr-scraper-staging && chmod +x deploy.sh health_check.sh rollback.sh'
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.STAGING_HOST }} "cd /opt/kr-scraper-staging && IMAGE_NAME='${IMAGE_NAME_LOWER}' GHCR_PAT='${{ secrets.GITHUB_TOKEN }}' ./deploy.sh ${IMAGE_TAG} staging"
+
+      - name: Run staging health checks
+        run: |
+          for attempt in $(seq 1 ${HEALTH_CHECK_RETRIES}); do
+            echo "Staging health check attempt $attempt/${HEALTH_CHECK_RETRIES}"
+            STATUS=$(curl -s -o /tmp/staging-health.json -w "%{http_code}" --fail --max-time ${DEPLOYMENT_TIMEOUT} http://${{ secrets.STAGING_HOST }}:8080/health || true)
+            DETAIL_STATUS=$(curl -s -o /tmp/staging-health-detailed.json -w "%{http_code}" --fail --max-time ${DEPLOYMENT_TIMEOUT} http://${{ secrets.STAGING_HOST }}:8080/health/detailed || true)
+
+            if [ "$STATUS" = "200" ] && [ "$DETAIL_STATUS" = "200" ]; then
+              if jq -e '.status == "healthy"' /tmp/staging-health.json >/dev/null && jq -e '.status == "healthy"' /tmp/staging-health-detailed.json >/dev/null; then
+                echo "Staging deployment healthy."
+                exit 0
+              fi
+            fi
+
+            if [ "$attempt" -eq ${HEALTH_CHECK_RETRIES} ]; then
+              echo "::error::Staging health checks failed after ${HEALTH_CHECK_RETRIES} attempts."
+              exit 1
+            fi
+
+            echo "Retrying in ${HEALTH_CHECK_INTERVAL}s..."
+            sleep ${HEALTH_CHECK_INTERVAL}
+          done
+
+      - name: Trigger rollback on failure
+        if: ${{ failure() }}
+        run: |
+          echo "Staging deployment failed. Initiating rollback."
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.STAGING_HOST }} 'cd /opt/kr-scraper-staging && ./rollback.sh ${IMAGE_TAG} staging --force'
+          exit 1
+
+  integration-tests:
+    name: Integration & E2E Tests
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    env:
+      BASE_URL: https://staging.your-domain.com
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+
+      - name: Run integration tests
+        run: |
+          BASE_URL=${BASE_URL} pytest tests/integration/ -v --base-url=${BASE_URL}
+
+      - name: Run e2e tests
+        run: |
+          BASE_URL=${BASE_URL} pytest tests/e2e/ -v --base-url=${BASE_URL}
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-test-results-${{ github.sha }}
+          path: |
+            .pytest_cache
+            htmlcov
+            coverage.xml
+          retention-days: 7
+
+  notify:
+    name: Notify Outcome
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    if: always()
+    steps:
+      - name: Send notification
+        if: ${{ success() && secrets.SLACK_WEBHOOK_URL != '' }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"✅ Staging deployed: ${{ github.sha }}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Send failure notification
+        if: ${{ failure() && secrets.SLACK_WEBHOOK_URL != '' }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"❌ Staging deployment failed: ${{ github.sha }}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}

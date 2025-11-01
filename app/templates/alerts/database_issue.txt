@@ -1,0 +1,32 @@
+[{{ environment|upper }}] Database Issue - {{ issue_type|replace('_', ' ')|title() }}
+
+Summary
+=======
+Issue Type: {{ issue_type }}
+Database URL: {{ database_url or 'n/a' }}
+Duration: {{ duration_minutes|default(0, true) }} minutes
+Timestamp: {{ timestamp }}
+Environment: {{ environment }}
+
+Error Details
+=============
+{{ error_message or "No error message provided." }}
+{% if additional_context %}
+Additional Context:
+{% for key, value in additional_context.items() %}- {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+
+Recommended Actions
+===================
+- Check database logs for connection or resource issues.
+- Verify database instance is reachable from the application network.
+- Review recent deployment or migration activity.
+- Confirm disk space, memory, and CPU usage are within normal ranges.
+- Restart database service if appropriate and documented.
+
+Useful Links
+============
+- Health Check Endpoint: {{ health_check_url or 'n/a' }}
+- Grafana Dashboard: {{ dashboard_url or 'n/a' }}
+- Runbook: {{ runbook_url or 'n/a' }}

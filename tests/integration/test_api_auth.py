@@ -10,6 +10,8 @@ from app.core.security import create_access_token, get_password_hash
 from app.database.models import User, UserRole
 from app.core.config import settings
 
+pytestmark = pytest.mark.integration
+
 
 @pytest.fixture
 def test_user(db_session):
@@ -158,6 +160,54 @@ class TestAuthenticationEndpoints:
 
         response = client.post(
             "/api/v1/auth/login", json={"username": "locked", "password": "locked123"}
+        )
+
+        assert response.status_code == 403
+        assert "Account locked" in response.json()["detail"]
+
+    def test_login_locked_user_after_expiry(self, client, db_session):
+        """Test: Locked account can login once lock period has expired."""
+        locked_user = User(
+            username="locked_expired",
+            email="locked_expired@example.com",
+            hashed_password=get_password_hash("locked123"),
+            role=UserRole.USER,
+            is_active=True,
+            locked_until=datetime.now(timezone.utc) - timedelta(minutes=5),
+        )
+        db_session.add(locked_user)
+        db_session.commit()
+
+        response = client.post(
+            "/api/v1/auth/login", json={"username": "locked_expired", "password": "locked123"}
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert "access_token" in data
+
+        db_session.refresh(locked_user)
+        locked_until = locked_user.locked_until
+        assert locked_until is not None
+        if locked_until.tzinfo is None:
+            locked_until = locked_until.replace(tzinfo=timezone.utc)
+        assert locked_until <= datetime.now(timezone.utc)
+
+    def test_login_locked_user_with_naive_datetime(self, client, db_session):
+        """Test: Naive locked_until datetimes are handled and converted."""
+        locked_user = User(
+            username="locked_naive",
+            email="locked_naive@example.com",
+            hashed_password=get_password_hash("locked123"),
+            role=UserRole.USER,
+            is_active=True,
+            locked_until=(datetime.now(timezone.utc) + timedelta(minutes=30)).replace(tzinfo=None),
+        )
+        db_session.add(locked_user)
+        db_session.commit()
+
+        response = client.post(
+            "/api/v1/auth/login", json={"username": "locked_naive", "password": "locked123"}
         )
 
         assert response.status_code == 403

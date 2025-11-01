@@ -1,0 +1,83 @@
+{
+  "company_basic": {
+    "default": {
+      "template": "You are an AI assistant extracting company basics. Return valid JSON with the keys company_name, address, phone, email, website, services, directors, technologies, social_media, team_size. Extract ONLY facts explicitly stated. Content: {{content}}",
+      "system_message": "Extract company fundamentals from provided HTML without hallucinating.",
+      "examples": [
+        {
+          "input": "<h1>Acme Corp</h1><p>Phone: +1 555 0100</p>",
+          "output": {
+            "company_name": "Acme Corp",
+            "phone": "+1 555 0100",
+            "services": [],
+            "directors": []
+          }
+        }
+      ],
+      "parameters": {
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "num_predict": 1024
+      }
+    },
+    "llama3.2:1b": {
+      "template": "Extract ONLY the company facts listed. Reply with valid JSON using keys: company_name, address, phone, email, website, services, directors, technologies, social_media, team_size. If data missing use null or []. Do not infer. Content: {{content}}",
+      "system_message": "Concise fact extraction agent.",
+      "parameters": {
+        "temperature": 0.05,
+        "top_p": 0.8,
+        "num_predict": 768
+      }
+    }
+  },
+  "company_detailed": {
+    "default": {
+      "template": "Follow the steps to extract detailed company data:\n1. Identify the company name\n2. List all contact details\n3. Capture services and technologies\n4. Identify directors or key people\n5. Return valid JSON with keys company_name, address, phone, email, website, services, technologies, directors, social_media, team_size. Use null/[] for missing fields. Content: {{content}}",
+      "system_message": "Senior data analyst extracting structured company details.",
+      "examples": [],
+      "parameters": {
+        "temperature": 0.15,
+        "top_p": 0.85,
+        "num_predict": 1536
+      }
+    },
+    "llama3.2": {
+      "template": "You are tasked with extracting company data precisely. Output valid JSON with fields company_name, address, phone, email, website, services (list), technologies (list), directors (list of {name,title}), social_media (object), team_size (int|null). Only include facts explicitly stated. Provide chain-of-thought silently and final answer as JSON. Content: {{content}}",
+      "parameters": {
+        "temperature": 0.2,
+        "top_p": 0.9,
+        "num_predict": 2048
+      }
+    }
+  },
+  "employees": {
+    "default": {
+      "template": "Extract employees explicitly listed with their titles. Return JSON with keys company_name, employees (list of {name, title}). Ignore advisory boards or partners. Content: {{content}}",
+      "parameters": {
+        "temperature": 0.1,
+        "top_p": 0.8,
+        "num_predict": 1024
+      }
+    }
+  },
+  "services": {
+    "default": {
+      "template": "Identify services or offerings mentioned. Return JSON with keys company_name, services (list of strings), categories (list). Only include explicit services. Content: {{content}}",
+      "parameters": {
+        "temperature": 0.1,
+        "top_p": 0.85,
+        "num_predict": 1024
+      }
+    }
+  },
+  "contact_info": {
+    "default": {
+      "template": "Extract contact details from the HTML. Return JSON with keys company_name, address, phone, email, website, social_media. Use null for missing fields. Validate email/phone formats. Content: {{content}}",
+      "parameters": {
+        "temperature": 0.05,
+        "top_p": 0.8,
+        "num_predict": 768
+      }
+    }
+  }
+}

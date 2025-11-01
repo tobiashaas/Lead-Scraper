@@ -3,13 +3,12 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: kr-postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-kr_leads}
       POSTGRES_USER: ${POSTGRES_USER:-kr_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kr_password}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -21,7 +20,6 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: kr-redis
     ports:
       - "6379:6379"
     volumes:
@@ -36,7 +34,6 @@ services:
 
   ollama:
     image: ollama/ollama:latest
-    container_name: kr-ollama
     ports:
       - "11434:11434"
     volumes:
@@ -56,30 +53,133 @@ services:
     #           count: 1
     #           capabilities: [gpu]
 
-  # App Service (später aktivieren wenn Dockerfile existiert)
-  # app:
-  #   build: .
-  #   container_name: kr-app
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     - DATABASE_URL=postgresql://${POSTGRES_USER:-kr_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-kr_leads}
-  #     - REDIS_URL=redis://redis:6379
-  #     - OLLAMA_HOST=http://ollama:11434
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #     ollama:
-  #       condition: service_healthy
-  #   volumes:
-  #     - ./app:/app/app
-  #     - ./data:/app/data
-  #     - ./logs:/app/logs
-  #   restart: unless-stopped
+  app:
+    build: .
+    working_dir: /app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-kr_user}:${POSTGRES_PASSWORD:-kr_password}@postgres:5432/${POSTGRES_DB:-kr_leads}
+      - REDIS_URL=redis://redis:6379
+      - OLLAMA_HOST=http://ollama:11434
+      - ENVIRONMENT=development
+      - DEBUG=True
+      - LOG_LEVEL=INFO
+      - PROMETHEUS_ENABLED=True
+      - PROMETHEUS_MULTIPROC_DIR=/tmp/prometheus_multiproc
+      - METRICS_INCLUDE_LABELS=True
+      - METRICS_ENDPOINT_ENABLED=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./app:/app/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    labels:
+      com.kr-scraper.service: api
+    tmpfs:
+      - /tmp/prometheus_multiproc
+
+  worker:
+    build: .
+    working_dir: /app
+    command:
+      - sh
+      - -c
+      - |
+        python -c "from app.workers.queue import initialize_scheduled_jobs; initialize_scheduled_jobs()" || echo "Warning: Failed to initialize scheduled jobs"
+        rq worker scraping maintenance --url redis://redis:6379 --with-scheduler
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-kr_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-kr_leads}
+      - REDIS_URL=redis://redis:6379
+      - OLLAMA_HOST=http://ollama:11434
+      - ENVIRONMENT=development
+      - DEBUG=True
+      - LOG_LEVEL=INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./app:/app/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    labels:
+      com.kr-scraper.service: worker
+
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: kr-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alerts:/etc/prometheus/alerts:ro
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+
+  alertmanager:
+    image: prom/alertmanager:v0.26.0
+    container_name: kr-alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093'
+    ports:
+      - "9093:9093"
+    environment:
+      - ALERT_SMTP_HOST=${ALERT_SMTP_HOST:-localhost}
+      - ALERT_SMTP_PORT=${ALERT_SMTP_PORT:-587}
+      - ALERT_SMTP_USER=${ALERT_SMTP_USER:-}
+      - ALERT_SMTP_PASSWORD=${ALERT_SMTP_PASSWORD:-}
+      - ALERT_EMAIL_TO=${ALERT_EMAIL_TO:-admin@localhost}
+      - ALERT_SLACK_WEBHOOK_URL=${ALERT_SLACK_WEBHOOK_URL:-}
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ./monitoring/alertmanager/templates:/etc/alertmanager/templates:ro
+      - alertmanager_data:/alertmanager
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: kr-grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:3001
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    restart: unless-stopped
 
 volumes:
   postgres_data:
   redis_data:
   ollama_data:
+  prometheus_data:
+  grafana_data:
+  alertmanager_data:

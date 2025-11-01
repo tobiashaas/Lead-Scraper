@@ -1,0 +1,183 @@
+{
+  "id": null,
+  "uid": "kr-scraper-scraping",
+  "title": "KR Lead Scraper - Scraping Statistics",
+  "tags": ["scraping", "jobs", "workers"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Total Jobs",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "sum(scraping_jobs_total)"}
+      ],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}},
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0}
+    },
+    {
+      "type": "gauge",
+      "title": "Job Success Rate",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(scraping_jobs_total{status=\"completed\"}) / sum(scraping_jobs_total) * 100",
+          "legendFormat": "Success Rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {"color": "red", "value": 0},
+              {"color": "orange", "value": 80},
+              {"color": "green", "value": 95}
+            ]
+          }
+        }
+      },
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0}
+    },
+    {
+      "type": "stat",
+      "title": "Active Jobs",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "sum(scraping_jobs_active)"}
+      ],
+      "gridPos": {"h": 6, "w": 6, "x": 12, "y": 0}
+    },
+    {
+      "type": "stat",
+      "title": "Failed Jobs (24h)",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "sum(increase(scraping_jobs_total{status=\"failed\"}[24h]))"}
+      ],
+      "gridPos": {"h": 6, "w": 6, "x": 18, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "Job Duration (p95) by Source",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(scraping_job_duration_seconds_bucket[5m])) by (source, le))",
+          "legendFormat": "{{source}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 6}
+    },
+    {
+      "type": "heatmap",
+      "title": "Job Duration Distribution",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(rate(scraping_job_duration_seconds_bucket[5m])) by (le)",
+          "legendFormat": "{{le}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 14}
+    },
+    {
+      "type": "timeseries",
+      "title": "Results by Type",
+      "datasource": "Prometheus",
+      "stack": true,
+      "targets": [
+        {
+          "expr": "sum(rate(scraping_results_total{result_type=\"new_companies\"}[5m])) by (source)",
+          "legendFormat": "New - {{source}}"
+        },
+        {
+          "expr": "sum(rate(scraping_results_total{result_type=\"updated_companies\"}[5m])) by (source)",
+          "legendFormat": "Updated - {{source}}"
+        },
+        {
+          "expr": "sum(rate(scraping_results_total{result_type=\"errors\"}[5m])) by (source)",
+          "legendFormat": "Errors - {{source}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 22}
+    },
+    {
+      "type": "timeseries",
+      "title": "Duplicate Detection",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(rate(duplicates_detected_total{action=\"auto_merged\"}[5m]))",
+          "legendFormat": "Auto-merged"
+        },
+        {
+          "expr": "sum(rate(duplicates_detected_total{action=\"candidate_created\"}[5m]))",
+          "legendFormat": "Candidates"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 22}
+    },
+    {
+      "type": "piechart",
+      "title": "Smart Scraper Usage",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum by (mode) (smart_scraper_enrichments_total)"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 30}
+    },
+    {
+      "type": "timeseries",
+      "title": "Queue Size by Queue",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(queue_size) by (queue_name)",
+          "legendFormat": "{{queue_name}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 30}
+    },
+    {
+      "type": "timeseries",
+      "title": "Queue Throughput",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(rate(queue_jobs_total{status=\"finished\"}[5m])) by (queue_name)",
+          "legendFormat": "Finished - {{queue_name}}"
+        },
+        {
+          "expr": "sum(rate(queue_jobs_total{status=\"failed\"}[5m])) by (queue_name)",
+          "legendFormat": "Failed - {{queue_name}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 38}
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "source",
+        "type": "query",
+        "datasource": "Prometheus",
+        "definition": "label_values(scraping_jobs_total, source)",
+        "includeAll": true,
+        "multi": true
+      }
+    ]
+  }
+}

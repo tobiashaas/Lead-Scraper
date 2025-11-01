@@ -1,0 +1,57 @@
+groups:
+  - name: system_health
+    rules:
+      - alert: DatabaseUnhealthy
+        expr: up{service="database"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Database is unhealthy"
+          description: |
+            Database health check is failing. Verify connections, logs, and resource usage.
+
+      - alert: RedisUnhealthy
+        expr: up{service="redis"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis is unhealthy"
+          description: |
+            Redis service is not responding to Prometheus scrape requests.
+            Check container status and network connectivity.
+
+      - alert: OllamaUnhealthy
+        expr: up{service="ollama"} == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Ollama service is unhealthy"
+          description: |
+            Ollama health check failed for 5 minutes. AI-powered features may be degraded.
+
+      - alert: WorkerDown
+        expr: scraping_jobs_active == 0 and queue_size{queue_name="scraping"} > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "No active workers but scraping queue has jobs"
+          description: |
+            Scraping workers appear to be down while jobs are queued. Investigate worker nodes and RQ status.
+
+      - alert: HighMemoryUsage
+        expr: container_memory_usage_bytes{container="app"}
+          /
+          container_spec_memory_limit_bytes{container="app"}
+          > 0.90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage: {{ ($value * 100) | printf "%.1f" }}%"
+          description: |
+            Application container exceeds 90% of memory limit for 5 minutes.
+            Consider scaling resources or investigating memory leaks.

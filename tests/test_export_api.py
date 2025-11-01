@@ -4,6 +4,7 @@ Tests für Export API Endpoints
 
 from fastapi import status
 from fastapi.testclient import TestClient
+import pytest
 
 
 def test_export_companies_csv(client: TestClient, auth_headers: dict):
@@ -67,14 +68,14 @@ def test_export_companies_stats(client: TestClient, auth_headers: dict):
     assert isinstance(data["top_cities"], list)
 
 
-def test_export_csv_unauthorized(client: TestClient):
+def test_export_csv_unauthorized(client):
     """Test CSV Export ohne Authentication"""
     response = client.get("/api/v1/export/companies/csv")
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-def test_export_json_limit_validation(client: TestClient, auth_headers: dict):
+def test_export_json_limit_validation(client, auth_headers: dict):
     """Test JSON Export mit ungültigem Limit"""
     response = client.get("/api/v1/export/companies/json?limit=20000", headers=auth_headers)
 
@@ -85,7 +86,7 @@ def test_export_json_limit_validation(client: TestClient, auth_headers: dict):
     ]
 
 
-def test_export_stats_empty_database(client: TestClient, auth_headers: dict):
+def test_export_stats_empty_database(client, auth_headers: dict):
     """Test Stats Export mit leerer Datenbank"""
     response = client.get("/api/v1/export/companies/stats", headers=auth_headers)
 

@@ -4,6 +4,7 @@ User registration, login, token refresh, etc.
 """
 
 from datetime import datetime, timedelta, timezone
+import html
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -44,10 +45,12 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
 
     # Create new user
     hashed_password = get_password_hash(user_data.password)
+    sanitized_full_name = html.escape(user_data.full_name) if user_data.full_name else None
+
     db_user = User(
         username=user_data.username,
         email=user_data.email,
-        full_name=user_data.full_name,
+        full_name=sanitized_full_name,
         hashed_password=hashed_password,
         role=UserRole.USER,  # Default role
     )

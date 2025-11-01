@@ -19,8 +19,11 @@
 
 - [ ] Use strong PostgreSQL password
 - [ ] Enable PostgreSQL SSL connections
-- [ ] Set up automated backups
-- [ ] Configure connection pooling
+- [ ] Set up automated backups ✅ NEW
+- [ ] Configure connection pooling ✅ NEW
+- [ ] Test backup/restore procedures ✅ NEW
+- [ ] Enable backup encryption ✅ NEW
+- [ ] Configure cloud sync (S3) ✅ NEW
 - [ ] Add database indexes for performance
 - [ ] Set up read replicas (optional)
 
@@ -33,6 +36,242 @@
 - [ ] Set proper rate limits
 - [ ] Configure Redis password
 - [ ] Set up monitoring
+
+---
+
+## 🔐 Secrets Management {#secrets-management}
+
+### Overview
+
+Modern deployments should avoid shipping long-lived secrets via `.env` files. KR Lead Scraper supports pulling configuration from managed secrets providers, reducing the blast radius of credential compromise and enabling centralized auditing. The application-level abstraction in `app/core/secrets_manager.py` works with AWS Secrets Manager and HashiCorp Vault. Use `.env` only for local development.
+
+### Choosing a Provider
+
+| Provider | Pros | Cons | Recommended for |
+| --- | --- | --- | --- |
+| AWS Secrets Manager | Fully managed, integrates with IAM, native CloudTrail auditing | AWS-specific, per-request cost | AWS-hosted infrastructure (ECS, EC2, Lambda) |
+| HashiCorp Vault | Works across environments, rich policy model, dynamic credentials | Requires operating Vault, token lifecycle management | Hybrid/on-prem setups, teams already running Vault |
+
+### AWS Secrets Manager Setup
+
+1. Provision the secret:
+
+   ```bash
+   ./scripts/secrets/setup_aws_secrets.sh --secret-name kr-scraper/production --region eu-central-1 --create-policy
+   ```
+
+2. Attach the generated policy (or equivalent) to the compute role (EC2 or ECS task role):
+
+   ```bash
+   aws iam attach-role-policy --role-name kr-scraper-app --policy-arn arn:aws:iam::123456789012:policy/kr-scraper-production-read
+   ```
+
+3. Validate access:
+
+   ```bash
+   aws secretsmanager get-secret-value --region eu-central-1 --secret-id kr-scraper/production
+   ```
+
+4. Configure application environment variables:
+
+   ```bash
+   SECRETS_MANAGER=aws
+   AWS_REGION=eu-central-1
+   AWS_SECRETS_NAME=kr-scraper/production
+   ```
+
+### HashiCorp Vault Setup
+
+1. Bootstrap the secret payload:
+
+   ```bash
+   ./scripts/secrets/setup_vault_secrets.sh --vault-addr https://vault.example.com --vault-path secret/data/kr-scraper
+   ```
+
+2. The script prints a read/list application token once. Store it securely. You can issue additional tokens with:
+
+   ```bash
+   vault token create -policy=kr-scraper-app -ttl=24h
+   ```
+
+3. Verify the stored payload:
+
+   ```bash
+   vault kv get secret/data/kr-scraper
+   ```
+
+4. Configure application environment variables:
+
+   ```bash
+   SECRETS_MANAGER=vault
+   VAULT_ADDR=https://vault.example.com
+   VAULT_TOKEN=<application-token>
+   VAULT_PATH=secret/data/kr-scraper
+   ```
+
+### Secrets Rotation
+
+- Manual rotation:
+
+  ```bash
+  python scripts/secrets/rotate_secrets.py --provider aws --secret-name kr-scraper/production --region eu-central-1 --backup
+  ```
+
+  Swap `--provider vault --vault-addr ... --vault-token ... --vault-path ...` when using Vault.
+
+- Dry-run preview:
+
+  ```bash
+  python scripts/secrets/rotate_secrets.py --provider aws --secret-name kr-scraper/production --region eu-central-1 --dry-run --verbose
+  ```
+
+- Scheduled rotation: configure a cron job or systemd timer (e.g., every 90 days) invoking the rotation script with `--backup`.
+
+### Backup and Disaster Recovery
+
+- Set `BACKUP_ENCRYPTION_KEY` (Fernet key) before invoking `--backup`.
+- Backups are written to `scripts/secrets/backups/` as encrypted JSON. Treat them as sensitive and store off-host.
+- Restore workflow:
+
+  ```bash
+  python scripts/secrets/rotate_secrets.py --provider aws --rollback scripts/secrets/backups/secrets_backup_20251029_120000.json.enc --secret-name kr-scraper/production --region eu-central-1
+  ```
+
+  Restart dependent services after restoring secrets.
+
+### Migration from `.env`
+
+1. Run the appropriate setup script to seed the secrets manager.
+2. Update deployment environment variables to include `SECRETS_MANAGER` and provider-specific settings.
+3. Remove sensitive values from `.env` files and version control.
+4. Redeploy the application; confirm secrets load via logs (look for "Loaded secrets" message).
+
+### Monitoring & Auditing
+
+- AWS: enable CloudTrail and configure alerts on `GetSecretValue` or `UpdateSecret` activity.
+- Vault: enable audit devices (`vault audit enable file file_path=/var/log/vault_audit.log`) and review access patterns.
+
+### Troubleshooting
+
+<!-- markdownlint-disable MD032 MD034 -->
+
+- **AWS `AccessDeniedException`:** ensure IAM role has `secretsmanager:GetSecretValue` and `DescribeSecret` for `AWS_SECRETS_NAME`.
+- **Vault `permission denied`:** the application token must include `read` and `list` on `VAULT_PATH`.
+- **`cryptography` import errors:** install dependencies via `pip install -r requirements.txt` before running rotation.
+- **Missing Fernet key:** export `BACKUP_ENCRYPTION_KEY` before using `--backup` or `--rollback`.
+
+### Security Best Practices
+
+1. Rotate secrets at least every 90 days.
+2. Use least-privilege roles/policies for secret access.
+3. Maintain separate secret stores per environment (dev/staging/prod).
+4. Encrypt backups at rest and restrict access.
+5. Monitor access logs for anomalies and alert on unexpected reads.
+
+Refer to `docs/PRODUCTION.md#secrets-management` from other guides for the latest operational details.
+
+<!-- markdownlint-enable MD032 MD034 -->
+
+---
+
+## 🚀 Automated Deployment
+
+### Overview
+
+KR Lead Scraper verwendet automatisierte CI/CD-Pipelines für Deployments zu Staging und Production. Deployments werden via GitHub Actions getriggert und nutzen Blue-Green Deployment für Zero-Downtime.
+
+### Quick Reference
+
+**Deploy to Staging:**
+
+```bash
+git push origin develop
+# Automatic deployment via GitHub Actions
+```
+
+**Deploy to Production:**
+
+```bash
+git tag v1.2.3
+git push origin v1.2.3
+# Automatic deployment via GitHub Actions
+```
+
+**Manual Rollback:**
+
+- Gehe zu GitHub Actions → Rollback Workflow
+- Workflow mit Environment und Target-Version starten
+
+### Deployment Workflows
+
+- **Staging**: Automatisch bei Push zu `develop` Branch
+- **Production**: Automatisch bei Git Tag Push (Semantic Versioning)
+- **Rollback**: Manuell via GitHub Actions oder automatisch bei Failures
+
+### Deployment Strategy
+
+- **Blue-Green Deployment** für Production (Zero-Downtime)
+- **Rolling Deployment** für Staging (schneller)
+- **Automatische Health-Checks** nach jedem Deployment
+- **Automatischer Rollback** bei Health-Check-Failures
+
+### Health Checks
+
+**Multi-Layer Health Checks:**
+
+1. Container Health (Docker Health Check)
+2. API Health (`/health` endpoint)
+3. Detailed Health (`/health/detailed` endpoint)
+4. Smoke Tests (Authentication, Critical Endpoints)
+
+**Configuration:**
+
+- Production: 10 Retries, 30s Interval (max 5 Minuten)
+- Staging: 5 Retries, 30s Interval (max 2.5 Minuten)
+
+### Rollback Mechanism
+
+**Automatischer Rollback:**
+
+- Triggered bei Health-Check-Failures
+- Switched Traffic zurück zu previous version
+- Notification an Team
+
+**Manueller Rollback:**
+
+- Via GitHub Actions Rollback Workflow
+- Requires: Environment, Target-Version, Reason
+- Creates Incident Report
+
+### Monitoring
+
+- **GitHub Actions**: Deployment Logs und Status
+- **Sentry**: Error Tracking mit Deployment-Context
+- **Slack/Discord**: Deployment Notifications
+- **Server Logs**: `/opt/kr-scraper/logs/deployment.log`
+
+### Documentation
+
+Für detaillierte Deployment-Dokumentation siehe:
+
+- **[DEPLOYMENT.md](DEPLOYMENT.md)**: Umfassende Deployment-Anleitung
+- **[scripts/deployment/README.md](../scripts/deployment/README.md)**: Deployment-Scripts-Dokumentation
+
+### Deployment Checklist
+
+**Before Deployment:**
+
+- [ ] Tests passed locally
+- [ ] Tested in Staging
+- [ ] Reviewed CHANGELOG.md
+- [ ] Team notified
+
+**After Deployment:**
+
+- [ ] Health checks passed
+- [ ] Smoke tests passed
+- [ ] Monitoring checked (Sentry)
+- [ ] Team notified
 
 ---
 
@@ -94,6 +333,129 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 # OpenSSL
 openssl rand -base64 32
 ```
+
+---
+
+## ♻️ Connection Pooling
+
+### Production Settings
+
+```bash
+DB_POOL_SIZE=20          # Base pool size
+DB_MAX_OVERFLOW=40       # Total 60 connections
+DB_POOL_TIMEOUT=30       # Seconds to wait for a connection
+DB_POOL_RECYCLE=3600     # Recycle connections every hour
+DB_CONNECT_TIMEOUT=10    # psycopg connect timeout (seconds)
+DB_POOL_PRE_PING=True    # Validate connections before use
+```
+
+### Tuning Guidelines
+
+- Ensure `DB_POOL_SIZE + DB_MAX_OVERFLOW` stays below PostgreSQL `max_connections`.
+- Increase pool size for higher concurrency (e.g., 50/100 for heavy workloads).
+- Lower `DB_POOL_RECYCLE` when behind proxies/load balancers with aggressive idle timeouts.
+- Monitor live metrics via `app.database.database.get_pool_status()` and expose via health endpoints.
+
+### Operational Notes
+
+- Call `reset_connection_pool()` after database failovers or network incidents to rebuild the engine safely.
+- Pool diagnostics are logged when `DB_ECHO=True` or via custom health endpoints.
+
+---
+
+## 💾 Database Backup & Recovery
+
+Automated backups run on the maintenance RQ queue with daily, weekly, and monthly schedules. Each backup can be compressed, encrypted, uploaded to cloud storage, and verified by restoring to a temporary database.
+
+### Environment Configuration
+
+```bash
+BACKUP_ENABLED=True
+
+# Cron expressions (minute hour day month weekday)
+BACKUP_DAILY_SCHEDULE="0 3 * * *"
+BACKUP_WEEKLY_SCHEDULE="0 4 * * 0"
+BACKUP_MONTHLY_SCHEDULE="0 5 1 * *"
+
+# Retention policy (number of backups per tier)
+BACKUP_RETENTION_DAILY=7
+BACKUP_RETENTION_WEEKLY=4
+BACKUP_RETENTION_MONTHLY=12
+
+# Features
+BACKUP_COMPRESSION_ENABLED=True
+BACKUP_ENCRYPTION_ENABLED=True
+BACKUP_ENCRYPTION_KEY=<GPG_KEY_ID>
+BACKUP_CLOUD_SYNC_ENABLED=True
+BACKUP_CLOUD_PROVIDER=s3
+BACKUP_CLOUD_BUCKET=kr-scraper-backups-prod
+BACKUP_VERIFICATION_ENABLED=True
+```
+
+### Manual Operations
+
+```bash
+# Trigger manual backup (compression + verification)
+make backup-db
+
+# Daily/weekly profiles with cleanup
+make backup-daily
+make backup-weekly
+
+# List, verify, and restore backups
+make backup-list
+make backup-verify
+make restore-db
+make restore-test
+```
+
+Detailed runbook covering encryption, cloud sync, troubleshooting, and disaster recovery lives in [`docs/BACKUP.md`](BACKUP.md).
+
+---
+
+## 🤖 AI Model Configuration
+
+### Environment Toggles
+
+Aktiviere automatische Modellwahl und Prompt-Optimierung über `.env`:
+
+```bash
+OLLAMA_MODEL_SELECTION_ENABLED=true
+OLLAMA_MODEL_PRIORITY=llama3.2,llama3.2:1b,mistral,qwen2.5
+OLLAMA_MODEL_DEFAULT=llama3.2
+PROMPT_OPTIMIZATION_ENABLED=true
+```
+
+- `OLLAMA_MODEL_SELECTION_ENABLED` – Schaltet den `ModelSelector` frei, der Benchmarks & Latenzen berücksichtigt.
+- `OLLAMA_MODEL_PRIORITY` – Reihenfolge der Modelle für automatische Auswahl.
+- `PROMPT_OPTIMIZATION_ENABLED` – Nutzt optimierte Prompts aus `data/prompts/optimized_prompts.json`.
+- `OLLAMA_MODEL_DEFAULT` – Fallback-Modell, wenn Auswahl deaktiviert ist.
+
+### Empfohlene Profile
+
+| Workload                 | Einstellungen                                                                                  |
+|--------------------------|-----------------------------------------------------------------------------------------------|
+| Standard (balanced)      | `OLLAMA_MODEL_DEFAULT=llama3.2`, Selektion aktiv, Timeout 30s                                  |
+| High-Volume / Fast       | `OLLAMA_MODEL_PRIORITY=llama3.2:1b,llama3.2,mistral,qwen2.5`, Timeout 20s, Batch-Größe reduzieren |
+| Quality-Critical         | Selektion aktiv, Priorität `llama3.2,mistral`, Prompt-Optimierung aktiv, Timeout 45s           |
+| Ressourcenlimitiert      | Selektion aktiv, Priorität `qwen2.5,llama3.2:1b`, Timeout 25s, `SMART_SCRAPER_MAX_SITES=5`     |
+
+### Benchmarks & Reports
+
+Nutze die Makefile-Targets zur regelmäßigen Aktualisierung der Leistungsdaten:
+
+- `make benchmark-models` – Führt das Modell-Benchmarking gegen `data/benchmarks/test_cases.json` aus.
+- `make benchmark-report` – Gibt `data/benchmarks/benchmark_report.md` aus (Markdown-Zusammenfassung).
+- `make benchmark-prompts` – Optimiert Prompts und aktualisiert `data/prompts/optimized_prompts.json`.
+
+Siehe [`docs/AI-SCRAPING.md#model-benchmarks-performance`](AI-SCRAPING.md#model-benchmarks-performance) für Details zu Metriken, Methodik und Ergebnissen.
+
+### Produktionshinweise
+
+1. Aktualisiere Benchmarks nach Modell-/Prompt-Updates (`make benchmark-models`).
+2. Versioniere `data/benchmarks/ollama_results.json` und `data/prompts/optimized_prompts.json` für Reproduzierbarkeit.
+3. Überwache Latenzen (p95/p99) in Grafana; passe Prioritäten bei Ausreißern an.
+4. Hinterlege Modell- und Prompt-Variablen in Secrets Manager statt `.env` für Produktionsumgebungen.
 
 ---
 

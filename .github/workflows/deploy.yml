@@ -1,0 +1,353 @@
+name: Production Deployment
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+          - staging
+      skip_tests:
+        description: "Skip pre-deployment tests"
+        required: false
+        default: "false"
+        type: boolean
+
+env:
+  DOCKER_REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME_LOWER: ""
+  DEPLOYMENT_TIMEOUT: 300
+  HEALTH_CHECK_RETRIES: 10
+  HEALTH_CHECK_INTERVAL: 30
+
+jobs:
+  validate:
+    name: Validate Release Tag
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set-outputs.outputs.version }}
+      should_deploy: ${{ steps.set-outputs.outputs.should_deploy }}
+      environment: ${{ steps.resolve-environment.outputs.environment }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Resolve target environment
+        id: resolve-environment
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "environment=${{ inputs.environment }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "environment=production" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate tag format
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME}"
+          if [[ ! "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Tag $TAG_NAME does not follow semantic versioning (vMAJOR.MINOR.PATCH)."
+            exit 1
+          fi
+
+      - name: Extract version from tag
+        id: set-version
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Determine deployment eligibility
+        id: determine
+        run: |
+          SHOULD_DEPLOY="true"
+          VERSION="${VERSION:-}"
+
+          if [ -z "$VERSION" ]; then
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+              echo "::warning::Manual dispatch triggered without tag reference. Expecting existing release tag."
+              SHOULD_DEPLOY="false"
+            else
+              echo "::error::Unable to determine version from tag."
+              exit 1
+            fi
+          else
+            API_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/v$VERSION"
+            STATUS=$(curl -s -o /tmp/release.json -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$API_URL")
+            if [ "$STATUS" -eq 200 ]; then
+              echo "::warning::Release v$VERSION already exists. Skipping deployment."
+              SHOULD_DEPLOY="false"
+            fi
+          fi
+
+          echo "SHOULD_DEPLOY=$SHOULD_DEPLOY" >> "$GITHUB_ENV"
+
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          VERSION_VALUE="${VERSION:-${GITHUB_REF_NAME#v}}"
+          echo "version=$VERSION_VALUE" >> "$GITHUB_OUTPUT"
+          echo "should_deploy=${SHOULD_DEPLOY:-false}" >> "$GITHUB_OUTPUT"
+
+  build-and-push:
+    name: Build and Push Image
+    runs-on: ubuntu-latest
+    needs: validate
+    if: needs.validate.outputs.should_deploy == 'true'
+    env:
+      VERSION: ${{ needs.validate.outputs.version }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set lowercase image name
+        run: |
+          echo "IMAGE_NAME_LOWER=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          cache-from: type=gha,mode=max
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:v${{ env.VERSION }}
+            ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image-reference: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:v${{ env.VERSION }}
+          output-file: sbom-${{ env.VERSION }}.spdx.json
+
+      - name: Scan image for vulnerabilities
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:v${{ env.VERSION }}
+          format: 'table'
+          exit-code: '0'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          output: trivy-report-${{ env.VERSION }}.txt
+
+      - name: Upload security artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-security-artifacts-v${{ env.VERSION }}
+          path: |
+            sbom-${{ env.VERSION }}.spdx.json
+            trivy-report-${{ env.VERSION }}.txt
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    environment:
+      name: production
+      url: https://api.your-domain.com
+    env:
+      VERSION: ${{ needs.validate.outputs.version }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Add production host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "${{ secrets.PRODUCTION_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Login to GHCR on remote server
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} "echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u ${{ github.actor }} --password-stdin"
+
+      - name: Copy deployment files
+        run: |
+          scp docker-compose.prod.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }}:/opt/kr-scraper/
+          scp scripts/deployment/deploy.sh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }}:/opt/kr-scraper/
+          scp scripts/deployment/health_check.sh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }}:/opt/kr-scraper/
+          scp scripts/deployment/rollback.sh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }}:/opt/kr-scraper/
+
+      - name: Run deployment script (Blue-Green)
+        env:
+          IMAGE_NAME_LOWER: ${{ env.IMAGE_NAME_LOWER }}
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} 'cd /opt/kr-scraper && chmod +x deploy.sh health_check.sh rollback.sh'
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} "cd /opt/kr-scraper && IMAGE_NAME='${IMAGE_NAME_LOWER}' GHCR_PAT='${{ secrets.GITHUB_TOKEN }}' ./deploy.sh ${{ env.VERSION }} production"
+
+      - name: Post-deployment health checks
+        id: health-check
+        run: |
+          for attempt in $(seq 1 ${{ env.HEALTH_CHECK_RETRIES }}); do
+            echo "Health check attempt $attempt/${{ env.HEALTH_CHECK_RETRIES }}"
+            STATUS=$(curl -s -o /tmp/health.json -w "%{http_code}" --fail --max-time ${{ env.DEPLOYMENT_TIMEOUT }} https://api.your-domain.com/health || true)
+            DETAIL_STATUS=$(curl -s -o /tmp/health-detailed.json -w "%{http_code}" --fail --max-time ${{ env.DEPLOYMENT_TIMEOUT }} https://api.your-domain.com/health/detailed || true)
+
+            if [ "$STATUS" = "200" ] && [ "$DETAIL_STATUS" = "200" ]; then
+              if jq -e '.status == "healthy"' /tmp/health.json >/dev/null && jq -e '.status == "healthy"' /tmp/health-detailed.json >/dev/null; then
+                echo "Deployment health checks passed."
+                exit 0
+              fi
+            fi
+
+            if [ "$attempt" -eq ${{ env.HEALTH_CHECK_RETRIES }} ]; then
+              echo "::error::Health checks failed after ${{ env.HEALTH_CHECK_RETRIES }} attempts."
+              exit 1
+            fi
+
+            echo "Waiting ${{ env.HEALTH_CHECK_INTERVAL }} seconds before retry..."
+            sleep ${{ env.HEALTH_CHECK_INTERVAL }}
+          done
+
+      - name: Extract changelog for version
+        id: changelog
+        run: |
+          VERSION="${{ env.VERSION }}"
+          if grep -q "## \[${VERSION}\]" CHANGELOG.md; then
+            awk '/## \['"${VERSION}"'\]/,/## \[/{if (/## \[/ && !/## \['"${VERSION}"'\]/) exit; print}' CHANGELOG.md > release_notes.md
+          else
+            echo "Release v${VERSION}" > release_notes.md
+            echo "" >> release_notes.md
+            awk '/## \[Unreleased\]/,/^---$/{if (/^---$/) exit; print}' CHANGELOG.md >> release_notes.md
+          fi
+
+      - name: Download security artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-security-artifacts-v${{ env.VERSION }}
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: Release v${{ env.VERSION }}
+          body_path: release_notes.md
+
+      - name: Upload SBOM to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: sbom-${{ env.VERSION }}.spdx.json
+          asset_name: sbom-${{ env.VERSION }}.spdx.json
+          asset_content_type: application/json
+
+      - name: Upload vulnerability report to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: trivy-report-${{ env.VERSION }}.txt
+          asset_name: trivy-report-${{ env.VERSION }}.txt
+          asset_content_type: text/plain
+
+      - name: Notify deployment success
+        if: ${{ success() && secrets.SLACK_WEBHOOK_URL != '' }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"✅ Deployed v${{ env.VERSION }} to production.\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Trigger rollback on failure
+        if: ${{ failure() }}
+        run: |
+          echo "Health checks failed. Automatic rollback handled by deploy.sh trap."
+          if [ "${{ secrets.SLACK_WEBHOOK_URL }}" != "" ]; then
+            curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"🚨 Deployment v${{ env.VERSION }} failed. Automatic rollback executed by deploy.sh.\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+          fi
+          exit 1
+
+  smoke-tests:
+    name: Post-Deployment Smoke Tests
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    environment:
+      name: production
+      url: https://api.your-domain.com
+    steps:
+      - name: Run API smoke tests
+        run: |
+          set -e
+          echo "Checking /health"
+          curl -f https://api.your-domain.com/health
+          echo "Checking /docs"
+          curl -f https://api.your-domain.com/docs
+
+      - name: Validate authentication flow
+        run: |
+          set -e
+          AUTH_PAYLOAD='{"username":"staging_bot","password":"${{ secrets.SMOKE_TEST_PASSWORD }}"}'
+          TOKEN_RESPONSE=$(curl -s -X POST -H "Content-Type: application/json" -d "$AUTH_PAYLOAD" https://api.your-domain.com/api/v1/auth/login)
+          TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r '.access_token')
+          if [ "$TOKEN" = "null" ] || [ -z "$TOKEN" ]; then
+            echo "::error::Failed to obtain auth token"
+            exit 1
+          fi
+          curl -f -H "Authorization: Bearer $TOKEN" https://api.your-domain.com/api/v1/companies
+
+      - name: Validate infrastructure connectivity
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} "docker exec kr-app-prod python -c 'from app.database.database import engine; engine.connect()'"
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} "docker exec kr-app-prod python -c 'from app.core.config import settings; import redis; redis.from_url(settings.redis_url).ping()'"
+
+      - name: Check secrets manager integration
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} "docker logs kr-app-prod 2>&1 | grep -q 'Loaded secrets from' || echo '::warning::Secrets Manager confirmation not found in logs.'"
+
+      - name: Run health check script
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} "cd /opt/kr-scraper && SMOKE_TEST_PASSWORD='${{ secrets.SMOKE_TEST_PASSWORD }}' ./health_check.sh production --verbose"
+
+  cleanup:
+    name: Cleanup and Reporting
+    runs-on: ubuntu-latest
+    needs: smoke-tests
+    if: always()
+    steps:
+      - name: Cleanup remote resources
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} "docker image prune -af --filter 'until=240h' || true"
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} "find /opt/kr-scraper/logs -type f -name 'deployment.log' -size +50M -exec truncate -s 0 {} +"
+
+      - name: Archive deployment logs
+        run: |
+          mkdir -p artifacts
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.PRODUCTION_HOST }} "tar czf - -C /opt/kr-scraper logs" > artifacts/production-logs.tar.gz
+
+      - name: Upload deployment logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-deployment-logs
+          path: artifacts/production-logs.tar.gz

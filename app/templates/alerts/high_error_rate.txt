@@ -1,0 +1,29 @@
+[{{ environment|upper }}] High Error Rate Alert - {{ error_rate }}% (Threshold: {{ threshold }}%)
+
+Summary
+=======
+Current Error Rate: {{ error_rate }}%
+Threshold: {{ threshold }}%
+Time Window: {{ time_window }}
+Total Requests: {{ total_requests }}
+Error Count: {{ error_count }}
+Timestamp: {{ timestamp }}
+
+Top Endpoints
+=============
+{% if top_endpoints %}{% for item in top_endpoints %}- {{ item.endpoint }} — {{ item.error_rate }}% errors ({{ item.count }} errors)
+{% endfor %}{% else %}- No endpoint breakdown available.
+{% endif %}
+
+Recommended Actions
+===================
+- Review Sentry for recent error spikes.
+- Inspect deployment status and recent releases.
+- Check API logs for stack traces and error context.
+- Validate upstream services and dependencies.
+
+Useful Links
+============
+- Prometheus Query: {{ prometheus_url or "n/a" }}
+- Grafana Dashboard: {{ dashboard_url or "n/a" }}
+- Logs: {{ logs_url or "n/a" }}

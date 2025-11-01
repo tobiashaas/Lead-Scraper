@@ -1,13 +1,24 @@
-"""
-Health Check Endpoints
-"""
+"""Health and metrics endpoints for the API."""
 
 from datetime import datetime, timezone
+import asyncio
+import os
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Response, status
+from prometheus_client import (
+    CollectorRegistry,
+    CONTENT_TYPE_LATEST,
+    REGISTRY,
+    generate_latest,
+    multiprocess,
+)
 
 from app.core.config import settings
 from app.database.database import check_db_connection
+from app.utils.metrics import update_db_pool_metrics, update_queue_metrics
+from app.utils.notifications import get_notification_service
+
+ALERT_CACHE_TTL_SECONDS = 300
 
 router = APIRouter()
 
@@ -63,11 +74,111 @@ async def detailed_health_check():
     # Overall status
     overall_healthy = all(status == "healthy" for status in checks.values())
 
-    return {
+    response = {
         "status": "healthy" if overall_healthy else "degraded",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "checks": checks,
     }
+
+    if settings.alerting_enabled and not overall_healthy:
+        await _dispatch_dependency_alerts(checks)
+
+    return response
+
+
+async def _dispatch_dependency_alerts(checks: dict[str, str]) -> None:
+    """Send notifications for failing dependencies with rate limiting."""
+
+    failing_components = {
+        name: status
+        for name, status in checks.items()
+        if status != "healthy"
+    }
+
+    if not failing_components:
+        return
+
+    notification_service = get_notification_service()
+
+    redis_client = await notification_service.get_redis_client()
+    now_iso = datetime.now(timezone.utc).isoformat()
+
+    async def _should_send(component: str) -> bool:
+        if not redis_client:
+            return True
+        key = f"health_alert:{settings.environment}:{component}"
+        cached = await redis_client.get(key)
+        if cached:
+            return False
+        await redis_client.setex(key, ALERT_CACHE_TTL_SECONDS, now_iso)
+        return True
+
+    tasks = []
+
+    for component, status in failing_components.items():
+        if not await _should_send(component):
+            continue
+
+        context = {
+            "alert_type": f"{component}_issue",
+            "severity": "critical" if component in {"database", "redis"} else "warning",
+            "issue_type": status if "unhealthy" in status else "health_check_failed",
+            "environment": settings.environment,
+            "timestamp": now_iso,
+            "dedup_key": f"health:{settings.environment}:{component}",
+        }
+
+        if component == "database":
+            context.update(
+                {
+                    "database_url": settings.database_url,
+                    "error_message": status,
+                    "health_check_url": "{}/health/detailed".format(settings.api_base_url)
+                    if getattr(settings, "api_base_url", None)
+                    else None,
+                }
+            )
+            tasks.append(
+                notification_service.send_templated_alert("database_issue", context)
+            )
+        elif component == "redis":
+            context.update(
+                {
+                    "issue_type": "redis_unhealthy",
+                    "error_message": status,
+                }
+            )
+            tasks.append(
+                notification_service.send_alert(
+                    alert_type="redis_issue",
+                    severity=context["severity"],
+                    subject=f"Redis issue detected ({settings.environment})",
+                    message=f"Redis health check reported: {status}",
+                    **context,
+                )
+            )
+        else:
+            context.update(
+                {
+                    "alert_type": f"{component}_issue",
+                    "error_message": status,
+                }
+            )
+            tasks.append(
+                notification_service.send_alert(
+                    alert_type=context["alert_type"],
+                    severity=context["severity"],
+                    subject=f"{component.title()} health degraded ({settings.environment})",
+                    message=f"{component.title()} status: {status}",
+                    **context,
+                )
+            )
+
+    if tasks:
+        try:
+            await asyncio.gather(*tasks)
+        except Exception:  # pragma: no cover - best effort
+            pass
 
 
 @router.get("/health/ready", status_code=status.HTTP_200_OK)
@@ -89,3 +200,23 @@ async def liveness_check():
     Liveness check for Kubernetes
     """
     return {"status": "alive", "timestamp": datetime.now(timezone.utc).isoformat()}
+
+
+@router.get("/metrics")
+async def metrics() -> Response:
+    """Expose Prometheus metrics for scraping by Prometheus servers."""
+
+    if not (settings.prometheus_enabled and settings.metrics_endpoint_enabled):
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    update_db_pool_metrics()
+    update_queue_metrics()
+
+    if os.environ.get("PROMETHEUS_MULTIPROC_DIR"):
+        registry = CollectorRegistry()
+        multiprocess.MultiProcessCollector(registry)
+        metrics_payload = generate_latest(registry)
+    else:
+        metrics_payload = generate_latest(REGISTRY)
+
+    return Response(content=metrics_payload, media_type=CONTENT_TYPE_LATEST)

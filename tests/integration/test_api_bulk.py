@@ -7,6 +7,8 @@ import pytest
 from app.api import bulk as bulk_module
 from app.database.models import Company, LeadQuality, LeadStatus
 
+pytestmark = pytest.mark.integration
+
 
 @pytest.fixture
 def create_companies(db_session) -> Callable[[int], list[Company]]:
@@ -129,6 +131,35 @@ class TestBulkEndpoints:
         assert response.status_code == 400
         assert response.json()["detail"] == "Invalid lead_quality value"
 
+    def test_bulk_update_companies_requires_updates(
+        self, create_companies, client, auth_headers
+    ) -> None:
+        companies = create_companies(1)
+        payload = {
+            "company_ids": [companies[0].id],
+            "updates": {},
+        }
+
+        response = client.post("/api/v1/bulk/companies/update", json=payload, headers=auth_headers)
+
+        assert response.status_code == 400
+        assert response.json()["detail"] == "No update fields provided"
+
+    def test_bulk_update_companies_all_invalid_ids(
+        self, create_companies, client, auth_headers
+    ) -> None:
+        payload = {
+            "company_ids": [99999, 88888],
+            "updates": {"industry": "Consulting"},
+        }
+
+        response = client.post("/api/v1/bulk/companies/update", json=payload, headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["updated_count"] == 0
+        assert set(data["failed_ids"]) == {99999, 88888}
+
     def test_bulk_update_companies_no_ids(self, client, auth_headers) -> None:
         payload = {
             "company_ids": [],
@@ -177,6 +208,16 @@ class TestBulkEndpoints:
         db_session.expire_all()
         remaining = db_session.query(Company).filter(Company.id.in_(company_ids)).all()
         assert remaining == []
+
+    def test_bulk_delete_companies_all_missing_ids(self, client, auth_headers) -> None:
+        payload = {"company_ids": [111111, 222222], "soft_delete": True}
+
+        response = client.post("/api/v1/bulk/companies/delete", json=payload, headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["deleted_count"] == 0
+        assert set(data["failed_ids"]) == {111111, 222222}
 
     def test_bulk_delete_companies_with_missing_ids(
         self, create_companies, client, auth_headers
@@ -271,6 +312,19 @@ class TestBulkEndpoints:
 
         assert response.status_code == 400
         assert response.json()["detail"] == "No company IDs provided"
+
+    def test_bulk_change_status_all_missing_ids(self, client, auth_headers) -> None:
+        payload = {
+            "company_ids": [555555, 666666],
+            "lead_status": LeadStatus.CONTACTED.value,
+        }
+
+        response = client.post("/api/v1/bulk/companies/status", json=payload, headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["updated_count"] == 0
+        assert data["changes"] == {"lead_status": LeadStatus.CONTACTED.value}
 
     def test_bulk_restore_companies_success(
         self, create_companies, client, auth_headers, db_session

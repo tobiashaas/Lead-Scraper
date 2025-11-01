@@ -2,11 +2,11 @@
 Tests für Webhooks API Endpoints
 """
 
+import pytest
 from fastapi import status
-from fastapi.testclient import TestClient
 
 
-def test_create_webhook(client: TestClient, auth_headers: dict):
+def test_create_webhook(client, auth_headers):
     """Test Webhook erstellen"""
     webhook_data = {
         "url": "https://example.com/webhook",
@@ -24,7 +24,7 @@ def test_create_webhook(client: TestClient, auth_headers: dict):
     assert data["active"] is True
 
 
-def test_create_webhook_with_secret(client: TestClient, auth_headers: dict):
+def test_create_webhook_with_secret(client, auth_headers):
     """Test Webhook mit Secret erstellen"""
     webhook_data = {
         "url": "https://example.com/webhook",
@@ -42,7 +42,7 @@ def test_create_webhook_with_secret(client: TestClient, auth_headers: dict):
     assert "secret" not in data
 
 
-def test_list_webhooks(client: TestClient, auth_headers: dict):
+def test_list_webhooks(client, auth_headers):
     """Test Webhooks auflisten"""
     response = client.get("/api/v1/webhooks/", headers=auth_headers)
 
@@ -52,7 +52,7 @@ def test_list_webhooks(client: TestClient, auth_headers: dict):
     assert isinstance(data, list)
 
 
-def test_get_webhook(client: TestClient, auth_headers: dict):
+def test_get_webhook(client, auth_headers):
     """Test einzelnen Webhook abrufen"""
     # Create webhook first
     webhook_data = {
@@ -74,14 +74,14 @@ def test_get_webhook(client: TestClient, auth_headers: dict):
     assert data["url"] == webhook_data["url"]
 
 
-def test_get_nonexistent_webhook(client: TestClient, auth_headers: dict):
+def test_get_nonexistent_webhook(client, auth_headers):
     """Test nicht existierenden Webhook abrufen"""
     response = client.get("/api/v1/webhooks/999999", headers=auth_headers)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_update_webhook(client: TestClient, auth_headers: dict):
+def test_update_webhook(client, auth_headers):
     """Test Webhook aktualisieren"""
     # Create webhook
     webhook_data = {
@@ -104,10 +104,15 @@ def test_update_webhook(client: TestClient, auth_headers: dict):
     data = response.json()
 
     assert data["active"] is False
-    assert "job.failed" in data["events"]
+    assert set(data["events"]) == {"job.completed", "job.failed"}
+
+    # Verify update
+    get_response = client.get(f"/api/v1/webhooks/{webhook_id}", headers=auth_headers)
+    assert get_response.status_code == status.HTTP_200_OK
+    assert get_response.json()["active"] is False
 
 
-def test_delete_webhook(client: TestClient, auth_headers: dict):
+def test_delete_webhook(client, auth_headers):
     """Test Webhook löschen"""
     # Create webhook
     webhook_data = {
@@ -131,7 +136,7 @@ def test_delete_webhook(client: TestClient, auth_headers: dict):
     assert get_response.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_test_webhook(client: TestClient, auth_headers: dict):
+def test_test_webhook(client, auth_headers):
     """Test Webhook testen"""
     # Create webhook
     webhook_data = {
@@ -151,20 +156,20 @@ def test_test_webhook(client: TestClient, auth_headers: dict):
     assert "message" in data
 
 
-def test_webhook_unauthorized(client: TestClient):
+def test_webhook_unauthorized(client):
     """Test Webhook Operations ohne Authentication"""
-    webhook_data = {
-        "url": "https://example.com/test",
-        "events": ["job.completed"],
-        "active": True,
-    }
+    # Test ohne Authentifizierung
+    response = client.get("/api/v1/webhooks/")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    response = client.post("/api/v1/webhooks/", json=webhook_data)
+    response = client.post("/api/v1/webhooks/", json={"url": "https://example.com"})
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
+    response = client.get("/api/v1/webhooks/123")
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-def test_create_webhook_invalid_url(client: TestClient, auth_headers: dict):
+def test_create_webhook_invalid_url(client, auth_headers):
     """Test Webhook mit ungültiger URL"""
     webhook_data = {
         "url": "not-a-valid-url",

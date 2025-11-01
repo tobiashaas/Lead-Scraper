@@ -8,7 +8,7 @@ import logging
 import random
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any
+from typing import Any, AsyncGenerator, Awaitable, Callable, Iterable, Literal
 
 from app.core.config import settings
 from app.utils.browser_manager import PlaywrightBrowserManager
@@ -125,7 +125,14 @@ class BaseScraper(ABC):
     - parse_detail_page()
     """
 
-    def __init__(self, name: str, domain: str, use_tor: bool = True, use_playwright: bool = False):
+    def __init__(
+        self,
+        name: str,
+        domain: str,
+        use_tor: bool = True,
+        use_playwright: bool = False,
+        progress_callback: Callable[[int, int], Awaitable[None]] | None = None,
+    ):
         """
         Initialisiert Base Scraper
 
@@ -145,6 +152,8 @@ class BaseScraper(ABC):
 
         # Statistiken
         self.stats = {"requests": 0, "successes": 0, "errors": 0, "results": 0}
+
+        self.progress_callback = progress_callback
 
         logger.info(
             f"Scraper '{self.name}' initialisiert "
@@ -179,6 +188,12 @@ class BaseScraper(ABC):
 
             logger.info(f"Gefunden: {len(search_urls)} Such-URLs")
 
+            if self.progress_callback:
+                try:
+                    await self.progress_callback(0, max(len(search_urls), 1))
+                except Exception as exc:  # pragma: no cover - best effort logging
+                    logger.warning("Progress callback failed", exc_info=exc)
+
             # 2. Suchergebnisse scrapen
             all_results = []
 
@@ -196,6 +211,12 @@ class BaseScraper(ABC):
                     self.stats["results"] += len(results)
                     logger.info(f"Gefunden: {len(results)} Ergebnisse")
 
+                if self.progress_callback:
+                    try:
+                        await self.progress_callback(i, len(search_urls))
+                    except Exception as exc:  # pragma: no cover - best effort logging
+                        logger.warning("Progress callback failed", exc_info=exc)
+
                 # Random Delay zwischen Requests
                 await self._random_delay()
 
@@ -209,6 +230,13 @@ class BaseScraper(ABC):
                 f"(Requests: {self.stats['requests']}, "
                 f"Errors: {self.stats['errors']})"
             )
+
+            if self.progress_callback:
+                try:
+                    total = len(search_urls) or 1
+                    await self.progress_callback(total, total)
+                except Exception as exc:  # pragma: no cover - best effort logging
+                    logger.warning("Progress callback failed", exc_info=exc)
 
             return all_results
 
@@ -225,6 +253,8 @@ class BaseScraper(ABC):
         Returns:
             Liste von Ergebnissen
         """
+        last_error: Exception | None = None
+
         for attempt in range(1, self.max_retries + 1):
             try:
                 self.stats["requests"] += 1
@@ -239,6 +269,7 @@ class BaseScraper(ABC):
 
             except Exception as e:
                 self.stats["errors"] += 1
+                last_error = e
                 logger.error(f"Fehler beim Scrapen (Versuch {attempt}/{self.max_retries}): {e}")
 
                 if attempt < self.max_retries:
@@ -247,6 +278,8 @@ class BaseScraper(ABC):
                     await asyncio.sleep(wait_time)
                 else:
                     logger.error(f"Max Retries erreicht für URL: {url}")
+                    if last_error is not None:
+                        raise last_error
                     return []
 
         return []

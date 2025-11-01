@@ -1,0 +1,37 @@
+[{{ environment|upper }}] Scraping Job Failed - {{ source }} ({{ city or "unknown location" }})
+
+Summary
+=======
+Job ID: {{ job_id }}
+Source: {{ source }}
+City: {{ city or "n/a" }}
+Industry: {{ industry or "n/a" }}
+Duration: {{ duration_seconds|default(0, true) }} seconds
+Timestamp: {{ timestamp }}
+Environment: {{ environment }}
+
+Error Details
+=============
+{{ error_message or "No error message provided." }}
+{% if stacktrace %}
+Stack Trace:
+{{ stacktrace }}
+{% endif %}
+
+Metrics
+=======
+Results Count: {{ results_count|default('unknown') }}
+Errors Count: {{ errors_count|default('unknown') }}
+Auto-Merged Duplicates: {{ auto_merged_duplicates|default('unknown') }}
+Oldest Queue Age: {{ oldest_queue_age|default('unknown') }} minutes
+
+Actions
+=======
+- Review Grafana dashboard: {{ dashboard_url or "n/a" }}
+- Inspect Sentry issue: {{ sentry_url or "n/a" }}
+- Check application logs: {{ logs_url or "n/a" }}
+- Retry scraping job after mitigation.
+
+Need Help?
+==========
+Contact the on-call engineer or reference the runbook: {{ runbook_url or "n/a" }}

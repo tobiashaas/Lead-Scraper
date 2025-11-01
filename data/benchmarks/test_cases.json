@@ -1,0 +1,421 @@
+[
+  {
+    "id": "TC001",
+    "name": "Simple contact details",
+    "complexity": "simple",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Alpha Consulting GmbH</h1><p>Adresse: Königstrasse 1, 70173 Stuttgart</p><p>Telefon: +49 711 123456</p><p>E-Mail: info@alpha-consulting.de</p><p>Website: https://www.alpha-consulting.de</p></body></html>",
+    "expected_data": {
+      "company_name": "Alpha Consulting GmbH",
+      "address": "Königstrasse 1, 70173 Stuttgart",
+      "phone": "+49 711 123456",
+      "email": "info@alpha-consulting.de",
+      "website": "https://www.alpha-consulting.de",
+      "services": ["Consulting"],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 208, "language": "de"}
+  },
+  {
+    "id": "TC002",
+    "name": "Minimal company",
+    "complexity": "simple",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Beta Ventures</h1><p>Leading innovation.</p></body></html>",
+    "expected_data": {
+      "company_name": "Beta Ventures",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 96, "language": "en"}
+  },
+  {
+    "id": "TC003",
+    "name": "Company with website and email",
+    "complexity": "simple",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Gamma IT Services</h1><p>Contact us at <a href=\"mailto:service@gamma-it.de\">service@gamma-it.de</a></p><p>Visit <a href=\"https://gamma-it.de\">https://gamma-it.de</a></p></body></html>",
+    "expected_data": {
+      "company_name": "Gamma IT Services",
+      "address": null,
+      "phone": null,
+      "email": "service@gamma-it.de",
+      "website": "https://gamma-it.de",
+      "services": ["IT Services"],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 181, "language": "de"}
+  },
+  {
+    "id": "TC004",
+    "name": "Company with umlauts",
+    "complexity": "simple",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Müller & Söhne AG</h1><p>Adresse: Überlinger Straße 12, 88662 Überlingen</p></body></html>",
+    "expected_data": {
+      "company_name": "Müller & Söhne AG",
+      "address": "Überlinger Straße 12, 88662 Überlingen",
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 137, "language": "de"}
+  },
+  {
+    "id": "TC005",
+    "name": "Short snippet",
+    "complexity": "simple",
+    "content_type": "company_page",
+    "html_content": "<h1>Delta Labs</h1>",
+    "expected_data": {
+      "company_name": "Delta Labs",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 20, "language": "en"}
+  },
+  {
+    "id": "TC006",
+    "name": "Directors listed",
+    "complexity": "medium",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Epsilon Digital</h1><ul><li>Managing Director: Lara Schmidt</li><li>CTO: Jonas Weber</li></ul></body></html>",
+    "expected_data": {
+      "company_name": "Epsilon Digital",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [
+        {"name": "Lara Schmidt", "title": "Managing Director"},
+        {"name": "Jonas Weber", "title": "CTO"}
+      ],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 180, "language": "de"}
+  },
+  {
+    "id": "TC007",
+    "name": "Services list",
+    "complexity": "medium",
+    "content_type": "services_page",
+    "html_content": "<html><body><h1>Zeta Solutions</h1><h2>Services</h2><ul><li>Cloud Migration</li><li>Managed Security</li><li>DevOps Automation</li></ul></body></html>",
+    "expected_data": {
+      "company_name": "Zeta Solutions",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": ["Cloud Migration", "Managed Security", "DevOps Automation"],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 201, "language": "en"}
+  },
+  {
+    "id": "TC008",
+    "name": "Full contact section",
+    "complexity": "medium",
+    "content_type": "contact_page",
+    "html_content": "<html><body><h1>Theta Media</h1><p>Phone: +49 30 987654</p><p>Email: hello@theta-media.com</p><p>Address: Friedrichstrasse 99, 10117 Berlin</p><p>Website: https://theta-media.com</p></body></html>",
+    "expected_data": {
+      "company_name": "Theta Media",
+      "address": "Friedrichstrasse 99, 10117 Berlin",
+      "phone": "+49 30 987654",
+      "email": "hello@theta-media.com",
+      "website": "https://theta-media.com",
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 229, "language": "de"}
+  },
+  {
+    "id": "TC009",
+    "name": "Social media links",
+    "complexity": "medium",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Iota Ventures</h1><a href=\"https://linkedin.com/company/iota\">LinkedIn</a><a href=\"https://twitter.com/iotaventures\">Twitter</a></body></html>",
+    "expected_data": {
+      "company_name": "Iota Ventures",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {
+        "linkedin": "https://linkedin.com/company/iota",
+        "twitter": "https://twitter.com/iotaventures"
+      },
+      "team_size": null
+    },
+    "metadata": {"content_length": 174, "language": "en"}
+  },
+  {
+    "id": "TC010",
+    "name": "Technologies listed",
+    "complexity": "medium",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Kappa Tech</h1><p>We work with React, Node.js, AWS</p></body></html>",
+    "expected_data": {
+      "company_name": "Kappa Tech",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": ["React", "Node.js", "AWS"],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 118, "language": "en"}
+  },
+  {
+    "id": "TC011",
+    "name": "Large director list",
+    "complexity": "complex",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Lambda Industries</h1><ul><li>CEO: Anna Keller</li><li>CFO: Martin Braun</li><li>COO: Petra Lang</li><li>CTO: Felix Kurz</li><li>CMO: Sara Klein</li></ul></body></html>",
+    "expected_data": {
+      "company_name": "Lambda Industries",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [
+        {"name": "Anna Keller", "title": "CEO"},
+        {"name": "Martin Braun", "title": "CFO"},
+        {"name": "Petra Lang", "title": "COO"},
+        {"name": "Felix Kurz", "title": "CTO"},
+        {"name": "Sara Klein", "title": "CMO"}
+      ],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 206, "language": "de"}
+  },
+  {
+    "id": "TC012",
+    "name": "Comprehensive services and technologies",
+    "complexity": "complex",
+    "content_type": "services_page",
+    "html_content": "<html><body><h1>Omicron Solutions</h1><section><h2>Services</h2><ul><li>Enterprise ERP</li><li>Data Warehousing</li><li>AI Consulting</li><li>Cybersecurity</li></ul></section><section><h2>Technologies</h2><p>We specialize in SAP, Snowflake, Azure, TensorFlow</p></section></body></html>",
+    "expected_data": {
+      "company_name": "Omicron Solutions",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": ["Enterprise ERP", "Data Warehousing", "AI Consulting", "Cybersecurity"],
+      "directors": [],
+      "technologies": ["SAP", "Snowflake", "Azure", "TensorFlow"],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 309, "language": "en"}
+  },
+  {
+    "id": "TC013",
+    "name": "Team page",
+    "complexity": "complex",
+    "content_type": "team_page",
+    "html_content": "<html><body><h1>Pi Analytics</h1><div class=\"team\"><div class=\"member\"><h3>Laura Meier</h3><p>Data Scientist</p></div><div class=\"member\"><h3>Tobias Hahn</h3><p>Machine Learning Engineer</p></div><div class=\"member\"><h3>Eva Roth</h3><p>Head of Analytics</p></div></div></body></html>",
+    "expected_data": {
+      "company_name": "Pi Analytics",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [
+        {"name": "Laura Meier", "title": "Data Scientist"},
+        {"name": "Tobias Hahn", "title": "Machine Learning Engineer"},
+        {"name": "Eva Roth", "title": "Head of Analytics"}
+      ],
+      "technologies": [],
+      "social_media": {},
+      "team_size": 3
+    },
+    "metadata": {"content_length": 334, "language": "de"}
+  },
+  {
+    "id": "TC014",
+    "name": "Multiple locations",
+    "complexity": "complex",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Rho Logistics</h1><p>Headquarters: Hamburg</p><p>Branch: Munich</p><p>Branch: Cologne</p></body></html>",
+    "expected_data": {
+      "company_name": "Rho Logistics",
+      "address": "Headquarters: Hamburg; Branch: Munich; Branch: Cologne",
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 168, "language": "de"}
+  },
+  {
+    "id": "TC015",
+    "name": "Long form content",
+    "complexity": "complex",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Sigma Research</h1><p>We are a research-driven organization...</p><p>Our services include Advanced Analytics, Bioinformatics, and Computational Modeling.</p><p>Leadership: Dr. Marie Fischer (CEO), Dr. Leon Sommer (Head of Research).</p><p>Contact: info@sigma-research.eu, +49 89 555555</p><p>Website: https://sigma-research.eu</p></body></html>",
+    "expected_data": {
+      "company_name": "Sigma Research",
+      "address": null,
+      "phone": "+49 89 555555",
+      "email": "info@sigma-research.eu",
+      "website": "https://sigma-research.eu",
+      "services": ["Advanced Analytics", "Bioinformatics", "Computational Modeling"],
+      "directors": [
+        {"name": "Dr. Marie Fischer", "title": "CEO"},
+        {"name": "Dr. Leon Sommer", "title": "Head of Research"}
+      ],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 424, "language": "de"}
+  },
+  {
+    "id": "TC016",
+    "name": "Empty page",
+    "complexity": "edge",
+    "content_type": "company_page",
+    "html_content": "<html><body><p>No relevant information</p></body></html>",
+    "expected_data": {
+      "company_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 73, "language": "en"}
+  },
+  {
+    "id": "TC017",
+    "name": "Boilerplate heavy",
+    "complexity": "edge",
+    "content_type": "company_page",
+    "html_content": "<html><body><nav>Navigation</nav><footer>Footer</footer><section><h1>Tau Creative</h1><p>Email: contact@taucreative.com</p></section></body></html>",
+    "expected_data": {
+      "company_name": "Tau Creative",
+      "address": null,
+      "phone": null,
+      "email": "contact@taucreative.com",
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 173, "language": "en"}
+  },
+  {
+    "id": "TC018",
+    "name": "Javascript placeholder",
+    "complexity": "edge",
+    "content_type": "company_page",
+    "html_content": "<html><body><script>document.write('Company: Upsilon Tech')</script><noscript><h1>Upsilon Tech</h1></noscript></body></html>",
+    "expected_data": {
+      "company_name": "Upsilon Tech",
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 170, "language": "en"}
+  },
+  {
+    "id": "TC019",
+    "name": "Malformed HTML",
+    "complexity": "edge",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Phi Security<h1><p>Contact us: secure@phisec.com<p>Phone +49 221 111111</body></html>",
+    "expected_data": {
+      "company_name": "Phi Security",
+      "address": null,
+      "phone": "+49 221 111111",
+      "email": "secure@phisec.com",
+      "website": null,
+      "services": [],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 162, "language": "en"}
+  },
+  {
+    "id": "TC020",
+    "name": "Mixed language content",
+    "complexity": "edge",
+    "content_type": "company_page",
+    "html_content": "<html><body><h1>Chi Servicios</h1><p>Adresse: Calle Mayor 5, Madrid</p><p>Phone: +34 91 222333</p><p>Email: contacto@chiservicios.es</p><p>Servicios: Soporte IT, Desarrollo Web</p></body></html>",
+    "expected_data": {
+      "company_name": "Chi Servicios",
+      "address": "Calle Mayor 5, Madrid",
+      "phone": "+34 91 222333",
+      "email": "contacto@chiservicios.es",
+      "website": null,
+      "services": ["Soporte IT", "Desarrollo Web"],
+      "directors": [],
+      "technologies": [],
+      "social_media": {},
+      "team_size": null
+    },
+    "metadata": {"content_length": 236, "language": "es"}
+  }
+]

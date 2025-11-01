@@ -1,0 +1,270 @@
+{
+  "id": null,
+  "uid": "kr-load-testing",
+  "title": "KR Lead Scraper - Load Testing",
+  "tags": ["load", "performance", "locust"],
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "timezone": "browser",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": ["5s", "10s", "30s", "1m", "5m"],
+    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d"]
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "scenario",
+        "label": "Scenario",
+        "type": "query",
+        "datasource": "Prometheus",
+        "definition": "label_values(locust_requests_total, scenario)",
+        "refresh": 1,
+        "includeAll": true,
+        "multi": true,
+        "sort": 3,
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": ["$__all"]
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "gauge",
+      "title": "Active Users",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "orange", "value": 0},
+              {"color": "red", "value": 1000}
+            ]
+          }
+        }
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "showThresholdMarkers": true,
+        "showThresholdLabels": true
+      },
+      "targets": [
+        {
+          "expr": "sum(locust_users{scenario=~$scenario})",
+          "legendFormat": "Users",
+          "interval": ""
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Request Rate",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 9, "x": 6, "y": 0},
+      "targets": [
+        {
+          "expr": "sum(rate(locust_requests_total{scenario=~$scenario}[1m])) by (name)",
+          "legendFormat": "{{name}}",
+          "interval": ""
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Failure Rate",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 9, "x": 15, "y": 0},
+      "targets": [
+        {
+          "expr": "sum(rate(locust_failures_total{scenario=~$scenario}[1m])) by (name)",
+          "legendFormat": "{{name}}",
+          "interval": ""
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Success Rate",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 6, "x": 0, "y": 8},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "red", "value": null},
+              {"color": "orange", "value": 0.90},
+              {"color": "green", "value": 0.98}
+            ]
+          }
+        }
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "expr": "(1 - (sum(rate(locust_failures_total{scenario=~$scenario}[1m])) / sum(rate(locust_requests_total{scenario=~$scenario}[1m]))))",
+          "legendFormat": "Success Rate",
+          "interval": ""
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Response Time Percentiles",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 12, "x": 6, "y": 8},
+      "fieldConfig": {"defaults": {"unit": "s", "decimals": 3}},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum(rate(locust_request_duration_seconds_bucket{scenario=~$scenario}[1m])) by (le))",
+          "legendFormat": "p50",
+          "interval": ""
+        },
+        {
+          "expr": "histogram_quantile(0.9, sum(rate(locust_request_duration_seconds_bucket{scenario=~$scenario}[1m])) by (le))",
+          "legendFormat": "p90",
+          "interval": ""
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(locust_request_duration_seconds_bucket{scenario=~$scenario}[1m])) by (le))",
+          "legendFormat": "p95",
+          "interval": ""
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(locust_request_duration_seconds_bucket{scenario=~$scenario}[1m])) by (le))",
+          "legendFormat": "p99",
+          "interval": ""
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "heatmap",
+      "title": "Response Time Heatmap",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 12, "x": 18, "y": 8},
+      "targets": [
+        {
+          "expr": "sum(rate(locust_request_duration_seconds_bucket{scenario=~$scenario}[5m])) by (le)",
+          "legendFormat": "Duration",
+          "interval": ""
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "DB Pool Usage",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 17},
+      "fieldConfig": {"defaults": {"unit": "percentunit", "decimals": 0}},
+      "targets": [
+        {
+          "expr": "avg(db_pool_connections_in_use) / avg(db_pool_connections_max)",
+          "legendFormat": "Pool Usage",
+          "interval": ""
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "API Error Rate",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 17},
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) by (endpoint)",
+          "legendFormat": "{{endpoint}}",
+          "interval": ""
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Queue Backlog",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 17},
+      "targets": [
+        {
+          "expr": "sum(locust_task_queue_length{scenario=~$scenario})",
+          "legendFormat": "Backlog",
+          "interval": ""
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "table",
+      "title": "Slowest Endpoints",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 25},
+      "targets": [
+        {
+          "expr": "topk(10, histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (endpoint, le)))",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "Response Size Distribution",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 25},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum(rate(http_response_size_bytes_bucket[5m])) by (le))",
+          "legendFormat": "p50",
+          "interval": ""
+        },
+        {
+          "expr": "histogram_quantile(0.9, sum(rate(http_response_size_bytes_bucket[5m])) by (le))",
+          "legendFormat": "p90",
+          "interval": ""
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_response_size_bytes_bucket[5m])) by (le))",
+          "legendFormat": "p99",
+          "interval": ""
+        }
+      ]
+    }
+  ]
+}

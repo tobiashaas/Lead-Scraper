@@ -4,7 +4,7 @@ Findet Websites von Unternehmen über Google Search
 """
 
 import logging
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -27,6 +27,49 @@ class GoogleSearcher:
             self.browser_manager = PlaywrightBrowserManager(use_tor=use_tor, headless=True)
         else:
             self.browser_manager = None
+
+    async def discover_companies(
+        self, industry: str | None, city: str | None = None, max_results: int = 5
+    ) -> list[tuple[str | None, str]]:
+        """Search for company websites based on industry and city."""
+
+        if not industry:
+            logger.debug("Skipping candidate discovery because industry is missing")
+            return []
+
+        query_parts = [industry]
+        if city:
+            query_parts.append(city)
+        query_parts.append("Unternehmen")
+
+        query = " ".join(part for part in query_parts if part)
+        encoded_query = quote_plus(query)
+
+        search_url = f"https://lite.duckduckgo.com/lite/?q={encoded_query}"
+        logger.info("DuckDuckGo discovery search: %s", query)
+
+        try:
+            import httpx
+
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+            }
+
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                response = await client.get(search_url, headers=headers, follow_redirects=True)
+                response.raise_for_status()
+
+            soup = BeautifulSoup(response.text, "lxml")
+
+            candidates = self._extract_candidates_from_duckduckgo_lite(soup, max_results)
+            if not candidates:
+                candidates = self._extract_candidates_from_duckduckgo(soup, max_results)
+
+            return candidates
+
+        except Exception as exc:  # pragma: no cover - network variability
+            logger.error("Candidate discovery failed: %s", exc)
+            return []
 
     async def find_website(
         self, company_name: str, city: str = None, additional_keywords: str = None
@@ -98,22 +141,8 @@ class GoogleSearcher:
         Returns:
             Website-URL oder None
         """
-        # DuckDuckGo Lite hat einfachere HTML-Struktur
-        # Suche nach allen Links in der Ergebnisliste
-        links = soup.find_all("a", href=True)
-
-        for link in links:
-            url = link.get("href", "")
-
-            # DuckDuckGo Lite verwendet /lite/? URLs
-            if "/lite/" in url or not url.startswith("http"):
-                continue
-
-            if url and self._is_valid_website(url):
-                logger.debug(f"Potenzielle Website: {url}")
-                return url
-
-        return None
+        candidates = self._extract_candidates_from_duckduckgo_lite(soup, max_results=1)
+        return candidates[0][1] if candidates else None
 
     def _extract_website_from_duckduckgo(
         self, soup: BeautifulSoup, company_name: str
@@ -145,23 +174,8 @@ class GoogleSearcher:
             logger.warning("Keine DuckDuckGo-Suchergebnisse gefunden")
             return None
 
-        # Durchsuche die ersten 5 Ergebnisse
-        for result in results[:5]:
-            # Extrahiere Link
-            link_tag = result.find("a", class_="result__a")
-            if not link_tag:
-                link_tag = result.find("a", href=True)
-
-            if not link_tag:
-                continue
-
-            url = link_tag.get("href", "")
-
-            if url and self._is_valid_website(url):
-                logger.debug(f"Potenzielle Website: {url}")
-                return url
-
-        return None
+        candidates = self._extract_candidates_from_duckduckgo(results, max_results=1)
+        return candidates[0][1] if candidates else None
 
     def _is_valid_website(self, url: str) -> bool:
         """
@@ -201,6 +215,81 @@ class GoogleSearcher:
             return False
 
         return True
+
+    def _extract_candidates_from_duckduckgo_lite(
+        self, soup: BeautifulSoup, max_results: int
+    ) -> list[tuple[str | None, str]]:
+        """Collect candidate (title, url) pairs from DuckDuckGo Lite results."""
+
+        candidates: list[tuple[str | None, str]] = []
+        seen: set[str] = set()
+
+        for link in soup.find_all("a", href=True):
+            url = link.get("href", "")
+
+            if "/lite/" in url or not url.startswith("http"):
+                continue
+
+            if not self._is_valid_website(url):
+                continue
+
+            domain = self._normalize_candidate(url)
+            if domain in seen:
+                continue
+
+            seen.add(domain)
+            title = link.get_text(strip=True) or None
+            candidates.append((title, url))
+
+            if len(candidates) >= max_results:
+                break
+
+        return candidates
+
+    def _extract_candidates_from_duckduckgo(
+        self, soup: BeautifulSoup, max_results: int
+    ) -> list[tuple[str | None, str]]:
+        """Collect candidate (title, url) pairs from DuckDuckGo results."""
+
+        candidates: list[tuple[str | None, str]] = []
+        seen: set[str] = set()
+
+        results = soup.find_all("div", class_="result")
+        if not results:
+            results = soup.find_all("a", class_="result__a")
+
+        for result in results:
+            link_tag = result.find("a", class_="result__a") if hasattr(result, "find") else result
+            if not link_tag:
+                link_tag = result if hasattr(result, "get") else None
+
+            if not link_tag:
+                continue
+
+            url = link_tag.get("href", "")
+
+            if not url or not self._is_valid_website(url):
+                continue
+
+            domain = self._normalize_candidate(url)
+            if domain in seen:
+                continue
+
+            seen.add(domain)
+            title = link_tag.get_text(strip=True) if hasattr(link_tag, "get_text") else None
+            candidates.append((title or None, url))
+
+            if len(candidates) >= max_results:
+                break
+
+        return candidates
+
+    @staticmethod
+    def _normalize_candidate(url: str) -> str:
+        """Normalize url to domain for deduplication."""
+
+        parsed = urlparse(url)
+        return parsed.netloc.lower() if parsed.netloc else url
 
 
 async def find_missing_websites(

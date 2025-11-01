@@ -2,6 +2,8 @@
 Unit Tests für Data Validator
 """
 
+import pytest
+
 from app.processors.validator import DataValidator
 
 
@@ -206,3 +208,85 @@ class TestDataValidator:
         assert "+49" in phone
         assert website.startswith("http")
         assert postal_code == "70173"
+
+    def test_validate_company_data_complete(self):
+        """Test: Vollständige Company-Daten werden validiert"""
+        data = {
+            "company_name": "Test GmbH",
+            "email": "INFO@TEST.DE",
+            "phone": "0711 123456",
+            "website": "www.test.de",
+            "postal_code": "70173",
+            "city": "Stuttgart",
+            "address": "Teststraße 1",
+            "description": "Test description",
+            "industry": "Software",
+            "legal_form": "GmbH",
+        }
+
+        validated = DataValidator.validate_company_data(data)
+
+        assert validated["company_name"] == "Test GmbH"
+        assert validated["email"] == "info@test.de"
+        assert "+49" in validated["phone"]
+        assert validated["website"].startswith("http")
+        assert validated["postal_code"] == "70173"
+        assert validated["city"] == "Stuttgart"
+        assert validated["address"] == "Teststraße 1"
+        assert validated["description"] == "Test description"
+        assert validated["industry"] == "Software"
+        assert validated["legal_form"] == "GmbH"
+
+    def test_validate_company_data_minimal(self):
+        """Test: Minimale Company-Daten (nur Name)"""
+        data = {"company_name": "Test GmbH"}
+
+        validated = DataValidator.validate_company_data(data)
+
+        assert validated["company_name"] == "Test GmbH"
+        assert "email" not in validated
+        assert "phone" not in validated
+
+    def test_validate_company_data_missing_name_raises(self):
+        """Test: Fehlender Company-Name wirft ValueError"""
+        data = {"email": "test@example.com"}
+
+        with pytest.raises(ValueError, match="Company name is required"):
+            DataValidator.validate_company_data(data)
+
+    def test_validate_company_data_invalid_name_raises(self):
+        """Test: Ungültiger Company-Name wirft ValueError"""
+        data = {"company_name": ""}
+
+        with pytest.raises(ValueError, match="Company name is required"):
+            DataValidator.validate_company_data(data)
+
+    def test_validate_company_data_filters_invalid_fields(self):
+        """Test: Ungültige Felder werden gefiltert"""
+        data = {
+            "company_name": "Test GmbH",
+            "email": "invalid-email",
+            "phone": "123",
+            "website": "",
+        }
+
+        validated = DataValidator.validate_company_data(data)
+
+        assert validated["company_name"] == "Test GmbH"
+        assert validated.get("email") is None
+        assert validated.get("phone") is None
+        assert "website" not in validated or validated.get("website") is None
+
+    def test_validate_company_data_strips_whitespace(self):
+        """Test: Whitespace wird aus String-Feldern entfernt"""
+        data = {
+            "company_name": "  Test GmbH  ",
+            "city": "  Stuttgart  ",
+            "industry": "  Software  ",
+        }
+
+        validated = DataValidator.validate_company_data(data)
+
+        assert validated["company_name"] == "Test GmbH"
+        assert validated["city"] == "Stuttgart"
+        assert validated["industry"] == "Software"

@@ -8,9 +8,18 @@ from app.api import scoring as scoring_module
 from app.api.scoring import map_quality_to_enum
 from app.database.models import Company, LeadQuality, LeadStatus
 
+pytestmark = pytest.mark.integration
+
 
 def test_map_quality_to_enum_defaults_to_unknown() -> None:
     assert map_quality_to_enum("does-not-exist") == LeadQuality.UNKNOWN
+
+
+def test_map_quality_to_enum_specific_values() -> None:
+    assert map_quality_to_enum("hot") == LeadQuality.A
+    assert map_quality_to_enum("warm") == LeadQuality.B
+    assert map_quality_to_enum("cold") == LeadQuality.C
+    assert map_quality_to_enum("low_quality") == LeadQuality.D
 
 
 @pytest.fixture
@@ -74,6 +83,26 @@ class TestScoringEndpoints:
             assert company.lead_quality == expected_quality.value
         else:
             assert company.lead_quality == expected_quality
+
+    def test_score_single_company_with_minimal_data(
+        self, create_company, client, auth_headers, db_session
+    ) -> None:
+        company = create_company(
+            street=None,
+            postal_code=None,
+            city=None,
+            technologies=None,
+            directors=None,
+        )
+
+        response = client.post(f"/api/v1/scoring/companies/{company.id}", headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["company_id"] == company.id
+
+        db_session.refresh(company)
+        assert company.lead_score == data["score"]
 
     def test_score_single_company_not_found(self, client, auth_headers) -> None:
         response = client.post("/api/v1/scoring/companies/99999", headers=auth_headers)
@@ -176,8 +205,46 @@ class TestScoringEndpoints:
         scored_ids = {item["company_id"] for item in data["results"]}
         assert target.id in scored_ids
 
+        # Refresh the target company to get the latest data
         db_session.refresh(target)
         assert target.lead_score is not None
+
+    def test_score_multiple_companies_with_filters_no_match(
+        self, create_company, client, auth_headers
+    ) -> None:
+        create_company(lead_status=LeadStatus.CONTACTED, lead_quality=LeadQuality.A)
+
+        response = client.post(
+            "/api/v1/scoring/companies/bulk",
+            params={
+                "lead_status": LeadStatus.NEW.value,
+                "lead_quality": LeadQuality.UNKNOWN.value,
+                "limit": 5,
+            },
+            json={},
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total_scored"] == 0
+        assert data["results"] == []
+
+    def test_score_single_company_with_full_address(self, create_company, client, auth_headers) -> None:
+        company = create_company(street="Main St 1", postal_code="70173", city="Stuttgart")
+
+        response = client.post(f"/api/v1/scoring/companies/{company.id}", headers=auth_headers)
+
+        assert response.status_code == 200
+        assert response.json()["company_id"] == company.id
+
+    def test_score_single_company_city_only(self, create_company, client, auth_headers) -> None:
+        company = create_company(street=None, postal_code="70173", city="Stuttgart")
+
+        response = client.post(f"/api/v1/scoring/companies/{company.id}", headers=auth_headers)
+
+        assert response.status_code == 200
+        assert response.json()["company_id"] == company.id
 
     def test_score_multiple_companies_invalid_filter(self, client, auth_headers) -> None:
         response = client.post(
@@ -199,6 +266,30 @@ class TestScoringEndpoints:
 
         assert response.status_code == 400
         assert response.json()["detail"] == "Invalid lead_quality filter"
+
+    def test_score_multiple_companies_quality_filter_only(
+        self, create_company, client, auth_headers, db_session
+    ) -> None:
+        matching = create_company(
+            company_name="Quality Match",
+            lead_status=LeadStatus.CONTACTED,
+            lead_quality=LeadQuality.A,
+            street=None,
+            city="Berlin",
+        )
+        create_company(lead_status=LeadStatus.CONTACTED, lead_quality=LeadQuality.B)
+
+        response = client.post(
+            "/api/v1/scoring/companies/bulk",
+            params={"lead_quality": LeadQuality.A.value},
+            json={},
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total_scored"] == 1
+        assert {item["company_id"] for item in data["results"]} == {matching.id}
 
     def test_score_multiple_companies_handles_exception(
         self, create_company, client, auth_headers, monkeypatch

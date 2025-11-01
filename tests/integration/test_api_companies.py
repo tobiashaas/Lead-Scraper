@@ -9,6 +9,8 @@ from sqlalchemy.orm import Session
 
 from app.database.models import Company, LeadQuality, LeadStatus, User
 
+pytestmark = pytest.mark.integration
+
 
 @pytest.fixture
 def create_companies_batch(db_session):

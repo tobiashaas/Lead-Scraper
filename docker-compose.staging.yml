@@ -1,0 +1,161 @@
+version: "3.9"
+
+# Staging Environment Configuration
+# Mirrors production setup with reduced resources and relaxed security for testing
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: kr-postgres-staging
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-kr_leads_staging}
+      POSTGRES_USER: ${POSTGRES_USER:-kr_user_staging}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data
+      - ./backups/staging:/backups
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kr_user_staging} -d ${POSTGRES_DB:-kr_leads_staging}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - kr-staging-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: kr-redis-staging
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_staging_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - kr-staging-network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: kr-ollama-staging
+    ports:
+      - "11435:11434"
+    volumes:
+      - ollama_staging_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - kr-staging-network
+    # Staging uses smaller models for faster testing
+
+  app:
+    image: ${IMAGE_REF:-ghcr.io/tobiashaas/lead-scraper:staging-latest}
+    container_name: kr-app-staging
+    working_dir: /app
+    ports:
+      - "8001:8000"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-kr_user_staging}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-kr_leads_staging}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      OLLAMA_HOST: http://ollama:11434
+      ENVIRONMENT: staging
+      DEBUG: "True"
+      LOG_LEVEL: DEBUG
+      SECRETS_MANAGER: ${SECRETS_MANAGER:-none}
+      CORS_ORIGINS: https://staging.your-domain.com,http://localhost:3000
+      SENTRY_ENVIRONMENT: staging
+      SENTRY_TRACES_SAMPLE_RATE: "1.0"
+      VERSION: ${VERSION:-latest}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+      - ./logs/staging:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - kr-staging-network
+    labels:
+      com.kr-scraper.environment: staging
+      com.kr-scraper.version: ${VERSION:-latest}
+      version: ${VERSION:-latest}
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kr-worker-staging
+    working_dir: /app
+    command:
+      - sh
+      - -c
+      - |
+        python -c "from app.workers.queue import initialize_scheduled_jobs; initialize_scheduled_jobs()" || echo "Warning: Failed to initialize scheduled jobs"
+        rq worker scraping maintenance --url redis://:${REDIS_PASSWORD}@redis:6379 --with-scheduler
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-kr_user_staging}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-kr_leads_staging}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      OLLAMA_HOST: http://ollama:11434
+      ENVIRONMENT: staging
+      DEBUG: "True"
+      LOG_LEVEL: DEBUG
+      SECRETS_MANAGER: ${SECRETS_MANAGER:-none}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+      - ./logs/staging:/app/logs
+    restart: unless-stopped
+    networks:
+      - kr-staging-network
+    labels:
+      com.kr-scraper.environment: staging
+      com.kr-scraper.service: worker
+
+  nginx:
+    image: nginx:alpine
+    container_name: kr-nginx-staging
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.staging.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped
+    networks:
+      - kr-staging-network
+
+volumes:
+  postgres_staging_data:
+  redis_staging_data:
+  ollama_staging_data:
+
+networks:
+  kr-staging-network:
+    driver: bridge

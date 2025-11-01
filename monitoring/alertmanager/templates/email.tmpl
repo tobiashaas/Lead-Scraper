@@ -1,0 +1,171 @@
+{{ define "email.subject" }}[{{ .GroupLabels.environment | toUpper }}] {{ .GroupLabels.alertname }} ({{ .Status | title }}){{ end }}
+
+{{ define "email.text" }}
+Alerts: {{ len .Alerts }} ({{ .Status }})
+
+{{ range .Alerts }}
+Alert: {{ .Labels.alertname }}
+Severity: {{ .Labels.severity }}
+Starts At: {{ .StartsAt }}
+Summary: {{ .Annotations.summary }}
+Description: {{ .Annotations.description }}
+Details:
+{{ range $label, $value := .Labels }}  • {{$label}} = {{$value}}
+{{ end }}
+{{ end }}
+{{ end }}
+
+{{ define "email.html" }}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>[{{ .GroupLabels.environment | toUpper }}] {{ .GroupLabels.alertname }}</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background-color: #f8fafc;
+        color: #111827;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      .card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        overflow: hidden;
+      }
+      .header {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #ffffff;
+        padding: 24px 28px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 22px;
+      }
+      .badge {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.2);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+      }
+      .section {
+        padding: 24px 28px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .section:last-child {
+        border-bottom: none;
+      }
+      .section h2 {
+        margin: 0 0 16px;
+        font-size: 18px;
+      }
+      .alert {
+        margin-bottom: 20px;
+        border: 1px solid #dbeafe;
+        border-left-width: 6px;
+        border-radius: 10px;
+        background: #eff6ff;
+        padding: 16px 18px;
+      }
+      .alert.critical {
+        border-color: #fecaca;
+        background: #fef2f2;
+      }
+      .alert.warning {
+        border-color: #fde68a;
+        background: #fffbeb;
+      }
+      .alert.info {
+        border-color: #bae6fd;
+        background: #f0f9ff;
+      }
+      .alert h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+      }
+      .labels,
+      .annotations {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 14px;
+        color: #374151;
+      }
+      .footer {
+        background: #f1f5f9;
+        padding: 20px 28px;
+        font-size: 12px;
+        color: #4b5563;
+      }
+      a.button {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 8px;
+        background: #1d4ed8;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 600;
+        margin-right: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="header">
+          <h1>{{ len .Alerts }} Alert(s): {{ .GroupLabels.alertname }}</h1>
+          <div class="badge">{{ .GroupLabels.environment | toUpper }} • {{ .Status | title }}</div>
+        </div>
+
+        <div class="section">
+          <h2>Summary</h2>
+          <p><strong>Status:</strong> {{ .Status | title }}</p>
+          <p><strong>Common Labels:</strong></p>
+          <ul class="labels">
+            {{ range $label, $value := .GroupLabels }}
+              <li><strong>{{$label}}</strong>: {{$value}}</li>
+            {{ end }}
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>Active Alerts</h2>
+          {{ range .Alerts }}
+          <div class="alert {{ .Labels.severity }}">
+            <h3>{{ .Labels.alertname }} ({{ .Labels.severity | title }})</h3>
+            <p><strong>Started:</strong> {{ .StartsAt }}</p>
+            {{ if .EndsAt }}<p><strong>Ends:</strong> {{ .EndsAt }}</p>{{ end }}
+            <p><strong>Summary:</strong> {{ .Annotations.summary }}</p>
+            <p><strong>Description:</strong> {{ .Annotations.description }}</p>
+            <p><strong>Labels:</strong></p>
+            <ul class="labels">
+              {{ range $key, $value := .Labels }}
+                <li>{{$key}} = {{$value}}</li>
+              {{ end }}
+            </ul>
+            {{ if .Annotations.dashboard }}
+            <a class="button" href="{{ .Annotations.dashboard }}">View Dashboard</a>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+
+        <div class="footer">
+          <div>Alertmanager: {{ .ExternalURL }}</div>
+          <div>Generated: {{ now }}</div>
+          <div>Silence alerts: Visit Alertmanager UI</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+{{ end }}

@@ -1,0 +1,24 @@
+{{ define "slack.title" }}{{ .GroupLabels.alertname }} - {{ .GroupLabels.environment | toUpper }}{{ end }}
+
+{{ define "slack.color" }}{{- if eq .Status "firing" -}}
+  {{- if eq .CommonLabels.severity "critical" -}}danger
+  {{- else if eq .CommonLabels.severity "warning" -}}warning
+  {{- else -}}#439FE0
+  {{- end -}}
+{{- else -}}
+  good
+{{- end -}}{{ end }}
+
+{{ define "slack.text" }}
+*Status:* {{ .Status | title }}
+*Alerts:* {{ len .Alerts.Firing }} firing, {{ len .Alerts.Resolved }} resolved
+
+{{ range .Alerts }}
+• *{{ .Labels.alertname }}* ({{ .Labels.severity | title }})
+  - Summary: {{ .Annotations.summary }}
+  - Description: {{ .Annotations.description }}
+  - Labels: {{ range $k, $v := .Labels }}{{$k}}={{$v}} {{ end }}
+{{ end }}
+
+View in Alertmanager: {{ .ExternalURL }}
+{{ end }}

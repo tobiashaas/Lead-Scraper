@@ -11,11 +11,12 @@ from app.api.schemas import CompanyCreate, CompanyList, CompanyResponse, Company
 from app.core.dependencies import get_current_active_user
 from app.database.database import get_db
 from app.database.models import Company, LeadQuality, LeadStatus, User
+from app.utils.cache import cache_result, invalidate_pattern
 
 router = APIRouter()
 
 
-@router.get("/", response_model=CompanyList)
+@router.get("/", response_model=CompanyList, response_model_exclude_none=True)
 async def list_companies(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -24,6 +25,10 @@ async def list_companies(
     lead_status: LeadStatus | None = None,
     lead_quality: LeadQuality | None = None,
     search: str | None = None,
+    include_total: bool = Query(
+        True,
+        description="Return total count of results. Disable for faster pagination.",
+    ),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -54,13 +59,15 @@ async def list_companies(
             )
         )
 
-    # Total count
-    total = query.count()
+    total: int | None = query.count() if include_total else None
 
-    # Pagination
     companies = query.offset(skip).limit(limit).all()
 
-    return {"total": total, "skip": skip, "limit": limit, "items": companies}
+    response_payload = {"skip": skip, "limit": limit, "items": companies}
+    if include_total:
+        response_payload["total"] = total
+
+    return response_payload
 
 
 @router.get("/{company_id}", response_model=CompanyResponse)
@@ -106,7 +113,8 @@ async def create_company(
     db.add(db_company)
     db.commit()
     db.refresh(db_company)
-
+    await invalidate_pattern("company_stats_overview*")
+    await invalidate_pattern("export_company_stats*")
     return db_company
 
 
@@ -134,7 +142,8 @@ async def update_company(
 
     db.commit()
     db.refresh(company)
-
+    await invalidate_pattern("company_stats_overview*")
+    await invalidate_pattern("export_company_stats*")
     return company
 
 
@@ -157,11 +166,13 @@ async def delete_company(
     # Soft delete
     company.is_active = False
     db.commit()
-
+    await invalidate_pattern("company_stats_overview*")
+    await invalidate_pattern("export_company_stats*")
     return None
 
 
 @router.get("/stats/overview")
+@cache_result(ttl=300, key_prefix="company_stats_overview")
 async def get_stats(db: Session = Depends(get_db)):
     """
     Get statistics overview

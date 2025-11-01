@@ -1,0 +1,233 @@
+name: Manual Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - production
+          - staging
+      target_version:
+        description: "Version to rollback to (e.g., 1.2.3)"
+        required: true
+        type: string
+      reason:
+        description: "Reason for rollback"
+        required: true
+        type: string
+
+env:
+  DOCKER_REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME_LOWER: ""
+
+jobs:
+  validate-rollback:
+    name: Validate Rollback Inputs
+    runs-on: ubuntu-latest
+    outputs:
+      current_version: ${{ steps.current.outputs.current_version }}
+      target_version: ${{ steps.target.outputs.target_version }}
+      is_valid: ${{ steps.validate.outputs.is_valid }}
+      environment: ${{ inputs.environment }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set lowercase image name
+        run: |
+          echo "IMAGE_NAME_LOWER=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+
+      - name: Normalize target version
+        id: target
+        run: |
+          VERSION="${{ inputs.target_version }}"
+          if [[ "$VERSION" =~ ^v ]]; then
+            VERSION="${VERSION#v}"
+          fi
+          echo "target_version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Validate target image exists
+        id: validate-image
+        run: |
+          VERSION="${{ steps.target.outputs.target_version }}"
+          IMAGE_NAME_LOWER="${GITHUB_REPOSITORY,,}"
+          echo "Checking image ghcr.io/${IMAGE_NAME_LOWER}:v${VERSION}"
+          if ! docker manifest inspect ghcr.io/${IMAGE_NAME_LOWER}:v${VERSION} >/dev/null 2>&1; then
+            echo "::error::Docker image for version v${VERSION} not found."
+            exit 1
+          fi
+
+      - name: Validate GitHub release exists
+        id: validate-release
+        env:
+          VERSION: ${{ steps.target.outputs.target_version }}
+        run: |
+          STATUS=$(curl -s -o /tmp/release.json -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/tags/v${VERSION}")
+          if [ "$STATUS" -ne 200 ]; then
+            echo "::warning::GitHub release v${VERSION} not found. Proceeding without release confirmation."
+          fi
+
+      - name: Configure SSH for validation
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Fetch current deployed version
+        id: current
+        run: |
+          HOST="${{ inputs.environment == 'production' && secrets.PRODUCTION_HOST || secrets.STAGING_HOST }}"
+          CONTAINER="kr-app-prod"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            CONTAINER="kr-app-staging"
+          fi
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+          CURRENT=$(ssh ${{ secrets.DEPLOY_USER }}@"$HOST" "docker inspect --format='{{index .Config.Labels \"com.kr-scraper.version\"}}' $CONTAINER 2>/dev/null" || echo "unknown")
+          if [ -z "$CURRENT" ] || [ "$CURRENT" = "<no value>" ]; then
+            CURRENT=$(ssh ${{ secrets.DEPLOY_USER }}@"$HOST" "docker inspect --format='{{index .Config.Labels \"version\"}}' $CONTAINER 2>/dev/null" || echo "unknown")
+          fi
+          echo "current_version=$CURRENT" >> "$GITHUB_OUTPUT"
+
+      - name: Validate rollback direction
+        id: validate
+        run: |
+          TARGET="${{ steps.target.outputs.target_version }}"
+          CURRENT="${{ steps.current.outputs.current_version }}"
+          if [ "$CURRENT" = "unknown" ]; then
+            echo "::warning::Current version unknown. Proceeding with caution."
+            echo "is_valid=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "$TARGET" = "$CURRENT" ]; then
+            echo "::error::Target version is the same as current version ($CURRENT)."
+            echo "is_valid=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "::notice::Rolling back from $CURRENT to $TARGET."
+          echo "is_valid=true" >> "$GITHUB_OUTPUT"
+
+  execute-rollback:
+    name: Execute Rollback
+    runs-on: ubuntu-latest
+    needs: validate-rollback
+    if: needs.validate-rollback.outputs.is_valid == 'true'
+    environment:
+      name: ${{ inputs.environment }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Determine host
+        id: host
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            echo "host=${{ secrets.PRODUCTION_HOST }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "host=${{ secrets.STAGING_HOST }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "${{ steps.host.outputs.host }}" >> ~/.ssh/known_hosts
+
+      - name: Copy rollback script
+        run: |
+          TARGET_DIR="/opt/kr-scraper"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            TARGET_DIR="/opt/kr-scraper-staging"
+          fi
+          scp scripts/deployment/rollback.sh ${{ secrets.DEPLOY_USER }}@${{ steps.host.outputs.host }}:"${TARGET_DIR}/"
+          scp scripts/deployment/health_check.sh ${{ secrets.DEPLOY_USER }}@${{ steps.host.outputs.host }}:"${TARGET_DIR}/"
+
+      - name: Execute rollback
+        run: |
+          TARGET_VERSION="${{ needs.validate-rollback.outputs.target_version }}"
+          TARGET_DIR="/opt/kr-scraper"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            TARGET_DIR="/opt/kr-scraper-staging"
+          fi
+
+          ssh ${{ secrets.DEPLOY_USER }}@${{ steps.host.outputs.host }} "cd ${TARGET_DIR} && chmod +x rollback.sh health_check.sh"
+          ssh ${{ secrets.DEPLOY_USER }}@${{ steps.host.outputs.host }} "cd ${TARGET_DIR} && ./rollback.sh ${TARGET_VERSION} ${{ inputs.environment }} --force"
+
+      - name: Run health checks
+        run: |
+          TARGET_DIR="/opt/kr-scraper"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            TARGET_DIR="/opt/kr-scraper-staging"
+          fi
+          ssh ${{ secrets.DEPLOY_USER }}@${{ steps.host.outputs.host }} "cd ${TARGET_DIR} && SMOKE_TEST_PASSWORD='${{ secrets.SMOKE_TEST_PASSWORD }}' ./health_check.sh ${{ inputs.environment }} --verbose"
+
+  verify-rollback:
+    name: Verify Rollback
+    runs-on: ubuntu-latest
+    needs: execute-rollback
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify version
+        run: |
+          HOST="${{ inputs.environment == 'production' && secrets.PRODUCTION_HOST || secrets.STAGING_HOST }}"
+          CONTAINER="kr-app-prod"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            CONTAINER="kr-app-staging"
+          fi
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+          VERSION=$(ssh ${{ secrets.DEPLOY_USER }}@"$HOST" "docker inspect --format='{{index .Config.Labels \"com.kr-scraper.version\"}}' $CONTAINER" || echo "unknown")
+          if [ -z "$VERSION" ] || [ "$VERSION" = "<no value>" ]; then
+            VERSION=$(ssh ${{ secrets.DEPLOY_USER }}@"$HOST" "docker inspect --format='{{index .Config.Labels \"version\"}}' $CONTAINER" || echo "unknown")
+          fi
+          echo "Rolled back version: $VERSION"
+
+      - name: Collect logs
+        run: |
+          mkdir -p artifacts
+          HOST="${{ inputs.environment == 'production' && secrets.PRODUCTION_HOST || secrets.STAGING_HOST }}"
+          TARGET_DIR="/opt/kr-scraper"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            TARGET_DIR="/opt/kr-scraper-staging"
+          fi
+          ssh ${{ secrets.DEPLOY_USER }}@"$HOST" "tar czf - -C ${TARGET_DIR} logs" > artifacts/${{ inputs.environment }}-rollback-logs.tar.gz
+
+      - name: Upload rollback logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: rollback-logs-${{ inputs.environment }}
+          path: artifacts/${{ inputs.environment }}-rollback-logs.tar.gz
+
+      - name: Create incident report issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Rollback: ${{ inputs.environment }} to v${{ needs.validate-rollback.outputs.target_version }}" \
+            --body "Rollback triggered for ${{ inputs.environment }}. Reason: ${{ inputs.reason }}." \
+            --label incident
+
+  notify-rollback:
+    name: Notify Rollback Outcome
+    runs-on: ubuntu-latest
+    needs: verify-rollback
+    if: always()
+    steps:
+      - name: Send rollback notification
+        if: ${{ success() && secrets.SLACK_WEBHOOK_URL != '' }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"🚨 ROLLBACK: ${{ inputs.environment }} rolled back to v${{ needs.validate-rollback.outputs.target_version }}. Reason: ${{ inputs.reason }}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Send rollback failure notification
+        if: ${{ failure() && secrets.SLACK_WEBHOOK_URL != '' }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"⚠️ Rollback failed for ${{ inputs.environment }}. Manual intervention required.\"}" ${{ secrets.SLACK_WEBHOOK_URL }}

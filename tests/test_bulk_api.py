@@ -2,11 +2,12 @@
 Tests für Bulk Operations API Endpoints
 """
 
+import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
 
 
-def test_bulk_update_invalid_fields(client: TestClient, auth_headers: dict):
+def test_bulk_update_invalid_fields(client, auth_headers: dict):
     """Test Bulk Update mit ungültigen Feldern"""
     request_data = {
         "company_ids": [1, 2],
@@ -18,7 +19,7 @@ def test_bulk_update_invalid_fields(client: TestClient, auth_headers: dict):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
-def test_bulk_delete_soft(client: TestClient, auth_headers: dict):
+def test_bulk_delete_soft(client, auth_headers: dict):
     """Test Bulk Soft Delete"""
     request_data = {"company_ids": [1, 2], "soft_delete": True}
 
@@ -32,7 +33,7 @@ def test_bulk_delete_soft(client: TestClient, auth_headers: dict):
     assert data["soft_delete"] is True
 
 
-def test_bulk_delete_hard(client: TestClient, auth_headers: dict):
+def test_bulk_delete_hard(client, auth_headers: dict):
     """Test Bulk Hard Delete"""
     request_data = {"company_ids": [1], "soft_delete": False}
 
@@ -45,7 +46,7 @@ def test_bulk_delete_hard(client: TestClient, auth_headers: dict):
     assert data["soft_delete"] is False
 
 
-def test_bulk_status_change_no_updates(client: TestClient, auth_headers: dict):
+def test_bulk_status_change_no_updates(client, auth_headers: dict):
     """Test Bulk Status Change ohne Updates"""
     request_data = {"company_ids": [1, 2]}
 
@@ -54,7 +55,7 @@ def test_bulk_status_change_no_updates(client: TestClient, auth_headers: dict):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
-def test_bulk_restore_companies(client: TestClient, auth_headers: dict):
+def test_bulk_restore_companies(client, auth_headers: dict):
     """Test Bulk Restore"""
     response = client.post(
         "/api/v1/bulk/companies/restore",
@@ -69,7 +70,7 @@ def test_bulk_restore_companies(client: TestClient, auth_headers: dict):
     assert "restored_count" in data
 
 
-def test_bulk_operations_unauthorized(client: TestClient):
+def test_bulk_operations_unauthorized(client):
     """Test Bulk Operations ohne Authentication"""
     request_data = {"company_ids": [1], "updates": {"lead_status": "new"}}
 
@@ -78,7 +79,7 @@ def test_bulk_operations_unauthorized(client: TestClient):
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-def test_bulk_update_empty_ids(client: TestClient, auth_headers: dict):
+def test_bulk_update_empty_ids(client, auth_headers: dict):
     """Test Bulk Update mit leerer ID Liste"""
     request_data = {"company_ids": [], "updates": {"lead_status": "new"}}
 
@@ -87,7 +88,7 @@ def test_bulk_update_empty_ids(client: TestClient, auth_headers: dict):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
-def test_bulk_update_nonexistent_companies(client: TestClient, auth_headers: dict):
+def test_bulk_update_nonexistent_companies(client, auth_headers: dict):
     """Test Bulk Update mit nicht existierenden Companies"""
     request_data = {
         "company_ids": [999998, 999999],
@@ -98,6 +99,6 @@ def test_bulk_update_nonexistent_companies(client: TestClient, auth_headers: dic
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
-
+    assert data["success"] is True
     assert data["updated_count"] == 0
     assert len(data["failed_ids"]) == 2

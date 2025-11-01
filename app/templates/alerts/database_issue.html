@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>[{{ environment|upper }}] Database Issue - {{ issue_type|replace('_', ' ')|title() }}</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f3f4f6;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #1f2937;
+      }
+      .wrapper {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      .card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
+        overflow: hidden;
+      }
+      .header {
+        background: linear-gradient(135deg, #4338ca, #1e3a8a);
+        color: #ffffff;
+        padding: 24px 28px 20px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .badge {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        background-color: rgba(255, 255, 255, 0.18);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .section {
+        padding: 24px 28px;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .section:last-child {
+        border-bottom: none;
+      }
+      .section h2 {
+        margin: 0 0 16px;
+        font-size: 18px;
+        color: #111827;
+      }
+      .details-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .details-table td {
+        padding: 6px 0;
+        font-size: 14px;
+        vertical-align: top;
+      }
+      .details-table td:first-child {
+        width: 180px;
+        font-weight: 600;
+        color: #4b5563;
+      }
+      .error-box {
+        background-color: #eef2ff;
+        border: 1px solid #c7d2fe;
+        border-radius: 8px;
+        padding: 16px 18px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        color: #1e3a8a;
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #ffffff;
+        background-color: #2563eb;
+      }
+      .button.secondary {
+        background-color: #1f2937;
+      }
+      .list {
+        margin: 0;
+        padding-left: 20px;
+        color: #374151;
+        font-size: 14px;
+      }
+      .footer {
+        background-color: #f8fafc;
+        padding: 20px 28px;
+        font-size: 12px;
+        color: #6b7280;
+        border-top: 1px solid #e2e8f0;
+      }
+      @media (max-width: 600px) {
+        .wrapper {
+          padding: 12px;
+        }
+        .section,
+        .header,
+        .footer {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="card">
+        <div class="header">
+          <h1>⚠️ Database Issue Detected</h1>
+          <span class="badge">{{ environment|upper }} • {{ severity|default("warning")|upper }}</span>
+        </div>
+
+        <div class="section">
+          <h2>Summary</h2>
+          <table class="details-table">
+            <tr>
+              <td>Issue Type</td>
+              <td>{{ issue_type|replace('_', ' ')|title() }}</td>
+            </tr>
+            <tr>
+              <td>Database</td>
+              <td>{{ database_url or 'n/a' }}</td>
+            </tr>
+            <tr>
+              <td>Duration</td>
+              <td>{{ duration_minutes|default(0, true) }} minutes</td>
+            </tr>
+            <tr>
+              <td>Timestamp</td>
+              <td>{{ timestamp }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="section">
+          <h2>Error Details</h2>
+          <div class="error-box">
+            {{ error_message or "No error message provided." }}
+            {% if additional_context %}
+
+            ---
+            {% for key, value in additional_context.items() %}
+            {{ key }}: {{ value }}
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Recommended Actions</h2>
+          <ul class="list">
+            <li>Check database instance health and resource usage (CPU, memory, disk).</li>
+            <li>Review application and database logs for connection or query timeouts.</li>
+            <li>Validate network connectivity between application and database.</li>
+            <li>Confirm no ongoing migrations or deployments impacting database availability.</li>
+            <li>Follow runbook procedures for failover or restart if necessary.</li>
+          </ul>
+          <div class="actions">
+            {% if health_check_url %}
+            <a href="{{ health_check_url }}" class="button">Run Health Check</a>
+            {% endif %}
+            {% if dashboard_url %}
+            <a href="{{ dashboard_url }}" class="button secondary">Open Grafana Dashboard</a>
+            {% endif %}
+            {% if runbook_url %}
+            <a href="{{ runbook_url }}" class="button secondary">View Runbook</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="footer">
+          <div>Environment: {{ environment }} | Severity: {{ severity|default("warning") }}</div>
+          <div>Generated at {{ timestamp }}</div>
+          <div style="margin-top: 8px;">This notification was generated by KR Lead Scraper alerting system.</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

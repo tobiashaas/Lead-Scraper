@@ -140,6 +140,17 @@ class Company(Base):
     sources = relationship("Source", secondary=company_sources, back_populates="companies")
     scraping_jobs = relationship("ScrapingJob", back_populates="company")
     notes = relationship("CompanyNote", back_populates="company", cascade="all, delete-orphan")
+    # Duplicate tracking relationships
+    duplicate_of = relationship(
+        "Company",
+        remote_side=[id],
+        foreign_keys=[duplicate_of_id],
+    )
+    duplicates = relationship(
+        "Company",
+        foreign_keys=[duplicate_of_id],
+        back_populates="duplicate_of",
+    )
 
     def __repr__(self):
         return f"<Company(id={self.id}, name='{self.company_name}', city='{self.city}')>"
@@ -217,7 +228,7 @@ class ScrapingJob(Base):
     error_message = Column(Text)
 
     # Metadaten
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
     created_by = Column(String(100))  # User/System
 
     # Zusätzliche Daten
@@ -251,7 +262,7 @@ class CompanyNote(Base):
     # Metadaten
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     created_by = Column(String(100))
-    updated_at = Column(DateTime, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationship
     company = relationship("Company", back_populates="notes")
@@ -282,12 +293,17 @@ class DuplicateCandidate(Base):
     overall_similarity = Column(Float, index=True)
 
     # Status
-    status = Column(String(50), default="pending")  # pending, confirmed, rejected
+    status = Column(String(50), default="pending", index=True)  # pending, confirmed, rejected
     reviewed_by = Column(String(100))
     reviewed_at = Column(DateTime)
+    notes = Column(Text)
 
     # Metadaten
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    company_a = relationship("Company", foreign_keys=[company_a_id])
+    company_b = relationship("Company", foreign_keys=[company_b_id])
 
     def __repr__(self):
         return f"<DuplicateCandidate(id={self.id}, similarity={self.overall_similarity:.2f})>"
@@ -321,7 +337,11 @@ class User(Base):
 
     # Metadaten
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
 
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', role={self.role.value})>"

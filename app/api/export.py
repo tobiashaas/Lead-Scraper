@@ -9,13 +9,14 @@ import logging
 from datetime import datetime
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, get_db
 from app.database.models import Company, LeadQuality, LeadStatus, User
+from app.utils.cache import cache_result
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/export", tags=["Export"])
@@ -217,6 +218,7 @@ async def export_companies_json(
 
 
 @router.get("/companies/stats")
+@cache_result(ttl=300, key_prefix="export_company_stats")
 async def export_companies_stats(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),

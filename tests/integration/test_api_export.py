@@ -8,6 +8,8 @@ from fastapi import HTTPException
 from app.api import export as export_module
 from app.database.models import Company, LeadQuality, LeadStatus
 
+pytestmark = pytest.mark.integration
+
 
 @pytest.fixture
 def create_companies(db_session) -> Callable[[int], list[Company]]:
@@ -135,12 +137,12 @@ class TestExportEndpoints:
     def test_export_companies_json_invalid_filter(self, client, auth_headers) -> None:
         response = client.get(
             "/api/v1/export/companies/json",
-            params={"lead_quality": "invalid"},
+            params={"lead_status": "invalid"},
             headers=auth_headers,
         )
 
         assert response.status_code == 400
-        assert "Invalid lead_quality" in response.json()["detail"]
+        assert "Invalid lead_status" in response.json()["detail"]
 
     def test_export_companies_json_invalid_status(self, client, auth_headers) -> None:
         response = client.get(
@@ -151,6 +153,16 @@ class TestExportEndpoints:
 
         assert response.status_code == 400
         assert response.json()["detail"] == "Invalid lead_status: invalid"
+
+    def test_export_companies_json_invalid_quality_value(self, client, auth_headers) -> None:
+        response = client.get(
+            "/api/v1/export/companies/json",
+            params={"lead_quality": "invalid_quality"},
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 400
+        assert response.json()["detail"] == "Invalid lead_quality: invalid_quality"
 
     def test_export_companies_json_limit(self, create_companies, client, auth_headers) -> None:
         create_companies(5)

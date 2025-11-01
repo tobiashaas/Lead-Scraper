@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -12,6 +13,8 @@ from sqlalchemy.orm import sessionmaker
 from app.api import scraping as scraping_module
 from app.database.models import Company, ScrapingJob, Source
 from app.scrapers.base import ScraperResult
+
+pytestmark = pytest.mark.integration
 
 
 @pytest.fixture
@@ -50,49 +53,76 @@ def scraping_payload(create_source) -> dict[str, Any]:
 
 
 @pytest.fixture
+def mock_rq_queue(monkeypatch):
+    """Mock RQ queue to avoid Redis dependency in tests."""
+
+    enqueued_jobs: list[dict[str, Any]] = []
+
+    def fake_enqueue(job_id: int, config: dict[str, Any], priority: str = "normal") -> str:
+        rq_job_id = f"test-rq-job-{job_id}"
+        enqueued_jobs.append(
+            {
+                "rq_job_id": rq_job_id,
+                "job_id": job_id,
+                "config": config,
+                "priority": priority,
+            }
+        )
+        return rq_job_id
+
+    # Patch where the function is used, not where it's defined
+    monkeypatch.setattr(scraping_module, "enqueue_scraping_job", fake_enqueue)
+
+    return enqueued_jobs
+
+
+@pytest.fixture
 def override_session_factory(db_session, monkeypatch) -> sessionmaker:
-    """Force run_scraping_job to use the pytest-managed database session."""
+    """Force database session factories to use the pytest-managed database session."""
     from app.database import database as database_module
+    from app.workers import scraping_worker as worker_module
 
     engine = db_session.get_bind().engine
     test_sessionlocal = sessionmaker(bind=engine)
-    original_sessionlocal = database_module.SessionLocal
+
+    original_database_sessionlocal = database_module.SessionLocal
+    original_worker_sessionlocal = worker_module.SessionLocal
 
     monkeypatch.setattr(database_module, "SessionLocal", test_sessionlocal)
+    monkeypatch.setattr(worker_module, "SessionLocal", test_sessionlocal)
 
     yield test_sessionlocal
 
-    monkeypatch.setattr(database_module, "SessionLocal", original_sessionlocal)
+    monkeypatch.setattr(database_module, "SessionLocal", original_database_sessionlocal)
+    monkeypatch.setattr(worker_module, "SessionLocal", original_worker_sessionlocal)
 
 
 class TestScrapingAPI:
     """HTTP endpoint coverage for scraping jobs."""
 
-    def test_create_scraping_job_triggers_background_task(
-        self, client, auth_headers, scraping_payload, monkeypatch, db_session
+    def test_create_scraping_job_enqueues_to_rq(
+        self,
+        client,
+        auth_headers,
+        scraping_payload,
+        mock_rq_queue,
+        db_session,
     ) -> None:
-        captured: list[tuple[int, dict[str, Any]]] = []
-
-        async def fake_run(job_id: int, config: dict[str, Any]) -> None:
-            captured.append((job_id, config))
-
-        monkeypatch.setattr(scraping_module, "run_scraping_job", fake_run)
-
         response = client.post("/api/v1/scraping/jobs", json=scraping_payload, headers=auth_headers)
 
         assert response.status_code == 201
         data = response.json()
-        assert captured and captured[0][0] == data["id"]
-        assert captured[0][1]["source_name"] == scraping_payload["source_name"]
+        assert mock_rq_queue and mock_rq_queue[0]["job_id"] == data["id"]
+        assert mock_rq_queue[0]["config"]["source_name"] == scraping_payload["source_name"]
 
+        # Verify job exists in database
         db_session.expire_all()
-        job = db_session.get(ScrapingJob, data["id"])
+        job = db_session.query(ScrapingJob).filter(ScrapingJob.id == data["id"]).first()
         assert job is not None
         assert job.status == "pending"
-        assert job.config == {
-            "use_tor": scraping_payload["use_tor"],
-            "use_ai": scraping_payload["use_ai"],
-        }
+        assert job.config["use_tor"] == scraping_payload["use_tor"]
+        assert job.config["use_ai"] == scraping_payload["use_ai"]
+        assert "rq_job_id" in job.config
 
     def test_create_scraping_job_unknown_source(
         self, client, auth_headers, scraping_payload
@@ -383,7 +413,7 @@ class TestRunScrapingJob:
         try:
             job_in_db = session.get(ScrapingJob, job.id)
             assert job_in_db.status == "failed"
-            assert job_in_db.error_message == "scrape failed"
+            assert "scrape failed" in job_in_db.error_message
         finally:
             session.close()
 
@@ -452,10 +482,24 @@ class TestRunScrapingJob:
             job_in_db = verification_session.get(ScrapingJob, job_id)
             assert job_in_db is not None
             assert job_in_db.status == "failed"
-            assert job_in_db.error_message == "boom"
+            assert job_in_db.error_message == "RuntimeError: boom"
             assert job_in_db.completed_at is not None
         finally:
             verification_session.close()
+
+
+class TestRQIntegration:
+    """Optional tests that exercise the real Redis-backed RQ queue."""
+
+    @pytest.mark.skipif(
+        not os.getenv("TEST_WITH_REDIS"),
+        reason="Requires Redis and worker infrastructure (set TEST_WITH_REDIS=1)",
+    )
+    def test_real_queue_integration(self, client, auth_headers, scraping_payload):
+        """Placeholder for real queue integration test when Redis is available."""
+
+        response = client.post("/api/v1/scraping/jobs", json=scraping_payload, headers=auth_headers)
+        assert response.status_code == 201
 
     @pytest.mark.asyncio
     async def test_run_scraping_job_gelbe_seiten(

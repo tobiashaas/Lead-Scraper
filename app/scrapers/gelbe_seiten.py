@@ -6,6 +6,7 @@ Scraped Unternehmensdaten von gelbeseiten.de
 import logging
 import re
 from urllib.parse import quote_plus
+from typing import Any, AsyncGenerator, Awaitable, Callable
 
 from bs4 import BeautifulSoup
 
@@ -168,14 +169,22 @@ class GelbeSeitenScraper(BaseScraper):
 
         # Website
         website = None
-        website_tag = entry.find("a", {"data-wipe-name": "Homepage"})
+        website_tag = entry.find("a", {"itemprop": "url"})
+        if not website_tag:
+            website_tag = entry.find("a", {"data-wipe-name": "Homepage"})
         if not website_tag:
             website_tag = entry.find("a", class_=re.compile(r"website|homepage"))
 
         if website_tag and website_tag.get("href"):
             website = website_tag["href"]
             # Bereinige Gelbe Seiten Tracking-URLs
-            if "gelbeseiten.de" in website or "/redirect" in website:
+            if website.startswith("/redirect/"):
+                path = website.split("/redirect/")[-1]
+                if path.startswith("https://") or path.startswith("http://"):
+                    website = path
+                else:
+                    website = None
+            elif "gelbeseiten.de" in website and "/redirect" in website:
                 website = None
 
         # E-Mail
@@ -228,7 +237,11 @@ class GelbeSeitenScraper(BaseScraper):
 
 # Convenience Function
 async def scrape_gelbe_seiten(
-    city: str, industry: str, max_pages: int = 5, use_tor: bool = True
+    city: str,
+    industry: str,
+    max_pages: int = 5,
+    use_tor: bool = True,
+    progress_callback: Callable[[int, int], Awaitable[None]] | None = None,
 ) -> list[ScraperResult]:
     """
     Scraped gelbeseiten.de
@@ -243,4 +256,5 @@ async def scrape_gelbe_seiten(
         Liste von Ergebnissen
     """
     scraper = GelbeSeitenScraper(use_tor=use_tor)
+    scraper.progress_callback = progress_callback
     return await scraper.scrape(city=city, industry=industry, max_pages=max_pages)

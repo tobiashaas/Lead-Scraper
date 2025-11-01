@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>11880 - Malformed Results</title>
+</head>
+<body>
+    <div class="search-results">
+        <ul class="result-list">
+            <!-- Missing company name -->
+            <li class="result-list-entry">
+                <div class="result-list-entry__content">
+                    <div class="result-list-entry__address">
+                        <span class="js-street-address">Fehlende Straße 1</span><br>
+                        <span class="js-postal-code">70173</span> 
+                        <span class="js-address-locality">Stuttgart</span>
+                    </div>
+                </div>
+            </li>
+            
+            <!-- Valid entry -->
+            <li class="result-list-entry">
+                <div class="result-list-entry__content">
+                    <h2 class="result-list-entry-title__headline">Gültiger Eintrag GmbH</h2>
+                    <div class="result-list-entry__address">
+                        <span class="js-street-address">Gültige Straße 2</span><br>
+                        <span class="js-postal-code">70173</span> 
+                        <span class="js-address-locality">Stuttgart</span>
+                    </div>
+                    <div class="result-list-entry__contact">
+                        <a href="tel:+49711123456" class="result-list-entry__phone">0711 123456</a>
+                    </div>
+                </div>
+            </li>
+            
+            <!-- Malformed HTML -->
+            <li class="result-list-entry">
+                <div class="result-list-entry__content">
+                    <h2 class="result-list-entry-title__headline">Ungültiger Eintrag</h2>
+                    <div class="result-list-entry__address">
+                        <span class="js-street-address">Ungültige Straße 3
+                    </div>
+                    <!-- Missing closing tags -->
+                </div>
+                
+                <!-- This is malformed HTML with unclosed elements -->
+                <div>Some content without proper closing
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

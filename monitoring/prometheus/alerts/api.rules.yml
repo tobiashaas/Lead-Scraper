@@ -1,0 +1,53 @@
+groups:
+  - name: api_performance
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+            /
+          sum(rate(http_requests_total[5m]))
+            > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High API error rate: {{ $value | humanizePercentage }}"
+          description: |
+            More than 5% of API requests are returning 5xx errors over a 5 minute
+            window. Check recent deployments, upstream dependencies, and logs.
+
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le)
+          ) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency: {{ $value }}s (p95)"
+          description: |
+            95th percentile API latency exceeded 2 seconds for the last 5 minutes.
+            Investigate slow endpoints, database performance, and external APIs.
+
+      - alert: APIDown
+        expr: up{job="kr-scraper-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "API service is down"
+          description: |
+            Prometheus could not scrape the API metrics endpoint. Verify service
+            health, container status, and network connectivity.
+
+      - alert: HighRequestRate
+        expr: sum(rate(http_requests_total[5m])) > 100
+        for: 5m
+        labels:
+          severity: info
+        annotations:
+          summary: "High API request rate: {{ $value }} req/s"
+          description: |
+            API request throughput exceeded 100 requests per second. Confirm this
+            is expected traffic or investigate potential abuse.

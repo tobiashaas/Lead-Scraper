@@ -1,0 +1,99 @@
+{
+  "text": "🚨 Scraping Job Failed - {{ source }} ({{ city or 'n/a' }})",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "🚨 Scraping Job Failed",
+        "emoji": true
+      }
+    },
+    {
+      "type": "context",
+      "elements": [
+        {
+          "type": "mrkdwn",
+          "text": "*Environment:* {{ environment|upper }} | *Severity:* {{ severity|default('critical')|upper }}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Timestamp:* {{ timestamp }}"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Job ID*\n{{ job_id }}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Source*\n{{ source }}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*City*\n{{ city or 'n/a' }}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Industry*\n{{ industry or 'n/a' }}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Duration*\n{{ duration_seconds|default(0, true) }}s"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Results*\n{{ results_count|default('n/a') }}"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*Error*\n```{{ error_message or 'No error message provided.' }}```"
+      }
+    },
+    {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "button",
+          "style": "danger",
+          "text": {
+            "type": "plain_text",
+            "text": "View Grafana"
+          },
+          "url": "{{ dashboard_url or '' }}"
+        },
+        {
+          "type": "button",
+          "style": "primary",
+          "text": {
+            "type": "plain_text",
+            "text": "Open Sentry"
+          },
+          "url": "{{ sentry_url or '' }}"
+        },
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "View Logs"
+          },
+          "url": "{{ logs_url or '' }}"
+        }
+      ]
+    }
+  ],
+  "attachments": [
+    {
+      "color": "danger",
+      "fallback": "Scraping job {{ job_id }} failed in {{ environment }}"
+    }
+  ]
+}

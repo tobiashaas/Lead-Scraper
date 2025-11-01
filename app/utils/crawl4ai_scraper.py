@@ -1,12 +1,15 @@
-"""
-Crawl4AI + Ollama Integration
-Intelligentes Website-Scraping mit lokalen LLMs
-"""
+"""Crawl4AI + Ollama Integration with model selection support."""
 
+from __future__ import annotations
+
+import asyncio
 import json
 import logging
+import math
+import time
 from datetime import datetime
-from typing import Any
+from textwrap import dedent
+from typing import Any, Dict, Optional
 
 try:
     from crawl4ai import WebCrawler
@@ -19,8 +22,32 @@ except ImportError:
 import ollama
 
 from app.core.config import settings
+from app.utils.model_selector import ModelSelector, auto_select_model
 
 logger = logging.getLogger(__name__)
+
+
+ALLOWED_OLLAMA_OPTIONS = {
+    "temperature",
+    "top_p",
+    "top_k",
+    "repeat_penalty",
+    "presence_penalty",
+    "frequency_penalty",
+    "num_ctx",
+    "num_predict",
+    "stop",
+}
+
+
+DEFAULT_COMPANY_PROMPT = dedent(
+    """
+    Extract detailed company information from the provided content. Return valid JSON with the
+    following keys: company_name, directors, legal_form, services, technologies, team_size,
+    contact_email, contact_phone, address, description. Use null when data is missing and do not
+    hallucinate.
+    """
+).strip()
 
 
 class Crawl4AIOllamaScraper:
@@ -33,7 +60,14 @@ class Crawl4AIOllamaScraper:
     - Fallback zu Trafilatura
     """
 
-    def __init__(self, model: str = None, ollama_host: str = None, timeout: int = None):
+    def __init__(
+        self,
+        model: str | None = None,
+        ollama_host: str | None = None,
+        timeout: int | None = None,
+        use_model_selector: bool | None = None,
+        priority: str | None = None,
+    ):
         """
         Initialisiert Crawl4AI + Ollama Scraper
 
@@ -42,9 +76,30 @@ class Crawl4AIOllamaScraper:
             ollama_host: Ollama Host URL (default: aus settings)
             timeout: Request Timeout (default: aus settings)
         """
-        self.model = model or settings.ollama_model
+        self.use_model_selector = (
+            use_model_selector
+            if use_model_selector is not None
+            else getattr(settings, "ollama_model_selection_enabled", False)
+        )
+        self.priority = priority or getattr(settings, "ollama_model_priority", "balanced")
+
+        self.model_selector: Optional[ModelSelector] = None
+        if self.use_model_selector:
+            try:
+                self.model_selector = ModelSelector()
+            except Exception as exc:  # pragma: no cover - defensive
+                logger.warning("ModelSelector initialization failed: %s", exc)
+                self.use_model_selector = False
+
+        self.model = model or self._initial_model()
         self.ollama_host = ollama_host or settings.ollama_host
         self.timeout = timeout or settings.ollama_timeout
+        self.use_prompt_library = bool(
+            self.model_selector and getattr(settings, "ollama_prompt_optimization_enabled", False)
+        )
+        self.benchmark_enabled = False
+        self.latencies: list[float] = []
+        self.tokens_per_second: list[float] = []
 
         # Crawl4AI Crawler initialisieren
         if CRAWL4AI_AVAILABLE:
@@ -61,6 +116,7 @@ class Crawl4AIOllamaScraper:
             "errors": 0,
             "crawl4ai_used": 0,
             "ollama_used": 0,
+            "model_usage": {},
         }
 
     async def extract_company_info(self, url: str, use_llm: bool = True) -> dict[str, Any] | None:
@@ -92,8 +148,17 @@ class Crawl4AIOllamaScraper:
                 return None
 
             # 2. Ollama: Strukturierte Extraktion
+            model_name = self.model
+            if self.model_selector and content:
+                model_name = auto_select_model(
+                    len(content),
+                    "complex",
+                    self.priority,
+                    self.model_selector,
+                )
+
             if use_llm:
-                result = await self._extract_with_ollama(content, url)
+                result = await self._extract_with_ollama(content, url, model_name)
                 self.stats["ollama_used"] += 1
             else:
                 result = {"raw_content": content}
@@ -154,102 +219,164 @@ class Crawl4AIOllamaScraper:
             logger.error(f"Trafilatura Fehler: {e}")
             return None
 
-    async def _extract_with_ollama(self, content: str, url: str) -> dict[str, Any]:
-        """
-        Extrahiert strukturierte Daten mit Ollama
+    async def _extract_with_ollama(
+        self, content: str, url: str, model_name: Optional[str] = None
+    ) -> dict[str, Any]:
+        """Extrahiert strukturierte Daten mit Ollama."""
 
-        Args:
-            content: Website Content (Markdown/Text)
-            url: Original URL
-
-        Returns:
-            Strukturierte Unternehmensdaten
-        """
-        # Prompt für Unternehmens-Extraktion
+        model_to_use = model_name or self.model
+        prompt_entry: Dict[str, Any] | None = None
         prompt = self._build_extraction_prompt(content)
+        if self.use_prompt_library and self.model_selector:
+            prompt_entry = self.model_selector.get_optimized_prompt("company_detailed", model_to_use)
+            if isinstance(prompt_entry, dict):
+                prompt = prompt_entry.get("template", prompt)
+            elif isinstance(prompt_entry, str):
+                prompt = prompt_entry
+
+        system_message = None
+        prompt_parameters: Dict[str, Any] = {}
+        if isinstance(prompt_entry, dict):
+            system_message = prompt_entry.get("system_message")
+            if isinstance(system_message, str) and system_message.strip():
+                system_message = system_message.strip()
+            params = prompt_entry.get("parameters")
+            if isinstance(params, dict):
+                prompt_parameters = {
+                    key: value for key, value in params.items() if key in ALLOWED_OLLAMA_OPTIONS
+                }
 
         try:
-            # Ollama API Call
+            options: Dict[str, Any] = {}
+            if self.model_selector:
+                options.update(self.model_selector.get_model_config(model_to_use))
+            if prompt_parameters:
+                options.update(prompt_parameters)
+            defaults = {"temperature": 0.1, "num_predict": 1000}
+            for key, value in defaults.items():
+                options.setdefault(key, value)
+            options = {
+                key: value
+                for key, value in options.items()
+                if key in ALLOWED_OLLAMA_OPTIONS and value is not None
+            }
+
+            final_prompt = prompt
+            if system_message:
+                final_prompt = f"System: {system_message}\n\n{prompt}"
+
+            start = time.perf_counter()
             response = ollama.generate(
-                model=self.model,
-                prompt=prompt,
+                model=model_to_use,
+                prompt=final_prompt,
                 format="json",
-                options={"temperature": 0.1, "num_predict": 1000},  # Deterministisch  # Max Tokens
+                options=options,
             )
+            duration = time.perf_counter() - start
+            self._record_latency(duration, response.get("response", ""))
+            self._record_model_usage(model_to_use, duration)
 
-            # Parse JSON Response
             extracted = json.loads(response["response"])
-
-            # Füge Metadaten hinzu
             extracted["scraped_at"] = datetime.now().isoformat()
             extracted["source_url"] = url
-            extracted["model_used"] = self.model
-
-            logger.info(f"Ollama Extraktion erfolgreich: {url}")
+            extracted["model_used"] = model_to_use
+            logger.info("Ollama Extraktion erfolgreich: %s", url)
             return extracted
 
-        except json.JSONDecodeError as e:
-            logger.error(f"Ollama JSON Parse Fehler: {e}")
-            # Fallback: Raw Response
+        except json.JSONDecodeError as exc:
+            logger.error("Ollama JSON Parse Fehler: %s", exc)
+            payload = response.get("response", "")
             return {
-                "raw_response": response.get("response", ""),
+                "raw_response": payload,
                 "error": "JSON Parse Failed",
                 "source_url": url,
+                "model_used": model_to_use,
             }
-        except Exception as e:
-            logger.error(f"Ollama Fehler: {e}")
-            return {"error": str(e), "source_url": url}
+        except Exception as exc:  # pragma: no cover - defensive
+            logger.error("Ollama Fehler: %s", exc)
+            return {"error": str(exc), "source_url": url, "model_used": model_to_use}
 
     def _build_extraction_prompt(self, content: str) -> str:
-        """
-        Baut Extraction Prompt für Ollama
+        """Baut Extraction Prompt für Ollama."""
 
-        Args:
-            content: Website Content
-
-        Returns:
-            Prompt String
-        """
-        # Kürze Content wenn zu lang (max 4000 chars)
         if len(content) > 4000:
             content = content[:4000] + "..."
+        return DEFAULT_COMPANY_PROMPT + f"\n\nWebsite Content:\n{content}"
 
-        prompt = f"""
-Extract company information from this website content and return valid JSON.
+    def extract_from_content(
+        self,
+        content: str,
+        *,
+        model_name: Optional[str] = None,
+        source_url: Optional[str] = None,
+    ) -> dict[str, Any]:
+        """Synchroner Wrapper für Benchmarks mit Rohinhalt."""
 
-Website Content:
-{content}
+        target_url = source_url or "benchmark://content"
 
-Extract the following information (use null if not found):
-- company_name: Official company name
-- directors: List of managing directors/CEOs (Geschäftsführer)
-- legal_form: Legal form (GmbH, AG, UG, etc.)
-- services: List of main services/products offered
-- technologies: List of technologies mentioned (software, hardware, etc.)
-- team_size: Estimated number of employees (number or null)
-- contact_email: Contact email address
-- contact_phone: Contact phone number
-- address: Full address if mentioned
-- description: Brief company description (max 200 chars)
+        async def _run() -> dict[str, Any]:
+            return await self._extract_with_ollama(content, target_url, model_name)
 
-Return ONLY valid JSON, no additional text:
-{{
-  "company_name": "...",
-  "directors": ["...", "..."],
-  "legal_form": "...",
-  "services": ["...", "..."],
-  "technologies": ["...", "..."],
-  "team_size": null,
-  "contact_email": "...",
-  "contact_phone": "...",
-  "address": "...",
-  "description": "..."
-}}
-"""
-        return prompt
+        return asyncio.run(_run())
+
+    def _initial_model(self) -> str:
+        if self.model_selector:
+            return self.model_selector.select_model_for_use_case("company_detailed", self.priority)
+        return settings.ollama_model
+
+    def benchmark_mode(self, enabled: bool) -> None:
+        """Enable or disable benchmark metric collection."""
+
+        self.benchmark_enabled = enabled
+        if not enabled:
+            self.latencies.clear()
+            self.tokens_per_second.clear()
+
+    def _record_latency(self, latency: float, response_text: str) -> None:
+        if not self.benchmark_enabled:
+            return
+        self.latencies.append(latency)
+        token_estimate = max(1, len(response_text) // 4)
+        self.tokens_per_second.append(token_estimate / latency if latency else token_estimate)
+
+    def _record_model_usage(self, model_name: str, latency: float) -> None:
+        usage = self.stats["model_usage"].setdefault(model_name, {"count": 0, "latency": []})
+        usage["count"] += 1
+        usage["latency"].append(latency)
+
+    def get_benchmark_stats(self) -> Dict[str, Any]:
+        """Return collected benchmark statistics when enabled."""
+
+        def percentile(values: list[float], pct: float) -> float:
+            if not values:
+                return 0.0
+            data = sorted(values)
+            k = (len(data) - 1) * (pct / 100.0)
+            f = math.floor(k)
+            c = math.ceil(k)
+            if f == c:
+                return data[int(k)]
+            return data[f] * (c - k) + data[c] * (k - f)
+
+        latency_mean = sum(self.latencies) / len(self.latencies) if self.latencies else 0.0
+        tokens_mean = (
+            sum(self.tokens_per_second) / len(self.tokens_per_second)
+            if self.tokens_per_second
+            else 0.0
+        )
+
+        return {
+            "benchmark_enabled": self.benchmark_enabled,
+            "latency_mean": latency_mean,
+            "latency_p50": percentile(self.latencies, 50),
+            "latency_p95": percentile(self.latencies, 95),
+            "latency_p99": percentile(self.latencies, 99),
+            "tokens_per_second_mean": tokens_mean,
+            "model_usage": self.stats.get("model_usage", {}),
+        }
 
     def get_stats(self) -> dict[str, int]:
-        """Gibt Statistiken zurück"""
+        """Gibt Statistiken zurück."""
         return self.stats.copy()
 
 

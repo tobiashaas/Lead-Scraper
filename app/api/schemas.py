@@ -5,8 +5,9 @@ Request/Response models
 
 from datetime import datetime
 from typing import Any
+import warnings
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, model_validator
 
 from app.database.models import LeadQuality, LeadStatus
 
@@ -89,10 +90,15 @@ class CompanyResponse(CompanyBase):
 class CompanyList(BaseModel):
     """Schema for paginated company list"""
 
-    total: int
+    total: int | None = Field(
+        default=None,
+        description="Total number of matching companies when include_total=true",
+    )
     skip: int
     limit: int
     items: list[CompanyResponse]
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Scraping Job Schemas
@@ -105,7 +111,42 @@ class ScrapingJobCreate(BaseModel):
     industry: str = Field(..., min_length=1)
     max_pages: int = Field(default=5, ge=1, le=50)
     use_tor: bool = Field(default=True)
-    use_ai: bool = Field(default=True, description="Use AI for data extraction")
+    use_ai: bool = Field(default=True, description="Use AI for data extraction and smart scraper")
+    enable_smart_scraper: bool = Field(
+        default=False, description="Enable Smart Scraper for this job"
+    )
+    smart_scraper_mode: str | None = Field(
+        default=None,
+        description="Smart scraper mode: enrichment, fallback (overrides global setting)",
+    )
+    smart_scraper_max_sites: int | None = Field(
+        default=None,
+        ge=1,
+        le=100,
+        description="Max websites to scrape (overrides global setting)",
+    )
+
+    @field_validator("smart_scraper_mode")
+    @classmethod
+    def validate_smart_scraper_mode(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        allowed = {"enrichment", "fallback"}
+        if value not in allowed:
+            raise ValueError(
+                "smart_scraper_mode must be one of 'enrichment', 'fallback', or None"
+            )
+        return value
+
+    @model_validator(mode="after")
+    def warn_if_smart_scraper_without_ai(self) -> "ScrapingJobCreate":
+        if self.enable_smart_scraper and not self.use_ai:
+            warnings.warn(
+                "Smart scraper requested but 'use_ai' is False. Enable AI to use smart scraper.",
+                UserWarning,
+                stacklevel=2,
+            )
+        return self
 
 
 class ScrapingJobResponse(BaseModel):
@@ -126,6 +167,7 @@ class ScrapingJobResponse(BaseModel):
     duration_seconds: float | None
     error_message: str | None
     created_at: datetime
+    queue: dict[str, Any] | None = Field(default=None, description="Transient queue metadata")
 
     model_config = ConfigDict(from_attributes=True)
 

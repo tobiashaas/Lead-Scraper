@@ -4,8 +4,8 @@ Webhook Management für Event Notifications
 """
 
 import logging
-from datetime import datetime
-from typing import Any
+from datetime import datetime, timezone
+from typing import Any, Dict
 
 import httpx
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
@@ -159,6 +159,40 @@ async def get_webhook(
         "active": webhook["active"],
         "created_at": webhook["created_at"],
     }
+
+
+async def dispatch_webhook_event(event_name: str, payload: Dict[str, Any]) -> None:
+    """Send event payload to all active webhooks subscribed to the event."""
+
+    matching_webhooks = [
+        webhook
+        for webhook in WEBHOOKS.values()
+        if webhook.get("active") and event_name in webhook.get("events", [])
+    ]
+
+    if not matching_webhooks:
+        return
+
+    async with httpx.AsyncClient(timeout=5) as client:
+        for webhook in matching_webhooks:
+            try:
+                await client.post(
+                    webhook["url"],
+                    json={
+                        "event": event_name,
+                        "payload": payload,
+                        "webhook_id": webhook["id"],
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                    },
+                    headers={"X-Webhook-Event": event_name},
+                )
+            except Exception as exc:
+                logger.warning(
+                    "Failed to dispatch webhook %s to %s: %s",
+                    event_name,
+                    webhook["url"],
+                    exc,
+                )
 
 
 @router.patch("/{webhook_id}")

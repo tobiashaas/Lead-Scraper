@@ -1,0 +1,32 @@
+[{{ environment|upper }}] Queue Backlog Alert - {{ queue_name }} ({{ queue_size }} jobs)
+
+Summary
+=======
+Queue Name: {{ queue_name }}
+Current Size: {{ queue_size }} jobs
+Threshold: {{ threshold }} jobs
+Oldest Job Age: {{ oldest_job_age_minutes|default('unknown') }} minutes
+Active Workers: {{ worker_count|default('unknown') }}
+Timestamp: {{ timestamp }}
+Environment: {{ environment }}
+
+Impact
+======
+- Jobs are accumulating faster than workers can process them.
+- Data freshness and SLA targets may be impacted.
+- Investigate worker health and processing bottlenecks.
+
+Recommended Actions
+===================
+1. Check worker logs for failures or restarts.
+2. Scale worker count or add temporary capacity.
+3. Inspect job payloads for anomalies (large jobs, retries).
+4. Verify external dependencies (databases, proxies, upstream services).
+5. Clear stuck jobs if necessary (see runbook).
+
+Useful Links
+============
+- Queue Dashboard: {{ queue_dashboard_url or 'n/a' }}
+- Worker Status: {{ worker_status_url or 'n/a' }}
+- Logs: {{ logs_url or 'n/a' }}
+- Runbook: {{ runbook_url or 'n/a' }}

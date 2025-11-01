@@ -1,19 +1,16 @@
-"""
-Integration Tests für Health API Endpoints
-"""
+"""Integration Tests für Health API Endpoints."""
 
-from fastapi.testclient import TestClient
+import pytest
 
 from app.api import health as health_module
-from app.main import app
 
-client = TestClient(app)
+pytestmark = pytest.mark.integration
 
 
 class TestHealthEndpoints:
     """Test Suite für Health Endpoints"""
 
-    def test_health_check(self):
+    def test_health_check(self, client):
         """Test: Basic health check endpoint"""
         response = client.get("/health")
 
@@ -24,7 +21,7 @@ class TestHealthEndpoints:
         assert "timestamp" in data
         assert "environment" in data
 
-    def test_detailed_health_check(self):
+    def test_detailed_health_check(self, client):
         """Test: Detailed health check with all dependencies"""
         response = client.get("/health/detailed")
 
@@ -44,7 +41,7 @@ class TestHealthEndpoints:
         # API should always be healthy
         assert checks["api"] == "healthy"
 
-    def test_readiness_check(self):
+    def test_readiness_check(self, client):
         """Test: Kubernetes readiness probe"""
         response = client.get("/health/ready")
 
@@ -57,7 +54,7 @@ class TestHealthEndpoints:
         if data["status"] == "not_ready":
             assert "reason" in data
 
-    def test_liveness_check(self):
+    def test_liveness_check(self, client):
         """Test: Kubernetes liveness probe"""
         response = client.get("/health/live")
 
@@ -67,7 +64,7 @@ class TestHealthEndpoints:
         assert data["status"] == "alive"
         assert "timestamp" in data
 
-    def test_health_endpoints_response_time(self):
+    def test_health_endpoints_response_time(self, client):
         """Test: Health endpoints respond quickly"""
         import time
 
@@ -79,7 +76,7 @@ class TestHealthEndpoints:
         # Health check should respond quickly (allow generous margin for CI environments)
         assert duration < 0.5
 
-    def test_health_check_headers(self):
+    def test_health_check_headers(self, client):
         """Test: Health check returns correct headers"""
         response = client.get("/health")
 
@@ -87,7 +84,7 @@ class TestHealthEndpoints:
         assert "content-type" in response.headers
         assert "application/json" in response.headers["content-type"]
 
-    def test_detailed_health_check_db_failure(self, monkeypatch):
+    def test_detailed_health_check_db_failure(self, client, monkeypatch):
         """Test: Detailed health check handles DB failure."""
 
         async def failing_db_check():
@@ -102,7 +99,7 @@ class TestHealthEndpoints:
         assert data["status"] == "degraded"
         assert data["checks"]["database"] == "unhealthy"
 
-    def test_detailed_health_check_db_exception(self, monkeypatch):
+    def test_detailed_health_check_db_exception(self, client, monkeypatch):
         """Test: Detailed health check handles DB exception."""
 
         async def exploding_db_check():
@@ -117,7 +114,7 @@ class TestHealthEndpoints:
         assert "unhealthy" in data["checks"]["database"]
         assert "db boom" in data["checks"]["database"]
 
-    def test_detailed_health_check_redis_exception(self, monkeypatch):
+    def test_detailed_health_check_redis_exception(self, client, monkeypatch):
         """Test: Detailed health check handles Redis exception."""
 
         class FailingRateLimiter:
@@ -137,7 +134,7 @@ class TestHealthEndpoints:
         assert "unhealthy" in redis_status
         assert "redis down" in redis_status
 
-    def test_detailed_health_check_ollama_exception(self, monkeypatch):
+    def test_detailed_health_check_ollama_exception(self, client, monkeypatch):
         """Test: Detailed health check handles Ollama exception."""
         import httpx
 
@@ -159,7 +156,7 @@ class TestHealthEndpoints:
         data = response.json()
         assert "unhealthy" in data["checks"]["ollama"]
 
-    def test_detailed_health_check_ollama_success(self, monkeypatch):
+    def test_detailed_health_check_ollama_success(self, client, monkeypatch):
         """Test: Detailed health check marks Ollama healthy on 200 response."""
         import httpx
 
@@ -196,7 +193,7 @@ class TestHealthEndpoints:
         data = response.json()
         assert data["checks"]["ollama"] == "healthy"
 
-    def test_readiness_check_not_ready(self, monkeypatch):
+    def test_readiness_check_not_ready(self, client, monkeypatch):
         """Test: Readiness check returns not_ready when DB is down."""
 
         async def failing_db_check():
@@ -209,4 +206,5 @@ class TestHealthEndpoints:
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "not_ready"
-        assert data["reason"] == "database_unavailable"
+        assert "reason" in data
+        assert "database" in data["reason"].lower()

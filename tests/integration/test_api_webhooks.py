@@ -9,6 +9,8 @@ import pytest
 from app.api import webhooks as webhooks_module
 
 
+pytestmark = pytest.mark.integration
+
 class TestWebhookHelpers:
     """Direct tests for helper functions handling network I/O."""
 
@@ -152,25 +154,6 @@ class TestWebhookHelpers:
 
         await webhooks_module.trigger_webhook_event("job.failed", {"job_id": 42})
 
-
-@pytest.fixture(autouse=True)
-def reset_webhooks_state() -> Callable[[], None]:
-    """Reset in-memory webhook storage before each test."""
-
-    original_webhooks = webhooks_module.WEBHOOKS.copy()
-    original_counter = webhooks_module.WEBHOOK_ID_COUNTER
-
-    webhooks_module.WEBHOOKS.clear()
-    webhooks_module.WEBHOOK_ID_COUNTER = 1
-
-    def _restore() -> None:
-        webhooks_module.WEBHOOKS.clear()
-        webhooks_module.WEBHOOKS.update(original_webhooks)
-        webhooks_module.WEBHOOK_ID_COUNTER = original_counter
-
-    return _restore
-
-
 @pytest.fixture
 def create_webhook_payload() -> dict[str, Any]:
     return {
@@ -264,6 +247,36 @@ class TestWebhookEndpoints:
         data = response.json()
         assert data["active"] is False
         assert data["events"] == ["job.failed"]
+
+    def test_update_webhook_toggle_active_only(self, client, auth_headers, create_webhook_payload) -> None:
+        create_resp = client.post(
+            "/api/v1/webhooks/", json=create_webhook_payload, headers=auth_headers
+        )
+        webhook_id = create_resp.json()["id"]
+
+        response = client.patch(
+            f"/api/v1/webhooks/{webhook_id}",
+            json={"active": False},
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 200
+        assert response.json()["active"] is False
+
+    def test_update_webhook_update_events_only(self, client, auth_headers, create_webhook_payload) -> None:
+        create_resp = client.post(
+            "/api/v1/webhooks/", json=create_webhook_payload, headers=auth_headers
+        )
+        webhook_id = create_resp.json()["id"]
+
+        response = client.patch(
+            f"/api/v1/webhooks/{webhook_id}",
+            json={"events": ["job.failed"]},
+            headers=auth_headers,
+        )
+
+        assert response.status_code == 200
+        assert response.json()["events"] == ["job.failed"]
 
     def test_delete_webhook(self, client, auth_headers, create_webhook_payload) -> None:
         create_resp = client.post(

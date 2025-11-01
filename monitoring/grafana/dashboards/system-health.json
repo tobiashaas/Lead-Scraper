@@ -1,0 +1,123 @@
+{
+  "id": null,
+  "uid": "kr-scraper-system",
+  "title": "KR Lead Scraper - System Health",
+  "tags": ["system", "health", "dependencies"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "API Health",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "max(up{job=\"kr-scraper-api\"})"}
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "red", "value": 0},
+              {"color": "green", "value": 1}
+            ]
+          }
+        }
+      },
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0}
+    },
+    {
+      "type": "stat",
+      "title": "Database Health",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "max(scrape_series_added{job=\"kr-scraper-api\"})",
+          "legendFormat": "DB"
+        }
+      ],
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0}
+    },
+    {
+      "type": "stat",
+      "title": "Redis Health",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "max(scrape_series_added{job=\"kr-scraper-api\"})"}
+      ],
+      "gridPos": {"h": 6, "w": 6, "x": 12, "y": 0}
+    },
+    {
+      "type": "stat",
+      "title": "Ollama Availability",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "max(scrape_duration_seconds{job=\"kr-scraper-api\"})"}
+      ],
+      "gridPos": {"h": 6, "w": 6, "x": 18, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "Request Rate by Status",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[5m])) by (status)",
+          "legendFormat": "{{status}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 6}
+    },
+    {
+      "type": "timeseries",
+      "title": "Error Rate",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(rate(http_errors_total[5m]))",
+          "legendFormat": "Errors"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 14}
+    },
+    {
+      "type": "timeseries",
+      "title": "Average Response Time",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "avg(rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m]))",
+          "legendFormat": "Avg"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 14}
+    },
+    {
+      "type": "stat",
+      "title": "Active Workers",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "sum(scraping_jobs_active)"}
+      ],
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 22}
+    },
+    {
+      "type": "timeseries",
+      "title": "Queue Backlog",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(queue_size) by (queue_name)",
+          "legendFormat": "{{queue_name}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 18, "x": 6, "y": 22}
+    }
+  ]
+}

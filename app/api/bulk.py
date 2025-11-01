@@ -87,6 +87,9 @@ async def bulk_update_companies(
         if not request.company_ids:
             raise HTTPException(status_code=400, detail="No company IDs provided")
 
+        if not request.updates:
+            raise HTTPException(status_code=400, detail="No update fields provided")
+
         normalized_updates = dict(request.updates)
         if "lead_status" in normalized_updates:
             try:

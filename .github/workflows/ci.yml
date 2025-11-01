@@ -1,4 +1,14 @@
-name: CI/CD Pipeline
+name: CI Pipeline
+
+# CI Pipeline: Runs on every push and PR
+# - Linting and formatting checks
+# - Unit and integration tests (80% coverage)
+# - Security scanning
+# - Docker image build
+#
+# For deployments, see:
+# - .github/workflows/staging.yml (automatic on develop)
+# - .github/workflows/deploy.yml (automatic on tags)
 
 on:
   push:
@@ -102,7 +112,17 @@ jobs:
           REDIS_URL: redis://localhost:6379
           POSTGRES_PASSWORD: test_password
         run: |
-          pytest tests/ -v --cov=app/api --cov-report=xml --cov-report=term --cov-fail-under=80
+          pytest tests/ -v -n auto --timeout=300 --cov=app/api --cov-report=xml --cov-report=html --cov-report=term --cov-fail-under=80
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            htmlcov
+            coverage.xml
+            .coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -160,9 +180,25 @@ jobs:
         run: |
           docker run --rm kr-lead-scraper:${{ github.sha }} python --version
 
-  # Deploy job (only on main branch)
+  staging-deploy-trigger:
+    name: Trigger Staging Deployment
+    runs-on: ubuntu-latest
+    needs: [lint, test, docker]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Staging Deployment Notification
+        run: |
+          echo "🚀 Triggering staging deployment..."
+          echo "Branch: develop"
+          echo "Commit: ${{ github.sha }}"
+          echo ""
+          echo "Staging deployment will be handled by staging.yml workflow."
+
   deploy:
-    name: Deploy
+    name: Deploy Notification
     runs-on: ubuntu-latest
     needs: [lint, test, docker]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -170,7 +206,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy notification
+      - name: Deployment Ready
         run: |
-          echo "🚀 Ready to deploy to production"
-          echo "Add your deployment steps here"
+          echo "✅ All checks passed!"
+          echo "📦 Docker image built successfully"
+          echo "🚀 Ready for deployment"
+          echo ""
+          echo "To deploy to production:"
+          echo "  git tag v1.2.3"
+          echo "  git push origin v1.2.3"
+          echo ""
+          echo "This will trigger the Production Deployment workflow."
+          echo "See .github/workflows/deploy.yml for details."
